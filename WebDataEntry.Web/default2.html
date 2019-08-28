@@ -1,0 +1,165 @@
+﻿<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Diary Layout</title>
+
+	<script type="text/javascript" src="/Scripts/ThirdParty/string.js"></script>
+	<script type="text/javascript" src="/Scripts/ThirdParty/jquery-2.0.3.js"></script>
+	<script type="text/javascript" src="/Scripts/ThirdParty/knockout-2.1.0.js"></script>
+	<script type="text/javascript" src="/Scripts/ThirdParty/DataTables-1.10.18/DataTables-1.10.18/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" src="//cdn.datatables.net/plug-ins/1.10.19/pagination/input.js"></script>
+	<script type="text/javascript" src="/Scripts/ThirdParty/vkbeautify.0.99.00.beta.js"></script>
+	<script type="text/javascript" src="/Scripts/ThirdParty/bootstrap-3.0.0/dist/js/bootstrap.min.js"></script>
+
+	<script type="text/javascript" src="/Scripts/editEntry.js"></script>
+	<script type="text/javascript" src="/Scripts/entry.js"></script>
+	<script type="text/javascript" src="/Scripts/entryFactory.js"></script>
+	<script type="text/javascript" src="/Scripts/dataTableHelpers.js"></script>
+	<script type="text/javascript" src="/Scripts/viewmodel.js"></script>
+	<script type="text/javascript" src="/Scripts/viewmodelHelpers.js"></script>
+
+	<script data-main="scripts/requireConfig" src="/Scripts/ThirdParty/require.js"></script>
+
+	<link href="/Content/site.css" rel="stylesheet"/>
+	<link href="/Scripts/ThirdParty/DataTables-1.10.18/DataTables-1.10.18/css/jquery.dataTables.css" rel="stylesheet"/>
+	<link href="/Scripts/ThirdParty/bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+	<link href="/Scripts/ThirdParty/bootstrap-3.0.0/dist/css/bootstrap-theme.min.css" rel="stylesheet"/>
+	<link href="/Content/dataTableCustom.css" rel="stylesheet"/>
+</head>
+<body>
+	<div>
+		<div id="diaryContent">
+			
+
+			<!-- Diary -->
+			<div class="panel panel-info col-md-4">
+				<nav class="navbar navbar-default">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand"><span class="glyphicon glyphicon-list"></span>  Diary</a>
+					</div>
+
+					<div class="collapse navbar-collapse navbar-ex1-collapse">
+						<ul class="nav navbar-nav navbar-right">
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-floppy-open"></span>  Load<span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<li><a id="buttonLoadThisYear" href="#">Latest</a></li>
+									<li><a id="buttonLoadAll" href="#">All</a></li>
+								</ul>
+							</li>
+							<li data-bind="visible: $root.anyEntries()">
+								<a href="#" id="buttonSaveXml"><span class="glyphicon glyphicon-floppy-save"></span>  Save</a>
+							</li>
+							<li>
+								<a href="#" id="downloadDatabase"><span class="glyphicon glyphicon-cloud-download"></span>  Download</a>
+							</li>
+							<li>
+								<a href="#" id="uploadDatabase"><span class="glyphicon glyphicon-cloud-upload"></span>  Upload</a>
+							</li>
+
+						</ul>
+					</div>
+				</nav>
+
+				<div class="panel-body" data-bind="visible: $root.anyEntries()">
+					<table id="tableEntries">
+						<thead>
+							<tr>
+								<td>Year</td>
+								<td>Month</td>
+								<td>Day</td>
+								<td>Id</td>
+								<td>Date</td>
+								<td>Title</td>
+								<td>Family</td>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- ko foreach: $root.entries() -->
+
+							<tr>
+								<td data-bind="text: DateEntry().Year"></td>
+								<td data-bind="text: DateEntry().Month"></td>
+								<td data-bind="text: DateEntry().Day"></td>
+								<td data-bind="text: DateEntry().Id"></td>
+								<td data-bind="text: DateEntry().Value"></td>
+								<td data-bind="text: Title().Value"></td>
+								<td data-bind="text: People()"></td>
+							</tr>
+							<!-- /ko -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Entry -->
+			<!-- ko if: $root.anyEntries() -->
+			<div class="panel panel-warning col-md-7" id="editEntry">
+
+				<!-- ko if: $root.editEntry.activeEntry() -->
+				<div class="panel-body" data-bind="with: $root.editEntry.activeEntry()">
+
+					<div id="mainEntry">
+						<div class="input-group">
+							<div class="reset-display reset-width" data-bind="css: { 'has-warning': !DateEntry().Day() }"><span class="input-group-addon reset-display">Day:</span><input type="number" data-bind="value: DateEntry().Day" class="form-control reset-display default-input-num-width" /></div>
+							<div class="reset-display reset-width" data-bind="css: { 'has-warning': !DateEntry().Month() }"><span class="input-group-addon reset-display">Month:</span> <input type="number" data-bind="value: DateEntry().Month" class="form-control reset-display default-input-num-width" /></div>
+							<div class="reset-display reset-width" data-bind="css: { 'has-error': !DateEntry().Year() }"><span class="input-group-addon reset-display">Year:</span> <input type="number" data-bind="value: DateEntry().Year" class="form-control reset-display default-input-num-width" /></div>
+						</div>
+					</div>	
+
+					<!-- Family People -->
+					<div class="panel panel-default col-md-5">
+
+						<div class="panel-heading">Family People:</div>
+						<div class="panel-body" style="height: 250px; overflow: auto">
+								<!-- ko foreach: $root.familyPeopleComputed() -->
+								<div style="display: block">
+									<input type="checkbox" class="check-with-label" data-bind="attr: {id: 'family' + Id() }, value: Id(), checked: $parent.People(), event: { 'change' : function() {$root.editEntry.saveActiveEntry($root);} }" /> <!-- $parent seems to be the activeEntry which comes from the with block, not the local foreach block. -->
+									<label class="label-for-check normal-fontweight" data-bind="attr: { 'for': 'family' + Id() }, text: Name"></label>
+								</div>
+								<!-- /ko --><!-- foreach: $root.familyPeopleComputed() -->
+						</div>
+	
+					</div>
+
+				</div>
+				<!-- /ko -->
+			</div>
+			<!-- /ko -->
+		</div>
+
+		<!-- ko if: $root.editEntry.activeEntry() -->
+		<div class="panel-body" data-bind="with: $root.editEntry.activeEntry()">
+			<div id="mainEntry">
+				<div class="panel panel-default" data-bind="css: { 'has-warning': ((!Info()) || (Info().Content().length == 0)) }">
+					<div class="panel-heading">Info:</div>
+					<div class="panel-body">
+						<div class="col-md-8">
+							<textarea cols="100" rows="15" data-bind="value: Info().Content" class="form-control"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- /ko -->
+
+		<script>
+			$(document).ready(function () {
+				viewModel.baseUrl = '';
+			});
+		</script>
+
+	</div>
+	<script type="text/javascript" src="/Scripts/documentReady.js"></script>
+
+</body>
+
+</html>
+<!-- , event: { 'change' : function() {$root.editEntry.saveActiveEntry($root);} } -->

@@ -1,0 +1,48 @@
+﻿
+
+#tableEntries tbody tr.even:hover, #example tbody tr.even td.highlighted {
+	background-color: #cef0f0;
+}
+
+#tableEntries tbody tr.odd:hover, #example tbody tr.odd td.highlighted {
+	background-color: #cef0ff;
+}
+
+#tableEntries tr.even:hover {
+	background-color: #cef0ff;
+}
+
+#tableEntries tr.even:hover td.sorting_1 {
+	background-color: #cef0ff;
+}
+
+#tableEntries tr.even:hover td.sorting_2 {
+	background-color: #cef0ff;
+}
+
+#tableEntries tr.even:hover td.sorting_3 {
+	background-color: #cef0ff;
+}
+
+#tableEntries tr.odd:hover {
+	background-color: #cef0f0;
+}
+
+#tableEntries tr.odd:hover td.sorting_1 {
+	background-color: #cef0ff;
+}
+
+#tableEntries tr.odd:hover td.sorting_2 {
+	background-color: #cef0ff;
+}
+
+#tableEntries tr.odd:hover td.sorting_3 {
+	background-color: #cef0ff;
+}
+
+.row_selected {
+	/* background-color: #3a87ad; */
+	font-weight: bold;
+	text-shadow: 1px 1px 0px #EEE;
+	color: #333;
+}

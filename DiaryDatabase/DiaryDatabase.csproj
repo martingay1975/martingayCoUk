@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3B3D0B2F-879E-4D2B-88F7-0300017EA71B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DiaryDatabase</RootNamespace>
+    <AssemblyName>DiaryDatabase</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Helper\DataToJson\DateAssembler.cs" />
+    <Compile Include="Helper\DataToJson\DiaryAssembler.cs" />
+    <Compile Include="Helper\DataToJson\EntryAssembler.cs" />
+    <Compile Include="Helper\DataToJson\FirstAssembler.cs" />
+    <Compile Include="Helper\DataToJson\ImageAssembler.cs" />
+    <Compile Include="Helper\DataToJson\InfoAssembler.cs" />
+    <Compile Include="Helper\DataToJson\TitleAssembler.cs" />
+    <Compile Include="Helper\FileEquality.cs" />
+    <Compile Include="Helper\IFileStreamSerialize.cs" />
+    <Compile Include="Helper\JsonFileSerialize.cs" />
+    <Compile Include="Helper\XmlFileStreamSerialize.cs" />
+    <Compile Include="Model\Data\Json\Date.cs" />
+    <Compile Include="Model\Data\Json\Diary.cs" />
+    <Compile Include="Model\Data\Json\Entry.cs" />
+    <Compile Include="Model\Data\Json\First.cs" />
+    <Compile Include="Model\Data\Json\Image.cs" />
+    <Compile Include="Model\Data\Json\Info.cs" />
+    <Compile Include="Model\Data\Json\Title.cs" />
+    <Compile Include="Model\Data\Xml\DateEntry.cs" />
+    <Compile Include="Model\Data\Xml\Diary.cs" />
+    <Compile Include="Model\Data\Xml\DiaryImage.cs" />
+    <Compile Include="Model\Data\Xml\Entry.cs" />
+    <Compile Include="Model\Data\Xml\First.cs" />
+    <Compile Include="Model\Data\Xml\Info\IImageConsumer.cs" />
+    <Compile Include="Model\Data\Xml\Info\IInfoParse.cs" />
+    <Compile Include="Model\Data\Xml\Info\ImageReader.cs" />
+    <Compile Include="Model\Data\Xml\Info\Info.cs" />
+    <Compile Include="Model\Data\Xml\Info\InfoParseAll.cs" />
+    <Compile Include="Model\Data\Xml\Info\InfoParseForDiaryContentAndImages.cs" />
+    <Compile Include="Model\Data\Xml\Info\InfoParseWhoops.cs" />
+    <Compile Include="Model\Data\Xml\Info\Whoop.cs" />
+    <Compile Include="Model\Data\Xml\Location.cs" />
+    <Compile Include="Model\Data\Xml\Person.cs" />
+    <Compile Include="Model\Data\Xml\Title.cs" />
+    <Compile Include="Presenter\DiarySerialization.cs" />
+    <Compile Include="Presenter\IDiarySerialization.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ThirdParty\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-2.1.0-vsdoc.js" />
+    <Content Include="Scripts\jquery-2.1.0.js" />
+    <Content Include="Scripts\jquery-2.1.0.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Scripts\jquery-2.1.0.min.map" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

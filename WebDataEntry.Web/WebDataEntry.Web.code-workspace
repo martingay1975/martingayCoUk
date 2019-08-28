@@ -1,0 +1,54 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"search.exclude": {
+			"Application": true,
+			"Controllers": true,
+			"bin": true,
+			"Content": true,
+			"Models": true,
+			"obj": true,
+			"Properties": true,
+		},
+		"files.exclude": {
+			"Application": true,
+			"Controllers": true,
+			"node_modules": true,
+			"bin": true,
+			"Content": true,
+			"Models": true,
+			"obj": true,
+			"Properties": true,
+			"ThirdParty": true,
+		},
+		"workbench.iconTheme": "vscode-icons",
+	},
+	"launch": {
+		"configurations": [
+			{
+				"name": "Launch Chrome",
+				"type": "chrome",
+				"request": "launch",
+				"url": "http://localhost:53000/default.html",
+				"webRoot": "${workspaceFolder:WebDataEntry.Web}",
+				"disableNetworkCache": true,
+				"showAsyncStacks": true,
+				"smartStep": false,
+				"runtimeArgs": [
+					"--incognito"
+  				],
+  
+			}
+		],
+		"compounds": []
+	},
+	"extensions": {
+		"recommendations": [
+			"vscode-icons-team.vscode-icons",
+		]
+	}
+}
