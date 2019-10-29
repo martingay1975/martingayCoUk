@@ -1,8 +1,0 @@
-C:\git\martingayCoUk\DiaryDatabase\bin\Debug\DiaryDatabase.dll
-C:\git\martingayCoUk\DiaryDatabase\bin\Debug\DiaryDatabase.pdb
-C:\git\martingayCoUk\DiaryDatabase\bin\Debug\log4net.dll
-C:\git\martingayCoUk\DiaryDatabase\bin\Debug\log4net.xml
-C:\git\martingayCoUk\DiaryDatabase\obj\Debug\DiaryDatabase.dll
-C:\git\martingayCoUk\DiaryDatabase\obj\Debug\DiaryDatabase.pdb
-C:\git\martingayCoUk\DiaryDatabase\obj\Debug\DiaryDatabase.csprojAssemblyReference.cache
-C:\git\martingayCoUk\DiaryDatabase\obj\Debug\DiaryDatabase.csproj.CopyComplete
