@@ -4,7 +4,9 @@ obj/
 bin/
 packages/
 
+
 .vscode/
+.vs/
 .idea/
 *.iml
 
