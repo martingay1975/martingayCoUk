@@ -26,7 +26,13 @@ namespace WebDataEntry.Web.Application
 		public void Download(string filePath, string destinationFilePath)
 		{
 			destinationFilePath = destinationFilePath.Replace("/", "\\");
-			Debug.WriteLine("Downloading " + filePath);
+            var destinationFileInfo = new FileInfo(destinationFilePath);
+            if (!Directory.Exists(destinationFileInfo.DirectoryName))
+            {
+                Directory.CreateDirectory(destinationFileInfo.DirectoryName);
+            }
+
+            Debug.WriteLine("Downloading " + filePath);
 			using (var fileStream = new FileStream(destinationFilePath, FileMode.Create))
 			{
 				sftp.DownloadFile("/martingay/" + filePath, fileStream);

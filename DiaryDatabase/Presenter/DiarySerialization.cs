@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Globalization;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -13,7 +13,7 @@ namespace DiaryDatabase.Presenter
 	{
 		public DiarySerialization()
 		{
-			this.log = LogManager.GetLogger(this.GetType().Name);
+			this.log = LogManager.GetLogger(nameof(DiarySerialization));
 		}
 
 		private readonly ILog log;
@@ -35,10 +35,10 @@ namespace DiaryDatabase.Presenter
 			catch (XmlException xmlEx)
 			{
 				var offendingLine = File.ReadLines(outpath).ElementAtOrDefault(xmlEx.LineNumber - 2);
-				var message = string.Format("The diary content has invalid XML. {1}{0}{0}{2}",
+				var message = string.Format("The diary content has invalid XML. {1}{0}{0}{2}{0}{3}",
 												Environment.NewLine, 
 												xmlEx.Message,
-												offendingLine);
+												offendingLine, xmlFile.Filename);
 
 				throw new InvalidOperationException(message);
 			}
@@ -50,12 +50,13 @@ namespace DiaryDatabase.Presenter
 			{
 				var xmlFile = new XmlFileStreamSerialize { Filename = inputDiaryXmlFilename };
 
+                Debug.WriteLine($"Loading diary: {xmlFile.Filename}");
 				using (var fileReader = new StreamReader(xmlFile.Filename))
 				{
 					this.Diary = xmlFile.Deserialize(fileReader);
 					return Diary;
 				}
-			}
+            }
 			catch (Exception ex)
 			{
 				log.FatalFormat("Error loading the xml from file {0}. {1}", inputDiaryXmlFilename, ex);
@@ -96,7 +97,7 @@ namespace DiaryDatabase.Presenter
 			using (var fileStream = new StreamWriter(outpath))
 			{
 				xmlFileStreamSerialize.Serialize(fileStream, diary);
-				fileStream.Close();
+                Debug.WriteLine($"Saving to {outpath}");
 			}
 		}
 

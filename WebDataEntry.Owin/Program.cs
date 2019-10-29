@@ -15,9 +15,9 @@ namespace WebDataEntry.Owin
 			{
 				using ((WebApp.Start(@"http://localhost:53000/", WebEntryStartUp.Configuration)))
 				using ((WebApp.Start(@"http://localhost:53001/", MartinGayCoUkStartUp.Configuration)))
-				using ((WebApp.Start(@"http://localhost:53002/", FrimleyFlyersStartUp.Configuration)))
+				//using ((WebApp.Start(@"http://localhost:53002/", FrimleyFlyersStartUp.Configuration)))
 				{
-					Console.WriteLine("Running on DiaryEntry-53000, MartinGay Co Uk-53001, FrimleyFlyers-53002");
+					Console.WriteLine("Running on DiaryEntry-53000, MartinGay Co Uk-53001");
 					Console.WriteLine("Press Enter key to quit.");
 					Console.ReadLine();
 				}

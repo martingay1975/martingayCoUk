@@ -113,7 +113,14 @@ namespace WebDataEntry.Web.Models
 				this._loadedHashes = this._savedHashes;
 
 				// also copy to Google Drive so the dev environment is in-sync.
-				this.relativePaths.ForEach(devEnvionment.Copy);
+                try
+                {
+                    this.relativePaths.ForEach(devEnvionment.Copy);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
 			}
 			catch (Exception e)
 			{

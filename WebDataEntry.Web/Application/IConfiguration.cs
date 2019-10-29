@@ -2,7 +2,7 @@
 {
     public interface IConfiguration
     {
-        string DiaryXmlFilePath { get; set; }
+        string DiaryXmlFilePath { get; }
         string JsonDirectoryPath { get; }
         string BasePath { get; }
         string DiaryImagesPath { get; }

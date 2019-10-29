@@ -106,7 +106,7 @@ namespace WebDataEntry.Web.Controllers
 				{
 					FtpUploadAsync(relativeFilePath);
 				}
-
+                
 				return streamProvider.RelativeFilePaths;
 			}
 
