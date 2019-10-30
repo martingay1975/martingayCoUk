@@ -1,6 +1,5 @@
 var gulp = require("gulp");
 var sass = require("gulp-sass");
-var debug = require("gulp-debug");
 var watch = require("gulp-watch");
 
 var sassConfig = {
@@ -27,4 +26,3 @@ gulp.task("watch", function () {
 			console.log(`Compiled Sass ${file}`);
 		});
 });
-
