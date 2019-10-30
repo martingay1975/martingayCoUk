@@ -1,0 +1,31 @@
+﻿@charset "UTF-8";
+                                       
+@import '../Scripts/components/entries/_entries.scss';
+@import 'menuOption.scss';
+@import '../Scripts/components/navigation/_navigation.scss';
+@import '../Scripts/components/site-header/_site-header.scss';
+@import '../Scripts/components/search/_search.scss';
+@import '../Scripts/components/lm2016/_lm2016.scss';
+@import '../Scripts/components/entries-rendered/_entries-rendered.scss';
+
+body {
+    background: url('/background1.jpg') no-repeat center center fixed;
+    font-family: Arial, Verdana, 'Helvetica Neue', Helvetica, sans-serif;
+    background-size: cover;
+}
+
+.hover-pointer:hover {
+    cursor: pointer
+}
+
+
+.centralize {
+    display: inline-block; 
+    text-align: center
+}
+
+span.glyphicon {
+    line-height: 0.8;
+    font-size: 18px;
+}
+ 

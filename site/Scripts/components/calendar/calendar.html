@@ -1,0 +1,25 @@
+﻿<!-- $data is a CalendarComponentViewModel -->
+
+<titles params="{iconPath: '/Scripts/components/navigation/images/calendar/archive.png', title: 'Archive'}"></titles>
+
+<div class="calendarOptionBase">
+	<calendar-year params="{years: $data.menuYears}"></calendar-year>
+
+	<p>&nbsp;</p>
+	
+	<!-- ko if: $data.menuMonths().length > 0 -->
+    <div class="panel -panel-default menuOptionsContainer yearsMonths">
+        <div class="panel-heading">
+            <p data-bind="text: $data.selectedYearObservable()"></p>
+        </div>
+		<div class="panel-body">
+			<!-- ko if: $data.menuMonths -->
+			<!-- ko foreach: $data.menuMonths -->
+			<!-- $data is a 'MenuOption' - comes from MenuOption.createMonth -->
+			<calendar-tile params="{menuOption: $data}"></calendar-tile>
+			<!-- /ko -->
+			<!-- /ko -->
+		</div>
+    </div>
+	<!-- /ko -->
+</div>

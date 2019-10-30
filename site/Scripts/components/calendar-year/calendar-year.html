@@ -1,0 +1,17 @@
+﻿<!-- $data is a CalendarYearComponentViewModel -->
+<!--<div style="height: 200px; display:inline-block; width: 30px; background-color:blueviolet" >&nbsp;</div>-->
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <p>Calendar</p>
+    </div>
+    <div class="panel-body horizontalScroll yearsMonths" id="calendarYearsScroller">
+        <!-- ko foreach: $data.years -->
+        <!-- $data is a MenuOption -->
+        <a class="menuOption" data-bind="'click': $data.clickUrl, attr: { 'id': $data.id }, css: { selected: $data.selected }">
+            <img data-bind="attr : { src : $data.imageUrl }" />
+            <span data-bind="text: $data.title"></span>
+        </a>
+        <!-- /ko-->
+    </div>
+</div>

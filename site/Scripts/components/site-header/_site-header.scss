@@ -1,0 +1,23 @@
+﻿
+#page-header {
+    .page-title {
+        font-weight: 700;
+        font-family: 'Cabin Sketch', cursive;
+        font-size: 28px;
+        color: white; 
+        text-align: center; 
+    }
+
+    .page-last-updated {
+        display:inline-block;
+
+        span {
+            color: white
+        }
+    }
+
+    .page-search {
+        display:inline-block
+    }
+}
+

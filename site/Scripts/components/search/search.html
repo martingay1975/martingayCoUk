@@ -1,0 +1,9 @@
+<div id="search" class="input-group navbar-form navbar-search" data-bind="event: { keypress: $data.keyPressEvent }" role="search">
+	<input type="text" class="form-control" placeholder="Search Diary" id="search" data-bind="textInput: $data.searchTerm, attr : { 'placeholder' : $data.placeholder() }" />
+	
+	<div class="input-group-btn">
+		<button type="submit" class="btn btn-success" data-bind="click: $data.executeSearch">
+			<span class="glyphicon glyphicon-search"></span>
+		</button>
+	</div>
+</div>

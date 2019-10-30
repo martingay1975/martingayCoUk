@@ -1,0 +1,7 @@
+﻿<!-- $data is a CalendarTileComponentViewModel -->
+
+<!-- $data is a MenuOption -->
+<a class="menuOption" data-bind="click: $data.menuOption.clickUrl, attr: {id: $data.menuOption.id}, css: { selected: $data.menuOption.selected }">
+	<img data-bind="attr : { src : $data.menuOption.imageUrl }" />
+	<span data-bind="text: $data.menuOption.title"></span>
+</a>

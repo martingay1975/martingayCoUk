@@ -1,0 +1,21 @@
+
+<!-- page-header class - makes it drop down 30px or so -->
+<div id="page-header" class="navbar navbar-inverse">
+    
+	<a href="/">
+		<span class="page-title">
+			<img src="images/logo.png" height="45" />
+			<span>Katie, Ben & Jessica</span>
+		</span>
+	</a>
+
+	<div class="page-search">
+	    <!-- ko component: {name: 'search'}-->
+		<!-- /ko -->
+	</div>
+
+	<div class="pull-right page-last-updated" style="display: inline">
+		<span data-bind="text: 'Updated: ' + $data.dateLastUpdated()"></span>
+	</div>
+
+</div>

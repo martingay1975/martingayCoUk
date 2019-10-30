@@ -1,0 +1,173 @@
+﻿.youtube {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden; }
+  .youtube iframe, .youtube object, .youtube embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; }
+
+.diaryImage {
+  max-width: 90%;
+  max-height: 400px;
+  border-radius: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto; }
+
+.diaryImageCaption {
+  text-transform: uppercase;
+  font-size: 12px;
+  text-align: right; }
+
+.entry-buttonbar {
+  margin-top: -20px; }
+
+.panel {
+  opacity: 0.93; }
+
+.panel-heading {
+  padding-top: 4px;
+  padding-bottom: 4px; }
+
+.panel-heading:hover {
+  background-color: #aaa;
+  background-image: linear-gradient(#cdcdcd 0px, #acacac 100%);
+  cursor: pointer; }
+
+.entries-title span {
+  font-size: larger;
+  font-weight: bold; }
+
+.entries-title img {
+  width: 36px;
+  height: 36px;
+  margin: 8px;
+  border-radius: 3px;
+  display: inline-block; }
+
+.entries-title .panel {
+  opacity: 1 !important; }
+
+.calendarOptionBase .horizontalScroll {
+  width: 100%;
+  opacity: 0.8;
+  background-color: white;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+  padding: 10px; }
+
+.calendarOptionBase .menuOption {
+  position: relative;
+  width: 150px;
+  max-width: 150px;
+  height: 150px;
+  max-height: 150px;
+  overflow: hidden; }
+
+.calendarOptionBase .menuOption span {
+  margin: 0;
+  color: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%); }
+
+.calendarOptionBase .menuOption .selected {
+  border: 30px;
+  opacity: 1; }
+
+.calendarOptionBase .menuOption img {
+  width: 150px;
+  height: 150px;
+  opacity: 0.60; }
+
+.calendarOptionBase .menuOption:hover {
+  opacity: 0.85; }
+
+.calendarOptionBase .menuOptionsContainer {
+  text-align: center;
+  opacity: 0.8;
+  background-color: white;
+  padding: 10px; }
+
+.calendarOptionBase .yearsMonths {
+  font-size: 40px; }
+
+.calendarOptionBase .specialDays {
+  font-size: larger;
+  font-weight: bold;
+  text-align: center; }
+
+.navigation-menu {
+  width: 70%;
+  opacity: 0.8;
+  padding: 5px; }
+  .navigation-menu img {
+    width: 36px;
+    height: 36px;
+    margin: 8px;
+    border-radius: 3px; }
+
+#page-header .page-title {
+  font-weight: 700;
+  font-family: 'Cabin Sketch', cursive;
+  font-size: 28px;
+  color: white;
+  text-align: center; }
+
+#page-header .page-last-updated {
+  display: inline-block; }
+  #page-header .page-last-updated span {
+    color: white; }
+
+#page-header .page-search {
+  display: inline-block; }
+
+#search {
+  padding-right: 50px;
+  display: inline-block; }
+  #search .input-group-btn {
+    display: inline-block; }
+
+.photo-size {
+  max-height: 250px;
+  margin: 17px;
+  border-radius: 20px; }
+
+.image-icon {
+  height: 24px; }
+
+.modal-dialog {
+  width: 90%;
+  max-width: 1250px; }
+
+.modal-image {
+  display: block;
+  margin: auto auto;
+  border-radius: 20px;
+  max-width: 80%; }
+
+body {
+  background: url("/background.jpg") no-repeat center center fixed;
+  font-family: Arial, Verdana, 'Helvetica Neue', Helvetica, sans-serif;
+  background-size: cover; }
+
+.hover-pointer:hover {
+  cursor: pointer; }
+
+.centralize {
+  display: inline-block;
+  text-align: center; }
+
+span.glyphicon {
+  line-height: 0.8;
+  font-size: 18px; }
+

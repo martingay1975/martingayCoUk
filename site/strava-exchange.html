@@ -1,0 +1,98 @@
+<p>Heellozz</p>
+
+<script src="/Scripts/ThirdParty/jquery/dist/jquery.js"></script>
+
+
+<form id="postExchange" action="https://www.strava.com/oauth/token" method="POST">
+    <input type="hidden" name="client_id" value="9912" />
+    <input type="hidden" name="client_secret" value="64dc88eaf43bfa3d3b0f4f624e5b7aeefd1059c6" />
+    <input type="hidden" name="code" id="authCode" value="" />
+    <input type="hidden" name="grant_type" value="authorization_code" />
+</form>
+<button id="submitMe">Go on then</button>
+
+<script>
+
+        var url = location.href;
+        var urlParts = [];
+        document.location.search.substr(1).split('&').forEach(pair => {
+            [key, value] = pair.split('=');
+            urlParts[key] = value;
+        });
+    
+        var authorizationCode = urlParts['code'];
+            
+        var clientId = "9912";
+                
+        var clientIdUrl = "client_id=" + clientId;
+    
+        var clientSecret = "64dc88eaf43bfa3d3b0f4f624e5b7aeefd1059c6";
+        var clientSecretUrl = "client_secret"; + clientSecret;
+        
+        var authorizationCode = "2a3a05fba9bbf47ad01a521677e8374c3a5554ea";
+        var authorizationCodeUrl = "code=" + authorizationCode;
+    
+        var authorizationTypeUrl = "grant_type=authorization_code";
+        
+        //var url = "https://www.strava.com/oauth/token?" + clientIdUrl + "&" + clientSecretUrl + "&" + authorizationCodeUrl + "&" + authorizationTypeUrl;
+        //var promise = $.post(url);
+    
+        // promise.done(function() {
+        //     alert("done");
+        // });
+    
+        // promise.fail(function() {
+        //     alert("fail");
+        // });
+    
+        var xhrPost = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://www.strava.com/oauth/token"); 
+            xhr.onload = function(event){ 
+                alert("Success, server responded with: " + event.target.response); // raw response
+            }; 
+            
+            // or onerror, onabort
+            xhr.onerror = function() {
+                alert('error');
+            }
+
+            var formData = new FormData(document.getElementById("postExchange")); 
+            xhr.send(formData);
+        }
+
+        var ajaxPost = function() {
+            var promise = $.post("https://www.strava.com/oauth/token", $("#postExchange").serialize());
+            promise.done(function(data) {
+                var bearerToken = data.access_token;
+
+
+                var sendObj = { url: "https://www.strava.com/api/v3/athlete",
+                                dataType: "json",
+                                beforeSend: function (xhr) {
+                                    xhr.setRequestHeader('Authorization', 'Bearer ' + bearerToken);
+                                }
+                            };
+                
+                var getAtheletePromise = $.ajax(sendObj);
+                getAtheletePromise.done(function(athleteData) {
+                    alert(JSON.stringify(athleteData));
+                });
+                getAtheletePromise.fail(function(err) {
+                    debugger;
+                    alert("failed getting athlete. " + JSON.stringify(err.responseJSON));
+                });
+            });
+            promise.fail(function() {
+                alert("fail to exchange token");
+            });
+        }
+
+        $(document).ready(function() {
+            $("#authCode").val(authorizationCode);
+            //$("#postExchange").submit();
+            ajaxPost();
+        });
+    
+    </script>
+    

@@ -1,0 +1,47 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+
+	<!-- stops the whole page from sliding when swiping -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<!-- used for search engine result description (not for the search themselves)-->
+	<meta name="description" content="Diary of our day to day lives so that in future we can look back and see what we've done!'" />
+	<meta name="author" content="Martin Gay">
+
+	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" media="screen">
+	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" media="screen">
+	<link rel="stylesheet" type="text/css" href="content/main.css">
+	<link rel="stylesheet" type="text/css" href="content/animate.css">
+
+	<!-- font -->
+	<link href='http://fonts.googleapis.com/css?family=Cabin:400,700|Open+Sans|Handlee' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Cabin+Sketch:400,700' rel='stylesheet' type='text/css'>
+
+	<!-- requireJs setup -->
+	<script src="Scripts/app/requireConfig.v1.js"></script>
+	<script data-main="app/knockout-startup.v1.js" src="Scripts/ThirdParty/requirejs/require.js"></script>
+
+	<title>Katie, Ben and Jessica Gay Blog Site</title>
+</head>
+<body>
+	<site-header></site-header>
+	
+	<div class="row" style="margin-right:0; padding-left: 10px">
+		<div class="col-sm-2" role="navigation">
+			<!-- ko component: {name: 'navigation'} -->
+			<!-- /ko -->
+		</div>
+
+		<div class="col-sm-9">
+			<!-- ko if: $data.currentRouteObservable() -->
+			<div id="content" data-bind="component: { name: $data.currentRouteObservable().componentName, params: $data.currentRouteObservable() }"></div>
+			<!-- /ko -->
+		</div>
+
+
+	</div>
+</body>
+
+</html>

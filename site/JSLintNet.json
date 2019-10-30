@@ -1,0 +1,27 @@
+﻿{
+  "version": "2.0.2",
+  "ignore": [
+    "\\martingay_co_uk\\Scripts\\ThirdParty\\",
+    "\\martingay_co_uk\\Content\\",
+    "\\martingay_co_uk1\\Scripts\\ThirdParty\\",
+    "\\Scripts\\ThirdParty\\",
+    "\\res\\"
+  ],
+  "options": {
+    "bitwise": false,
+    "browser": true,
+    "couch": false,
+    "devel": true,
+    "eval": false,
+    "for": true,
+    "node": false,
+    "this": true,
+    "white": true
+  },
+  "globalVariables": [
+    "define",
+    "window",
+    "require"
+  ],
+  "cancelBuild": false
+}

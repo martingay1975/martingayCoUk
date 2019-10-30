@@ -1,0 +1,46 @@
+
+
+<nav class="navbar navbar-inverse">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+		<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav">
+				<li><a href="#/entries"><img src="/Scripts/components/navigation/images/calendar/latest.png" />Latest</a></li>
+				<li><a href="#/whoops"><img src="/Scripts/components/navigation/images/calendar/whoops.png" />Whoops</a></li>
+				<li>
+					<a href="#/calendar"><img src="/Scripts/components/navigation/images/calendar/archive.png" />Archive</a>
+
+					<ul>
+						<!-- ko foreach: $data.dateEntries -->
+						<li>
+							<a data-bind="attr : { 'href' : $data.href } ">
+								<img data-bind="attr : { 'src' : $data.imgSrc }" />
+								<span data-bind="text: $data.stringDate"></span>
+							</a>
+						</li>
+						<!-- /ko -->
+					</ul>
+				</li>
+				<li><a href="#/specialdays"><img src="/Scripts/components/navigation/images/calendar/special.png" />Special Days</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+
+<div class="navbar navbar-default navigation-menu panel">
+	<div class="panel-heading">Social</div>
+	<ul class="list-unstyled">
+		<li><a href="http://www.facebook.com/martingay71" target="_blank"><img src="/Scripts/components/navigation/images/facebook.png"/>Facebook</a></li>
+		<li><a href="http://twitter.com/MartinGay1975" target="_blank"><img src="/Scripts/components/navigation/images/twitter.png" />Twitter</a></li>
+		<li><a href="https://www.youtube.com/channel/UCwjc6nH9_bQH6idpPVIGKlw" target="_blank"><img src="/Scripts/components/navigation/images/youtube.png" />YouTube</a></li>
+		<li><a href="#/strava"><img src="/Scripts/components/navigation/images/strava.png" />Strava</a></li>
+		<li><a href="#/spotify"><img src="/Scripts/components/navigation/images/spotify.png" />Spotify</a></li>
+	</ul>
+</div>

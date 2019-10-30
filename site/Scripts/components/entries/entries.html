@@ -1,0 +1,71 @@
+<!--Description: Shows a single diary entry opened.-->
+
+<titles params="{iconPath: $data.iconPath, title: $data.title}"></titles>
+
+<!-- ko if: $data.diaryEntries().length === 0 -->
+<div class="panel panel-default">
+
+	<div class="panel-body">
+		<div class="infocontent">
+			<p>There are no entries which match the search.</p>
+		</div>
+	</div>
+</div>
+<!-- /ko -->
+
+<!-- ko foreach: $component.buttons -->
+	<button data-bind="text: $data.label, click: $component.buttonClick"></button>
+<!-- /ko -->
+
+<!-- ko foreach: $data.diaryEntries -->
+
+	<div class="panel panel-default">
+		<div class="panel-heading" data-bind="click: $data.toggleContentDisplayed">
+
+			<!-- ko if: $data.woopsRating -->
+			<whoopsprogressbar params="{woopsRating: $data.woopsRating}"></whoopsprogressbar>
+			<!-- /ko --> <!-- if we have a woopsRating -->
+
+			<!-- Title -->
+			<div>
+				<!-- ko if:$data.title -->
+				<span class="title-font" data-bind="text: $data.title.value"></span>
+				<!-- /ko -->
+				<!-- ko if:$data.first -->
+				<span class="title-font" data-bind="text: $data.first.value"></span>
+				<!-- /ko -->
+			</div>
+
+			<!-- Date -->
+			<div>
+				<span class="label label-info" data-bind="text : $data.getDateValue()"></span>
+			</div>
+
+			<div class="pull-right entry-buttonbar">
+
+				<span data-bind="visible: $data.hasYouTube" class="glyphicon glyphicon-facetime-video"></span>
+				<span data-bind="visible: $data.hasImages" class="glyphicon glyphicon-picture"></span>
+
+				<span class="glyphicon glyphicon-share hover-pointer popover-standard"
+					  data-toggle="popover"
+					  data-placement="bottom"
+					  data-container="body"
+					  data-title="Share link. You can also copy the link from your browser's address bar."
+					  data-bind="attr: { 'data-content' : $data.getUrl() }, click: $data.gotoEntryOnly">
+				</span>
+
+			</div>
+		</div>
+
+		<!-- ko if: $data.isContentDisplayed() && $data.info -->
+		<div class="panel-body">
+			<div class="infocontent" data-bind="html: $data.info.content"></div>
+		</div>
+		<!-- /ko -->
+		
+	</div>
+	<!-- end looping each entry -->
+
+<!-- /ko -->
+
+<entries-rendered></entries-rendered>

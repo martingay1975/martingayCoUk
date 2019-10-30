@@ -1,0 +1,73 @@
+﻿<!-- $data is a ComponentViewModel -->
+
+<titles params="{iconPath: '/Scripts/components/navigation/images/calendar/special.png', title: 'Special Days'}"></titles>
+
+<div class="calendarOptionBase">
+
+	<div class="panel panel-default specialDays">
+		<div class="panel-heading">2019 Outings</div>
+		<div class="panel-body">
+			<!-- ko foreach: $data.trips2019MenuOptions -->
+			<!-- $data is a 'MenuOption' -->
+			<calendar-tile params="{menuOption: $data}"></calendar-tile>
+			<!-- /ko -->
+		</div>
+	</div>
+
+	<div class="panel panel-default specialDays">
+		<div class="panel-heading">2018 Outings</div>
+		<div class="panel-body">
+			<!-- ko foreach: $data.trips2018MenuOptions -->
+			<!-- $data is a 'MenuOption' -->
+			<calendar-tile params="{menuOption: $data}"></calendar-tile>
+			<!-- /ko -->
+		</div>
+	</div>
+
+	<div class="panel panel-default specialDays">
+		<div class="panel-heading">2017 Outings</div>
+		<div class="panel-body">
+			<!-- ko foreach: $data.trips2017MenuOptions -->
+			<!-- $data is a 'MenuOption' -->
+			<calendar-tile params="{menuOption: $data}"></calendar-tile>
+			<!-- /ko -->
+		</div>
+	</div>
+
+	<div class="panel panel-default specialDays">
+		<div class="panel-heading">2016 Outings</div>
+		<div class="panel-body">
+			<!-- ko foreach: $data.trips2016MenuOptions -->
+			<!-- $data is a 'MenuOption' -->
+			<calendar-tile params="{menuOption: $data}"></calendar-tile>
+			<!-- /ko -->
+		</div>
+	</div>
+
+	<div class="panel panel-default specialDays">
+		<div class="panel-heading">2015 Outings</div>
+		<div class="panel-body">
+			<!-- ko foreach: $data.trips2015MenuOptions -->
+			<!-- $data is a 'MenuOption' -->
+			<calendar-tile params="{menuOption: $data}"></calendar-tile>
+			<!-- /ko -->
+		</div>
+	</div>
+
+	<div class="panel panel-default specialDays">
+		<div class="panel-heading">Gay Pre Christmas Parties</div>
+		<div class="panel-body">
+			<!-- ko foreach: $data.gayXmasParties -->
+			<!-- $data is a 'MenuOption' -->
+			<calendar-tile params="{menuOption: $data}"></calendar-tile>
+			<!-- /ko -->
+		</div>
+	</div>
+
+	<div class="panel panel-default specialDays">
+		<div class="panel-heading">Marathons</div>
+		<div class="panel-body">
+			<a href="#/lm2016"><img src="/Scripts/components/lm2016/images/marathon2016.png" />London Marathon 2016</a>
+		</div>
+	</div>
+</div>

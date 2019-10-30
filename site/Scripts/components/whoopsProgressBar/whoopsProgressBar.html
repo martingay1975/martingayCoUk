@@ -1,0 +1,13 @@
+﻿<!-- $data is a ComponentViewModel -->
+
+<div style="width:30%" class="pull-right">
+	<span style="position:absolute; padding-left: 5px; font-weight: 700" data-bind="text: 'Catastrophe rating: ' + $data.woopsRating"></span>
+    <div class="progress progress-striped active">
+		
+        <div style="min-width:180px" data-bind="style: {width: $data.woopsRating + '%'}, 
+						attr: {'aria-valuenow' : $data.woopsRating}, 
+						css: { 'progress-bar-danger': $data.woopsRating > 89, 'progress-bar-warning' : $data.woopsRating > 40 && $data.woopsRating < 90, 'progress-bar-success' : $data.woopsRating < 41}" 
+             class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+</div>

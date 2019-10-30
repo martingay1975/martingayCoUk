@@ -1,0 +1,15 @@
+﻿
+<!-- Using bootstrap's modal dialog. We are overriding the width to 90% of the screen -->
+<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" data-bind="click: $component.close">
+			<div class="modal-body">
+				<img class="modal-image" data-bind="attr: { src: $component.largeImageSourceObservable }" />
+			</div>
+			<div class="modal-footer">
+			    <span class="glyphicon glyphicon-picture"></span>
+                <span id="myModalLabel" data-bind="text: $component.imageTitle"></span>
+			</div>
+		</div>
+	</div>
+</div>

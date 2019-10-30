@@ -1,0 +1,61 @@
+﻿
+.calendarOptionBase {
+
+    .horizontalScroll {
+        width: 100%; 
+        opacity: 0.8;
+        background-color: white;
+        overflow-x: scroll; 
+        overflow-y: hidden; 
+        -webkit-overflow-scrolling:touch;
+        white-space: nowrap;
+        padding: 10px;
+    }
+
+    .menuOption {
+        position: relative;
+        width: 150px; max-width: 150px; 
+        height: 150px; max-height: 150px;
+        overflow: hidden;
+    }
+
+    .menuOption span {
+        margin: 0;
+        color: black;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%) 
+    }
+
+    .menuOption .selected {
+        border: 30px;
+        opacity: 1
+    }
+
+    .menuOption img {
+        width: 150px;height: 150px; opacity: 0.60;
+    }
+
+    .menuOption:hover {
+        opacity: 0.85;
+    }
+
+    .menuOptionsContainer { 
+        text-align: center;
+        opacity: 0.8;
+        background-color: white;
+        padding: 10px
+    }
+
+    .yearsMonths {
+        font-size: 40px;
+    }
+
+    .specialDays {
+        font-size: larger;
+        font-weight: bold;
+        text-align:center;
+    }
+}
