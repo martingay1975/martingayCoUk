@@ -92,7 +92,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StartUp\FrimleyFlyersStartUp.cs" />
     <Compile Include="StartUp\MartinGayCoUkStartUp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

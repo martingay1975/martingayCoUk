@@ -1,28 +1,38 @@
 
-<div role="navigation" class="navbar navbar-default navigation-menu">
 
-	<ul class="list-unstyled">
-		<li><a href="#/entries"><img src="/Scripts/components/navigation/images/calendar/latest.png" />Latest</a></li>
-		<li><a href="#/whoops"><img src="/Scripts/components/navigation/images/calendar/whoops.png" />Whoops</a></li>
-		<li>
-			<a href="#/calendar"><img src="/Scripts/components/navigation/images/calendar/archive.png" />Archive</a>
-
-			<ul>
-				<!-- ko foreach: $data.dateEntries -->
+<nav class="navbar navbar-inverse">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+		<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav">
+				<li><a href="#/entries"><img src="/Scripts/components/navigation/images/calendar/latest.png" />Latest</a></li>
+				<li><a href="#/whoops"><img src="/Scripts/components/navigation/images/calendar/whoops.png" />Whoops</a></li>
 				<li>
-					<a data-bind="attr : { 'href' : $data.href } ">
-						<img data-bind="attr : { 'src' : $data.imgSrc }" />
-						<span data-bind="text: $data.stringDate"></span>
-					</a>
+					<a href="#/calendar"><img src="/Scripts/components/navigation/images/calendar/archive.png" />Archive</a>
+
+					<ul>
+						<!-- ko foreach: $data.dateEntries -->
+						<li>
+							<a data-bind="attr : { 'href' : $data.href } ">
+								<img data-bind="attr : { 'src' : $data.imgSrc }" />
+								<span data-bind="text: $data.stringDate"></span>
+							</a>
+						</li>
+						<!-- /ko -->
+					</ul>
 				</li>
-				<!-- /ko -->
+				<li><a href="#/specialdays"><img src="/Scripts/components/navigation/images/calendar/special.png" />Special Days</a></li>
 			</ul>
-		</li>
-		<li><a href="#/specialdays"><img src="/Scripts/components/navigation/images/calendar/special.png" />Special Days</a></li>
-		<!--<li>Family Tree</li>-->
-	</ul>
-	
-</div>
+		</div>
+	</div>
+</nav>
+
 
 <div class="navbar navbar-default navigation-menu panel">
 	<div class="panel-heading">Social</div>
