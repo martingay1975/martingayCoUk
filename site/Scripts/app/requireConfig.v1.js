@@ -6,7 +6,7 @@ var require = {
 		// third-party
 		crossroads:					"ThirdParty/crossroads/dist/crossroads",
 		hasher:						"ThirdParty/hasher/dist/js/hasher",
-		jquery:						"ThirdParty/jquery/dist/jquery",
+		jquery:						"//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min",
 		knockout:					"ThirdParty/knockout/dist/knockout",
 		"knockout-projections":		"ThirdParty/knockout-projections/dist/knockout-projections",
 		"knockout-mapping":			"ThirdParty/knockout-mapping/knockout.mapping",
