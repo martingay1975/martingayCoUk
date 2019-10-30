@@ -1,0 +1,78 @@
+
+body
+{
+	font-family: Verdana;
+	font-size: 8pt;
+	color:#ae104a;
+	background: #333333;
+}
+
+table
+{
+	font-family: Verdana;
+	font-size: 8pt;
+	color:#777777;
+}
+
+.titleText
+{
+	color:#FFFFFF;
+	font-size: 7pt;
+}
+
+
+.divWindowCell 
+{
+	background: #FFFFFF;
+	opacity:1;filter: alpha(opacity=100); -moz-opacity: 1;
+}               
+
+
+.titlediv
+{ 	
+	position:absolute;
+	top:90px;
+	left:400px;
+	font-family:Verdana; 
+	font-size:large;
+	background-color:silver;
+	color:black;
+	font-variant: small-caps;
+	filter:alpha(opacity=80);
+	-moz-opacity:.80;
+	opacity:.80;
+}
+
+img
+{
+	border: none 0px #ffffff;
+}
+
+a.linkopacity img 
+{
+	filter:alpha(opacity=50); 
+	-moz-opacity: 0.5; 
+	opacity: 0.5;
+}
+
+a.linkopacity:hover img 
+{
+	filter:alpha(opacity=100);   
+	-moz-opacity: 1.0;   
+	opacity: 1.0;
+}
+
+.imgphoto
+{
+	background:transparent; 
+	padding:5px; 
+	border:solid 2px black;
+}
+
+.backintheday
+{
+	font-family: Verdana;
+	font-size: 12pt;
+	color:#ae104a;
+
+}

@@ -1,0 +1,41 @@
+
+.diarytitle
+{
+	color:#FFFFFF;
+	font-size: x-small
+}
+
+.diarytitlehighlight
+{
+	background-color: #FFFFFF;
+	cursor: hand;
+	cursor: pointer;
+	font-size: x-small;
+}
+
+
+.diaryimgcaption
+{
+	font-size: xx-small;
+	font-variant: small-caps
+}
+
+div.linkopacity 
+{
+	font-size: x-small;
+	filter:alpha(opacity=60); 
+	-moz-opacity: 0.6; 
+	opacity: 0.6;
+	cursor: hand;
+	cursor: pointer;
+}
+
+div.linkopacity:hover
+{
+	background-color: #FFFFFF;
+	cursor: hand;
+	cursor: pointer;
+	filter:alpha(opacity=100);   
+	-moz-opacity: 1.0;   
+	opacity: 1.0;
+}
