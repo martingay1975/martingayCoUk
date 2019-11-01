@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "file": "diary.css",
-  "sources": ["_diary.scss"],
-  "names": [],
-  "mappings": "AACA,YACI,UAAW,IACX,WAAY,MACZ,cAAe,KACf,QAAS,MACT,YAAa,KACb,aAAc,MAGlB,mBACI,eAAgB,UAChB,UAAW,KACX,WAAW,OAGf,iBACI,WAAY,OAIhB,OACI,QAAS,MAGb,eACI,YAAa,IACb,eAAgB,KAGpB,cAAc,OACV,iBAAkB,KAClB,iBAAkB,2CAClB,OAAO"
-}
