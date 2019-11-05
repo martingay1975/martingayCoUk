@@ -1,13 +1,32 @@
 ﻿
-.navigation-menu {
-    width: 70%; 
+.nav {
+    width: 90%; 
     opacity: 0.8; 
-    padding: 5px;
+    padding: 4px;
     
-    img {
-        width: 36px;
-        height: 36px;
-        margin: 8px;
-        border-radius: 3px;
+    ul {
+        padding-inline-start: 12px;
     }
+
+    .nav-link {
+        padding:4px;
+    }
+
+    img {
+        width: 32px;
+        height: 32px;
+        margin: 6px;
+        border-radius: 2px;
+    }
+
+    > .container {
+        padding: 1px
+    }
+}
+
+.navbar {
+    padding:4px;
+    border-color: #ddd;
+    border-radius: 6px;
+    border-width: 3px;
 }

@@ -1,37 +1,57 @@
 
-<div role="navigation" class="navbar navbar-default navigation-menu">
-
-	<ul class="list-unstyled">
-		<li><a href="#/entries"><img src="/Scripts/components/navigation/images/calendar/latest.png" />Latest</a></li>
-		<li><a href="#/whoops"><img src="/Scripts/components/navigation/images/calendar/whoops.png" />Whoops</a></li>
-		<li>
-			<a href="#/calendar"><img src="/Scripts/components/navigation/images/calendar/archive.png" />Archive</a>
-
-			<ul>
-				<!-- ko foreach: $data.dateEntries -->
-				<li>
-					<a data-bind="attr : { 'href' : $data.href } ">
-						<img data-bind="attr : { 'src' : $data.imgSrc }" />
-						<span data-bind="text: $data.stringDate"></span>
-					</a>
+<nav class="navbar navbar-expand-sm navbar-light bg-light" style="margin-bottom: 20px">
+	<div class="container">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar1">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbar1">
+			<ul class="nav flex-column">
+				<li class="nav-link"><a href="#/entries"><img src="/Scripts/components/navigation/images/calendar/latest.png" />Latest</a></li>
+				<li class="nav-link"><a href="#/whoops"><img src="/Scripts/components/navigation/images/calendar/whoops.png" />Whoops</a></li>
+				<li class="nav-item"><a href="#/calendar"><img src="/Scripts/components/navigation/images/calendar/archive.png" />Archive</a>
+					<ul>
+						<!-- ko foreach: $data.dateEntries -->
+						<li class="nav-link">
+							<a data-bind="attr : { 'href' : $data.href } ">
+								<img data-bind="attr : { 'src' : $data.imgSrc }" />
+								<span data-bind="text: $data.stringDate"></span>
+							</a>
+						</li>
+						<!-- /ko -->
+					</ul>
 				</li>
-				<!-- /ko -->
-			</ul>
-		</li>
-		<li><a href="#/specialdays"><img src="/Scripts/components/navigation/images/calendar/special.png" />Special Days</a></li>
-		<!--<li>Family Tree</li>-->
-	</ul>
-	
-</div>
+				<li class="nav-link"><a href="#/specialdays"><img src="/Scripts/components/navigation/images/calendar/special.png" />Special Days</a></li>
 
-<div class="navbar navbar-default navigation-menu panel">
-	<ul class="list-unstyled">
-		<li><a href="http://www.facebook.com/martingay71" target="_blank"><img src="/Scripts/components/navigation/images/facebook.png"/>Facebook</a></li>
-		<li><a href="http://twitter.com/MartinGay1975" target="_blank"><img src="/Scripts/components/navigation/images/twitter.png" />Twitter</a></li>
-		<li><a href="https://www.youtube.com/channel/UCwjc6nH9_bQH6idpPVIGKlw" target="_blank"><img src="/Scripts/components/navigation/images/youtube.png" />YouTube</a></li>
-		<li><a href="#/strava"><img src="/Scripts/components/navigation/images/strava.png" />Strava</a></li>
-		<li><a href="#/spotify"><img src="/Scripts/components/navigation/images/spotify.png" />Spotify</a></li>
-		<li><a href="https://mgns.herokuapp.com/"><img src="/Scripts/components/navigation/images/nightscout.png" />Live Blood Sugars</a></li>
-		<li><a href="https://github.com/martingay1975"><img src="/Scripts/components/navigation/images/github.png" />Github</a></li>
-	</ul>
-</div>
+				<li style="margin-top:30px">&nbsp;</li>
+				<li class="nav-link"><a href="https://mgns.herokuapp.com/"><img src="/Scripts/components/navigation/images/nightscout.png" />Live Blood Sugars</a></li>
+				<li class="nav-link"><a href="https://github.com/martingay1975"><img src="/Scripts/components/navigation/images/github.png" />Github</a></li>
+				<li class="nav-link"><a href="http://www.facebook.com/martingay71" target="_blank"><img src="/Scripts/components/navigation/images/facebook.png"/>Facebook</a></li>
+				<li class="nav-link"><a href="http://twitter.com/MartinGay1975" target="_blank"><img src="/Scripts/components/navigation/images/twitter.png" />Twitter</a></li>
+				<li class="nav-link"><a href="https://www.youtube.com/channel/UCwjc6nH9_bQH6idpPVIGKlw" target="_blank"><img src="/Scripts/components/navigation/images/youtube.png" />YouTube</a></li>
+				<li class="nav-link"><a href="#/strava"><img src="/Scripts/components/navigation/images/strava.png" />Strava</a></li>
+				<li class="nav-link"><a href="#/spotify"><img src="/Scripts/components/navigation/images/spotify.png" />Spotify</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<!-- 
+
+<nav class="navbar navbar-expand-sm navbar-light bg-light" style="margin-bottom: 20px">
+	<div class="container">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar2">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbar2">
+			<ul class="nav flex-column">
+				<li class="nav-link"><a href="https://mgns.herokuapp.com/"><img src="/Scripts/components/navigation/images/nightscout.png" />Live Blood Sugars</a></li>
+				<li class="nav-link"><a href="https://github.com/martingay1975"><img src="/Scripts/components/navigation/images/github.png" />Github</a></li>
+				<li class="nav-link"><a href="http://www.facebook.com/martingay71" target="_blank"><img src="/Scripts/components/navigation/images/facebook.png"/>Facebook</a></li>
+				<li class="nav-link"><a href="http://twitter.com/MartinGay1975" target="_blank"><img src="/Scripts/components/navigation/images/twitter.png" />Twitter</a></li>
+				<li class="nav-link"><a href="https://www.youtube.com/channel/UCwjc6nH9_bQH6idpPVIGKlw" target="_blank"><img src="/Scripts/components/navigation/images/youtube.png" />YouTube</a></li>
+				<li class="nav-link"><a href="#/strava"><img src="/Scripts/components/navigation/images/strava.png" />Strava</a></li>
+				<li class="nav-link"><a href="#/spotify"><img src="/Scripts/components/navigation/images/spotify.png" />Spotify</a></li>
+			</ul>
+		</div>
+	</div>
+</nav> -->

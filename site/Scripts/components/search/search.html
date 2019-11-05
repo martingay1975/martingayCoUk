@@ -1,9 +1,8 @@
-<div id="search" class="input-group navbar-form navbar-search" data-bind="event: { keypress: $data.keyPressEvent }" role="search">
-	<input type="text" class="form-control" placeholder="Search Diary" id="search" data-bind="textInput: $data.searchTerm, attr : { 'placeholder' : $data.placeholder() }" />
+<div id="search" class="input-group mb-3" data-bind="event: { keypress: $data.keyPressEvent }" role="search">
+	<input type="text" class="form-control" placeholder="Search Diary" id="search"  aria-label="Search Diary" aria-describedby="basic-addon2"
+	 data-bind="textInput: $data.searchTerm, attr : { 'placeholder' : $data.placeholder() }" />
 	
-	<div class="input-group-btn">
-		<button type="submit" class="btn btn-success" data-bind="click: $data.executeSearch">
-			<span class="glyphicon glyphicon-search"></span>
-		</button>
+	<div class="input-group-append">
+		<button class="btn btn-outline-success my-2 my-sm-0" data-bind="click: $data.executeSearch" type="button">Search</button>
 	</div>
 </div>

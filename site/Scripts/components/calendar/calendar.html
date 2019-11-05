@@ -8,11 +8,11 @@
 	<p>&nbsp;</p>
 	
 	<!-- ko if: $data.menuMonths().length > 0 -->
-    <div class="panel -panel-default menuOptionsContainer yearsMonths">
-        <div class="panel-heading">
+    <div class="card -card-default menuOptionsContainer yearsMonths">
+        <div class="card-heading">
             <p data-bind="text: $data.selectedYearObservable()"></p>
         </div>
-		<div class="panel-body">
+		<div class="card-body">
 			<!-- ko if: $data.menuMonths -->
 			<!-- ko foreach: $data.menuMonths -->
 			<!-- $data is a 'MenuOption' - comes from MenuOption.createMonth -->

@@ -3,9 +3,9 @@
 <titles params="{iconPath: $data.iconPath, title: $data.title}"></titles>
 
 <!-- ko if: $data.diaryEntries().length === 0 -->
-<div class="panel panel-default">
+<div class="card card-default">
 
-	<div class="panel-body">
+	<div class="card-body">
 		<div class="infocontent">
 			<p>There are no entries which match the search.</p>
 		</div>
@@ -14,13 +14,13 @@
 <!-- /ko -->
 
 <!-- ko foreach: $component.buttons -->
-	<button data-bind="text: $data.label, click: $component.buttonClick"></button>
+	<button class="btn btn-success" data-bind="text: $data.label, click: $component.buttonClick"></button>
 <!-- /ko -->
 
 <!-- ko foreach: $data.diaryEntries -->
 
-	<div class="panel panel-default">
-		<div class="panel-heading" data-bind="click: $data.toggleContentDisplayed">
+	<div class="card card-default">
+		<div class="card-heading" data-bind="click: $data.toggleContentDisplayed">
 
 			<!-- ko if: $data.woopsRating -->
 			<whoopsprogressbar params="{woopsRating: $data.woopsRating}"></whoopsprogressbar>
@@ -41,7 +41,7 @@
 				<span class="label label-info" data-bind="text : $data.getDateValue()"></span>
 			</div>
 
-			<div class="pull-right entry-buttonbar">
+			<div class="float-right entry-buttonbar">
 
 				<span data-bind="visible: $data.hasYouTube" class="glyphicon glyphicon-facetime-video"></span>
 				<span data-bind="visible: $data.hasImages" class="glyphicon glyphicon-picture"></span>
@@ -58,7 +58,7 @@
 		</div>
 
 		<!-- ko if: $data.isContentDisplayed() && $data.info -->
-		<div class="panel-body">
+		<div class="card-body">
 			<div class="infocontent" data-bind="html: $data.info.content"></div>
 		</div>
 		<!-- /ko -->
