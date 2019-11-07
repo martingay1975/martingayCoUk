@@ -3,12 +3,9 @@
 <titles params="{iconPath: '/Scripts/components/navigation/images/calendar/archive.png', title: 'Archive'}"></titles>
 
 <div class="calendarOptionBase">
-	<calendar-year params="{years: $data.menuYears}"></calendar-year>
-
-	<p>&nbsp;</p>
 	
 	<!-- ko if: $data.menuMonths().length > 0 -->
-    <div class="card -card-default menuOptionsContainer yearsMonths">
+    <div class="card card-default menuOptionsContainer yearsMonths">
         <div class="card-heading">
             <p data-bind="text: $data.selectedYearObservable()"></p>
         </div>
@@ -20,6 +17,10 @@
 			<!-- /ko -->
 			<!-- /ko -->
 		</div>
-    </div>
+	</div>
+	
+	<p>&nbsp;</p>
+
 	<!-- /ko -->
+	<calendar-year params="{years: $data.menuYears}"></calendar-year>
 </div>

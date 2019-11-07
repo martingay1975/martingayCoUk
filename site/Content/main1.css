@@ -75,7 +75,6 @@
   overflow-x: scroll;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  white-space: nowrap;
   padding: 10px;
 }
 
