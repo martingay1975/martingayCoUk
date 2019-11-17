@@ -14,6 +14,7 @@ var require = {
 		text:						"ThirdParty/requirejs-text/text",
 		"jquery-dateFormat":		"ThirdParty/jquery-dateFormat/dateFormat",
 		moment:						"ThirdParty/moment/moment.min",
+		"load-google-maps-api":		"../node_modules/load-google-maps-api/index",
 		
 		// app
 		router:						"app/router",											// Routing / url hash

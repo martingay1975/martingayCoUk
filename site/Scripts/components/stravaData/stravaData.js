@@ -1,13 +1,25 @@
 /*global define*/
-define(['jquery', 'text!./stravaData.html'], function ($, componentTemplate) {
+define(["jquery", "text!./stravaData.html", "load-google-maps-api"], function ($, componentTemplate, loadGoogleMapsApi) {
 
 	"use strict";
+
+    var GoogleMap = function() {
+
+        var mapProp= {
+            center:new google.maps.LatLng(51.508742,-0.120850),
+            zoom:5,
+        };
+
+        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+    };
 
 	var StravaDataComponentViewModel = function (params) {
 
         if (!(this instanceof StravaDataComponentViewModel)) {
 			throw "Must invoke the function StravaDataComponentViewModel with the new operator";
         }
+
+        GoogleMap();
         
         var init = function() {
             //var access_token = "ab5309fea6e5993a127421eba4218f5bf7140829";
@@ -51,7 +63,8 @@ define(['jquery', 'text!./stravaData.html'], function ($, componentTemplate) {
         init();
 	};
     
-    
+
+
 
 	return { viewModel: StravaDataComponentViewModel, template: componentTemplate };
 });
