@@ -25,6 +25,7 @@ var require = {
 		urlBuilder:					"app/urlBuilder",										// Url building utility class
 		menuOption:					"app/menuOption",										// A menu option for the calendar / special 
 		googleAnalytics:			"app/googleAnalytics",									// Google Analytics api initiator
+		gmapLoader:					"app/gmapLoader",										// Google Map loader
 
 		// app/bindingHandlers
 		bindingHandlersFormatDate:	"app/bindingHandlers/formatDate",						// format date binding handler

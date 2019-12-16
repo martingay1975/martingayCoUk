@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html style="height:100vh">
+        
+<head>
+<meta charset="UTF-8">
+<title>Kitchen Tablet</title>
+</head>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+        crossorigin="anonymous">
+</script>
+
+<script>
+
+    const pagesToShow = [
+        "https://mgns.herokuapp.com/",
+    ];
+
+    let frameOnShow = 1;
+    let pageToShowIndex = 0;
+
+    const nextWebPagePlease = function() {
+
+        console.log("Hit Me... ");
+        let toHideFrame;
+        let toShowFrame;
+        
+        if (frameOnShow === 1) {
+            toHideFrame = $("#frameShowing1");
+            toShowFrame = $("#frameShowing2");
+            frameOnShow = 2;
+        } else {
+            toHideFrame = $("#frameShowing2");
+            toShowFrame = $("#frameShowing1");
+            frameOnShow = 1;
+        }
+
+        toHideFrame.css("display", "none");
+        toShowFrame.css("display", "block");
+
+        toHideFrame.attr("src", pagesToShow[pageToShowIndex]);
+
+        pageToShowIndex ++;
+        if (pageToShowIndex === pagesToShow.length)
+        {
+            pageToShowIndex = 0;
+        }
+    }
+
+
+    const onMainPageLoad = function() {
+        setInterval(nextWebPagePlease, 4000);
+    };
+
+
+    $(document).ready(onMainPageLoad);
+    $("#frameShowing1").css({"overflow": "hidden", "height": "100%", "width": "100%"});
+    $("#frameShowing2").css({"overflow": "hidden", "height": "100%", "width": "100%"});
+
+
+</script>
+
+<body style="background-color: black; width:100vw; height:100vh">
+    <iframe id="frameShowing1" frameborder="0" height="100%" width="100%"></iframe>></iframe>
+    <iframe id="frameShowing2" frameborder="0" height="100%" width="100%"></iframe>></iframe>
+</body>
+
+</html>
