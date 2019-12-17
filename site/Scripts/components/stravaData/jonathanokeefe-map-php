@@ -1,0 +1,1795 @@
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-797782-7']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script><!DOCTYPE html>
+<html>
+<head>
+<title>Strava Multiple Ride Mapper</title>
+<link rel="shortcut icon" href="http://www.jonathanokeeffe.com/bike/bike.ico">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+<meta property="og:title" content="Strava Multiple Ride Mapper" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="http://www.jonathanokeeffe.com/strava/map.php" />
+<meta property="og:image" content="" />
+<meta property="og:site_name" content="Strava Multiple Ride Mapper" />
+<meta property="fb:admins" content="1103491039" />
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/cupertino/jquery-ui.css" type="text/css" />
+<link rel="stylesheet" media="screen" type="text/css" href="colorpicker/css/colorpicker.css" />
+
+<style type="text/css">
+
+html { 
+	height: 100%;
+	width: 100%;
+}
+
+body { 
+	height: 100%; 
+	width: 100%;
+	margin: 0; 
+	padding: 0;
+	background-color: #eee;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+body, p, td {
+	font-size: 9pt;
+}
+
+#container {
+	height: 100%;
+	width: 100%;
+}
+
+#titleDiv {
+	margin-top: 5px;
+}
+
+
+#map_canvas { 
+	height: 100%;
+}
+
+#status {
+	font-size: 8pt;
+	width: 345px;
+	margin-top: 10px;
+	overflow: auto;
+}
+
+#control {
+	font-size: 9pt;
+}
+
+
+
+#layoutTable {
+	width: 98%;
+	height: 100%;
+	table-layout: fixed;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+td {
+	vertical-align: top;
+}
+
+#controlTable td {
+	vertical-align: middle;
+}
+
+#controlTable .tooltip {
+	position: relative;
+	top: 5px;
+}
+
+#col1 {
+	width: 370px;
+}
+
+#col2 {
+	width: 100%;
+}
+
+#col3 {
+	width: 0px;
+}
+
+
+#leftCol {
+}
+
+#rightCol {
+}
+
+a {
+	text-decoration: none;
+}
+
+a.result {
+	color: #000066;
+}
+a.editedResult {
+	color: #660000;
+}
+
+select {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+label {
+	display:block;
+	margin-top:7px;
+	float:left;
+	clear:left;
+	width:110px;
+}
+input, textarea {
+	border: 1px solid #ccc;
+	padding: 2px;
+	margin-top: 3px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+#dialog-confirm, #dialog-changes {
+	display: none;
+}
+
+.ui-dialog-title {
+	font-size: 12px;
+	font-family: sans-serif;
+}
+
+.ui-dialog-buttonset .ui-button-text {
+	font-size: 12px;
+	font-family: sans-serif
+}
+
+#ui-datepicker-div {
+	display: none;
+}
+
+
+#progressbar {
+	height: 15px;
+	margin-top: 10px;
+}
+
+#tooltip {
+	position: absolute;
+	font-size: 10pt;
+	border: 1px solid #333;
+	background: #f7f5d1;
+	padding: 6px 6px;
+	color: #333;
+	display: none;
+	z-index: 10;
+}
+
+#linkDiv {
+	margin-top: 10px;
+	width: 100%;
+	text-align: center;
+}
+#colorSelector {
+	position: relative;
+	left: 45px;
+	top: -25px;
+	width: 36px;
+	height: 36px;
+	background: url(colorpicker/images/select.png);
+}
+#colorSelector div {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 30px;
+	height: 30px;
+	background: url(colorpicker/images/select.png) center;
+}
+
+.colorPicker {
+	z-index: 999;
+}
+
+#colorSelectorHolder {
+	margin-top: 17px;
+	margin-bottom: -15px;
+	display: none;
+}
+
+.colorpicker_field input {
+	box-sizing: content-box;
+}
+
+#fullscreenUI {
+	box-shadow: 1px 1px 5px #444444;
+}
+
+p.authentication {
+	font-size: 12pt;
+}
+
+#authenticationButton {
+	margin-left: 50px;
+	margin-right: auto;
+	height: 41px;
+	width: 195px;
+	font-size: 12pt;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fc4c02), to(#fc4c02));
+	background: -o-gradient(linear, left top, left bottom, from(#fc4c02), to(#fc4c02));
+	background: -ms-gradient(linear, left top, left bottom, from(#fc4c02), to(#fc4c02));
+	border-color: #f97443 #d13f16 #d13f16 #f97443;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+#authenticationSpan {
+	color: white;
+}
+
+.hidden {
+	display: none;
+}
+
+
+</style>
+<script type="text/javascript">
+function initMap() {
+}
+</script>
+<script type="text/javascript" async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_OiLe8sH6SKRr3_dmBPzmxX4Q6TgnpAA&callback=initMap"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+<script type="text/javascript" src="colorpicker/js/colorpicker.js"></script>
+<script type="text/javascript" src="jquery/filedownload/jquery.fileDownload.js"></script>
+<script type="text/javascript" src="jquery/hotkeys/jquery.hotkeys.js"></script>
+<script type="text/javascript" src="js/lz-string.min.js"></script>
+<script type="text/javascript">
+var displayAllParm = "";
+var type = "";
+var map;
+var activityCounter = 0;
+var displayedActivities = 0;
+
+
+function handleResize() {
+	var h = $(window).height();
+	var w = $(window).width();
+	//alert("handleResize " + h + " " + w);
+	$("#map_canvas").css('height', h - 100);
+	$("#layoutTable").css('height', h - 120);
+	$("#mainRow").css('height', h - 100);
+	$("#status").css('height', h - 510);
+}
+var fastMode = false;
+
+
+var detailLevel = 1;
+
+function initialize() {
+var initialLat = 42;
+var initialLng = 80;
+var initialZoom = 3;
+detailLevel = 1;
+var initialMapTypeId = google.maps.MapTypeId.TERRAIN;
+	$(window).resize(handleResize);
+	handleResize();
+	var myOptions = {
+		center: new google.maps.LatLng(initialLat, initialLng),
+		zoom: initialZoom,
+		mapTypeId: initialMapTypeId
+	};
+	map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+	google.maps.event.addListener(map, "click", function() {
+		if (highlighted != -1) {
+			resetActivity(highlighted, {clearRemove: true});
+			highlighted = -1;
+		}
+	});
+
+
+	$("#opacitySlider").slider({
+		min: 0,
+		max: 100,
+		value: 25,
+		slide: function(event, ui) {
+			var val = ui.value;
+			if ($("#applyMode").val() == 1) {
+				var a = 0.25 * val / 100;
+				var b = 0.80 * val / 100;
+				var hotOpacity = a * Math.pow(displayedLines.length, -0.3);
+				var medOpacity = b * Math.pow(displayedLines.length, -0.292);
+				for (var i = 0; i < displayedLines.length; ++i) {
+					var v = displayedLines[i];
+					if ($.isArray(v)) {
+						v[0].setOptions({strokeOpacity: hotOpacity});
+						v[1].setOptions({strokeOpacity: medOpacity});
+					} else {
+						v.setOptions({strokeOpacity: val / 100});
+						v.opacity = val / 100;
+					}
+				}
+			}
+		}
+	});
+
+	$("#widthSlider").slider({
+		min: 1,
+		max: 20,
+		value: 3,
+		slide: function(event, ui) {
+			var val = ui.value;
+			if ($("#applyMode").val() == 1) {
+				for (var i = 0; i < displayedLines.length; ++i) {
+					var v = displayedLines[i];
+					if ($.isArray(v)) {
+						v[0].setOptions({strokeWeight: val + 2});
+						v[1].setOptions({strokeWeight: val + 1});
+						v[2].setOptions({strokeWeight: val + 0});
+					} else {
+						v.setOptions({strokeWeight: val + 0});
+					}
+				}
+			}
+		}
+	});
+
+	$("#loadButton").button().click(getActivities);
+	var dates = $( "#startDate, #endDate" ).datepicker({
+		changeMonth: true,
+		changeYear: true,
+		onSelect: function (selectedDate) {
+			var option = this.id == "startDate" ? "minDate" : "maxDate",
+			instance = $( this ).data( "datepicker" ),
+			date = $.datepicker.parseDate(
+			instance.settings.dateFormat ||
+			$.datepicker._defaults.dateFormat,
+			selectedDate, instance.settings );
+			dates.not(this).datepicker("option", option, date);
+		}
+	});
+
+	$("#autoZoom").change(function () {
+		if ($(this).val() == 2) {
+			map.fitBounds(globalBounds);
+		}
+		//showLink(false, true);
+	});
+
+	$("#colorMode").change(function(){
+		if ($(this).val() == 1) {
+			// heatmap
+			$("#colorSelectorHolder").hide();
+
+		} else {
+			// monochrome
+			$("#colorSelectorHolder").show();
+		}
+	});
+
+	$("#hideMap").change(hideMapChanged);
+
+	$("#dialog-confirm").dialog({
+		resizable: false,
+		height: 240,
+		width: 500,
+		modal: true,
+		autoOpen: false
+	});
+	$("#dialog-changes").dialog({
+		resizable: false,
+		height: 500,
+		width: 600,
+		modal: true,
+		autoOpen: false
+	});
+	$("#athlete").focus();
+
+	tooltips();
+
+	google.maps.event.addListener(map, 'center_changed', mapChanged);
+	google.maps.event.addListener(map, 'bounds_changed', mapChanged);
+	google.maps.event.addListener(map, 'zoom_changed', mapChanged);
+	google.maps.event.addListener(map, 'maptypeid_changed', mapChanged);
+	google.maps.event.addListener(map, 'tilesloaded', hideMapChanged);
+
+	$('#colorSelector').ColorPicker({
+		color: '#ff0000',
+		onShow: function (colpkr) {
+			$(colpkr).fadeIn(500);
+			return false;
+		},
+		onHide: function (colpkr) {
+			$(colpkr).fadeOut(500);
+			return false;
+		},
+		onChange: function (hsb, hex, rgb) {
+			$('#colorSelector div').css('backgroundColor', '#' + hex);
+			if ($("#applyMode").val() == 1) {
+				for (var i = 0; i < displayedLines.length; ++i) {
+					var v = displayedLines[i];
+					if ($.isArray(v)) {
+						v[0].setOptions({strokeColor: "#" + hex});
+						v[1].setOptions({strokeColor: "#" + hex});
+						v[2].setOptions({strokeColor: "#" + hex});
+					} else {
+						v.setOptions({strokeColor: "#" + hex});
+						v.color = "#" + hex;
+					}
+				}
+			}
+		}
+	});
+
+	
+	createFullscreenButton();
+
+	$(document).bind('keydown', 'ctrl+shift+h', toggleHideMap);
+
+	$("#authenticationButton").click(authenticate);
+	$("#whichAthlete").change(function() {
+		if ($(this).val() == "other") {
+			$("#riderIdRow").show();
+		} else {
+			$("#riderIdRow").hide();
+		}
+	});
+
+/*
+$(document).on("submit", "form.fileDownloadForm", function (e) {
+    e.preventDefault(); //otherwise a normal form submit would occur
+});
+*/
+
+
+	$(document).on("click", "#kmlLink", function (e) {
+		var data = {};
+		data.activities = collectActivities();
+		sendPolylines(data);
+		$.fileDownload("ajaxMapKml.php", {
+			preparingMessageHtml: "Preparing KML file...",
+			failMessageHtml: "There was a problem generating the KML file, please try again.",
+			httpMethod: "POST",
+			data: $.param(data)
+		});
+		e.preventDefault(); //otherwise a normal form submit would occur
+	});
+	globalBounds = new google.maps.LatLngBounds();
+}
+
+function authenticate() {
+	var theState = encodeURIComponent(window.location).replace(/%26/g, "|");
+	//window.location.href = "https://www.strava.com/oauth/authorize?client_id=64&redirect_uri=" + "http://www.jonathanokeeffe.com/strava/map9.php" + "&scope=view_private&approval_prompt=auto&response_type=code&state=" + theState;
+	window.location.href = "https://www.strava.com/oauth/authorize?client_id=64&redirect_uri=" + "http://www.jonathanokeeffe.com/strava/map.php" + "&scope=read_all,activity:read_all,profile:read_all&approval_prompt=auto&response_type=code&state=" + theState;
+}
+
+function toggleHideMap() {
+	if ($("#hideMap").is(":checked")) {
+		$('#hideMap').prop('checked', false);
+	} else {
+		$('#hideMap').prop('checked', true);
+	}
+	hideMapChanged();
+}
+function hideMapChanged() {
+	if ($("#hideMap").is(":checked")) {
+		$("#map_canvas > div:first").css("background-color", "black").find("img").hide();
+	} else {
+		$("#map_canvas > div:first").css("background-color", "rgb(229, 227, 223)").find("img").show();
+	}
+}
+
+var fullscreen = false;
+var previousWidth = null;
+var previousHeight = null;
+function createFullscreenButton() {
+	// Create a div to hold the control.
+	var controlDiv = document.createElement('div');
+	controlDiv.id = "fullscreenDiv";
+	// Set CSS styles for the DIV containing the control
+	// Setting padding to 5 px will offset the control
+	// from the edge of the map.
+	controlDiv.style.padding = '5px';
+	controlDiv.style.width = '73px';
+
+	// Set CSS for the control border.
+	var controlUI = document.createElement('div');
+	controlUI.id = "fullscreenUI";
+	controlUI.style.backgroundColor = 'white';
+	controlUI.style.borderStyle = 'solid';
+	controlUI.style.borderWidth = '1px';
+	controlUI.style.borderColor = '#808080';
+	controlUI.style.height = '18px';
+	controlUI.style.paddingTop = '0px';
+	controlUI.style.cursor = 'pointer';
+	controlUI.style.textAlign = 'center';
+	controlUI.title = 'Click to set the map to Home';
+	controlDiv.appendChild(controlUI);
+
+	// Set CSS for the control interior.
+	var controlText = document.createElement('div');
+	controlText.id = "fullscreenText";
+	controlText.style.fontFamily = 'Arial,sans-serif';
+	controlText.style.fontSize = '12px';
+	controlText.style.paddingLeft = '4px';
+	controlText.style.paddingRight = '4px';
+	controlText.style.paddingTop = '1px';
+	controlText.innerHTML = 'Fullscreen';
+	controlUI.appendChild(controlText);	
+
+	google.maps.event.addDomListener(controlUI, 'click', function() {
+		if (!fullscreen) {
+			previousWidth = $("#map_canvas").css("width");
+			previousHeight = $("#map_canvas").css("height");
+
+			$("#map_canvas").css("position", "absolute");
+			$("#map_canvas").css("top", "0");
+			$("#map_canvas").css("left", "0");
+			$("#map_canvas").css("width", "100%");
+			$("#map_canvas").css("height", "100%");
+			$("#fullscreenText").html("Exit Fullscreen");
+			$("#fullscreenDiv").css("width", "105px");
+			$("#footer").hide();
+			$("#opacitySlider").hide();
+			$("#widthSlider").hide();
+			$("body").requestFullScreen();
+			google.maps.event.trigger(map, 'resize');
+			setTimeout(delayedResize, 200);
+			fullscreen = true;
+		} else {
+			$("#map_canvas").css("position", "relative");
+			$("#map_canvas").css("top", "auto");
+			$("#map_canvas").css("left", "auto");
+			$("#map_canvas").css("width", previousWidth);
+			$("#map_canvas").css("height", previousHeight);
+			$("#fullscreenText").html("Fullscreen");
+			$("#fullscreenDiv").css("width", "73px");
+			$("#footer").show();
+			$("#opacitySlider").show();
+			$("#widthSlider").show();
+			$("body").cancelFullScreen();
+			google.maps.event.trigger(map, 'resize');
+			fullscreen = false;
+		}
+	});
+	map.controls[google.maps.ControlPosition.TOP_RIGHT].push(controlDiv);
+}
+
+function delayedResize() {
+	$("#map_canvas").css("height", "100%");
+	google.maps.event.trigger(map, 'resize');
+}
+
+function currentColor() {
+	return "#" + $("#" + $('#colorSelector').data("colorpickerId")).data("colorpicker").fields.eq(0).val();
+}
+
+function changeLog() {
+	$("#dialog-changes").dialog("open");
+}
+
+function tooltips() {
+	$("img.tooltip").hover(function(e) {
+		xOffset = 10;
+		yOffset = 20;
+		this.t = this.title;
+		this.title = "";									  
+		$("body").append("<p id='tooltip'>"+ this.t +"</p>");
+		$("#tooltip")
+			.css("top",(e.pageY - xOffset) + "px")
+			.css("left",(e.pageX + yOffset) + "px")
+			.fadeIn("fast");		
+	},
+	function() {
+		this.title = this.t;		
+		$("#tooltip").remove();
+	});	
+}
+var activities = [];
+var newActivities = [];
+var multipleAthletes = false;
+var athleteId = "";
+
+function getActivities() {
+	var replaceMode = $("#replaceMode").val();
+	if (replaceMode == "1") {
+		$("#status").html("");
+		for (var i = 0; i < displayedLines.length; ++i) {
+			removeLine(i);
+		}
+		polylines = [];
+		displayedLines = [];
+		globalBounds = new google.maps.LatLngBounds();
+	} else {
+	}
+
+
+	var data = {};
+	data.whichAthlete = $("#whichAthlete").val();
+	data.athlete = $("#athlete").val();
+	data.startDate = $("#startDate").val();
+	data.endDate = $("#endDate").val();
+	data.segment = $("#segment").val();
+	data.keyword = $("#keyword").val();
+	data.drawingMode = $("#drawingMode").val();
+	data.activityType = $("#activityType").val();
+	data.commute = $("#noCommute").val();
+
+	//alert(isNumeric(data.athlete));
+	var athletes = data.athlete.split(",");
+	if (athletes.length > 1) {
+		multipleAthletes = true;
+	}
+	var allOk = true;
+	for (var i = 0; i < athletes.length; ++i) {
+		var r = $.trim(athletes[i]);
+		if (r != "" && r.substr(0, 4) != "http" && !isNumeric(r)) {
+			allOk = false;
+		}
+	}
+	if (!allOk) {
+		alert("Error: Athlete ID must be numeric (do not use the athlete name).  The athlete ID number can be found in the URL of the athlete profile page (such as http://www.strava.com/athletes/12345) -- the athlete ID in this case would be 12345");
+		return false
+	}
+
+	if ($.trim(data.athlete) != "" || $.trim(data.whichAthlete) == "own") {
+		type = "ATHLETE";
+	}
+	if ($.trim(data.segment) != "") {
+		type = "SEGMENT";
+	}
+	var url = "ajaxV3GetActivities.php5";
+	if (data.athlete == "44979999") {
+		fake = {};
+		fake.status = "OK";
+		fake.activities = [];
+		fake.activities.push("3883704");
+		fake.activities.push("4497209");
+		fake.activities.push("5654957");
+		fake.activities.push("7118859");
+		fake.activities.push("7507987");
+		fake.activities.push("8871291");
+		fake.activities.push("10418812");
+		fake.activities.push("12106960");
+		fake.activities.push("15100281");
+		fake.activities.push("16502463");
+		fake.activities.push("17946259");
+		fake.activities.push("19695419");
+		fake.activities.push("20480547");
+		fake.activities.push("22056343");
+		fake.activities.push("24928370");
+		fake.activities.push("25582820");
+		fake.activities.push("27431604");
+		fake.activities.push("28142893");
+		fake.activities.push("32501919");
+
+		fake.activities.push("3151998");
+		fake.activities.push("3679701");
+		fake.activities.push("8397738");
+		fake.activities.push("5329970");
+		fake.activities.push("7917129");
+		fake.activities.push("8383594");
+		fake.activities.push("9390871");
+		fake.activities.push("10958632");
+		fake.activities.push("11547837");
+		fake.activities.push("12738278");
+		fake.activities.push("13445402");
+		fake.activities.push("26246163");
+		fake.activities.push("26823265");
+		fake.activities.push("29364733");
+
+		getActivitiesCallback(fake);
+	} else if (data.keyword == "JPO") {
+		fake = {};
+		fake.status = "OK";
+		fake.activities = [];
+		fake.activityDetails = [];
+		fake.activities.push("1554810106");
+		fake.activities.push("1554814675");
+		fake.activities.push("1554814983");
+//		fake.activities.push("9168916");
+//		fake.activities.push("9169175");
+//		fake.activities.push("10292576");
+//		fake.activities.push("10291273");
+//		fake.activities.push("1160877");
+//		fake.activities.push("1090862");
+//		fake.activities.push("13883442");
+		for (var i = 0; i < fake.activities.length; ++i) {
+			fake.activityDetails.push({id:fake.activities[i], start_date_local: "2018-01-01"});
+		}
+		getActivitiesCallback(fake);
+	} else {
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: data,
+			success: getActivitiesCallback,
+			dataType: "json"
+		});
+	}
+	return false;
+}
+
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+var home = false;
+var activityDetails = null;
+var activityLookup = {};
+
+function getActivitiesCallback(data) {
+	var replaceMode = $("#replaceMode").val();
+	if (replaceMode == "1") {
+		activities = [];
+	}
+	newActivities = [];
+	$("#progressbar").show();
+	showKmlLink(false);
+	if (data == null || data.status == null) {
+		alert("Error");
+		return;
+	}
+	if (data.status != "OK") {
+		alert("Error: " + data.message);
+		return;
+	}
+
+	if (data.rateLimitError) {
+		alert("Error: Daily Strava API limit exceeded. Strava limits the number of requests an application can process each day through its API, and that limit has been exceeded for today. No further requests can be processed today.");
+		return;
+	}
+
+	if (data.activities.length == 0) {
+		alert("Warning: No activities found");
+		return;
+	}
+	if (data.athleteId != null) {
+		athleteId = data.athleteId;
+	}
+	for (var i = 0; i < data.activityDetails.length; ++i) {
+		newActivities.push({id: data.activityDetails[i].id});
+		activities.push({id: data.activityDetails[i].id});
+		activityLookup[data.activityDetails[i].id] = data.activityDetails[i];
+	}
+	activityDetails = data.activityDetails;
+
+	activityCounter = 0;
+
+	if (replaceMode == "1") {
+		displayedActivities = 0;
+	}
+
+	if (newActivities.length > 1000 && displayAllParm != "true") {
+		var buttons = {
+			"Cancel": function() {
+				$(this).dialog("close");
+			},
+			"Display first 1000 activities (very slow)": function() {
+				$(this).dialog("close");
+				newActivities = newActivities.slice(0, 1000);
+				loadActivity();
+			},
+			"Display first 100 activities": function() {
+				$(this).dialog("close");
+				newActivities = newActivities.slice(0, 100);
+				loadActivity();
+			}
+		};
+		if (home || 1 == 1) {
+			buttons["Display all"] = function() {
+				$(this).dialog("close");
+				loadActivity();
+			}
+		}
+
+		$("#dialogText").html("<p>Your search parameters selected a total of " + newActivities.length + " activities.</p><p>Displaying more than 1000 activities produces an unusable map on most computers.  You can choose to display the first 100 activities, display the first 1000 activities (which will be very slow), or cancel and start another search.</p>");
+		$("#dialog-confirm").dialog("option", "buttons", buttons);
+		$("#dialog-confirm").dialog("option", "title", "Found " + newActivities.length + " activities");
+		$("#dialog-confirm").dialog("open");
+	} else if (newActivities.length > 100 && displayAllParm != "true") {
+		var buttons = {
+			"Cancel": function() {
+				$(this).dialog("close");
+			},
+			"Display all activities (slow)": function() {
+				$(this).dialog("close");
+				loadActivity();
+			},
+			"Display first (oldest) 100 activities": function() {
+				$(this).dialog("close");
+				newActivities = newActivities.slice(0, 100);
+				loadActivity();
+			},
+			"Display last (most recent) 100 activities": function() {
+				$(this).dialog("close");
+				newActivities = newActivities.slice(-100);
+				loadActivity();
+			}
+		};
+		$("#dialogText").html("<p>Your search parameters selected a total of " + newActivities.length + " activities.</p><p>Displaying more than 100 activities will take several minutes to load, and the map will be slow on some computers.  You can choose to display the first 100 activities, the last 100 activities, display all activities (which will be slow), or cancel and start another search.</p>");
+		$("#dialog-confirm").dialog("option", "buttons", buttons);
+		$("#dialog-confirm").dialog("option", "title", "Found " + newActivities.length + " activities");
+		$("#dialog-confirm").dialog("open");
+	} else {
+		// Get started
+		startTime = new Date().getTime();
+		loadActivity();
+	}
+	displayAllParm = "false";
+}
+
+var startTime = null;
+var endTime = null;
+var loading = false;
+
+function loadActivity() {
+	loading = true;
+	if (newActivities.length != 0) {
+		var pct = activityCounter * 100 / newActivities.length;
+		$("#progressbar").progressbar({value: pct});
+	}
+	if (activityCounter >= newActivities.length) {
+		status("Done");
+		_gaq.push(['_trackEvent', 'ajaxMap', 'mapComplete', ""]);
+		endTime = new Date().getTime();
+		var elapsedTime = endTime - startTime;
+		$("#progressbar").hide();
+		//showLink(true);
+		showKmlLink(true);
+		if (polylines.length > 0) {
+			resetActivity(polylines.length - 1);
+		}
+		$.ajax({
+			type: 'GET',
+			url: 'ajaxMapComplete.php',
+			data: {displayed: polylines.length, elapsed: elapsedTime},
+			success: function(){},
+			dataType: "json"
+		});
+		debugMessage("Loaded " + polylines.length + " activities in " + elapsedTime + " ms");
+		loading = false;
+		if (newPolyline != null) {
+			newPolyline.setMap(null);
+		}
+
+		return;
+	}
+	var activity = newActivities[activityCounter];
+	var activityId = activity.id;
+	var drawingMode = $("#drawingMode").val();
+	if (drawingMode != "fast") {
+		var points = null;
+		if (localStorage) {
+			// drawingMode == high = hi-resolution
+			// drawingMode == slow = normal-resolution
+			// drawingMode == fast = use summary from activity (don't fetch from server)
+			var localStorageKey = activityId;
+			if (drawingMode == "high") {
+				localStorageKey = activityId + "hr";
+			}
+			points = localStorage.getItem(localStorageKey);
+			if (points != null) {
+				points = LZString.decompressFromUTF16(points);
+				var len = points.split(";").length;
+				var lenn = len;
+			}
+		}
+		if (points == null) {
+			activityLookup[activity.id].fetchedFromServer = true;
+			globalData = null;
+			$.getJSON(
+				'ajaxV3GetRidePoints.php5?activity=' + activity.id + '&detailLevel=' + detailLevel + '&drawingMode=' + drawingMode, 
+				activityLoaded
+			);
+		} else {
+			activityLookup[activity.id].fetchedFromServer = false;
+			points = points.split(";");
+			var p = [];
+			var data = {};
+			data.points = [];
+			data.activity = {};
+			data.activity.name = activityLookup[activityId].name;
+			data.activity.id = activityId;
+			for (var i = 0; i < points.length; ++i) {
+				var ll = points[i].split(",");
+				var point = {};
+				point.latitude = ll[0];
+				point.longitude = ll[1];
+				data.points.push(point);
+			}
+			data.activity.athlete = {};
+			data.activity.athlete.name = activityLookup[activityId].athleteName;
+			data.activity.start_date_local = activityLookup[activityId].start_date_local.substr(0, 10);
+			data.fromLocalStorage = true;
+			globalData = data;
+			if (fastMode) {
+				activityLoaded();
+			} else {
+				setTimeout(activityLoaded, 1);
+			}
+		}
+	} else {
+		var data = {};
+		data.points = [];
+		data.activity = {};
+		data.activity.name = activityLookup[activityId].name;
+		data.activity.id = activityId;
+		var encodedPath = activityLookup[activityId].map;
+		if (encodedPath != null) {
+			var path = google.maps.geometry.encoding.decodePath(encodedPath);
+			if (path.length > 0) {
+				for (var i = 0; i < path.length; ++i) {
+					var point = {};
+					point.latitude = path[i].lat();
+					point.longitude = path[i].lng();
+					data.points.push(point);
+				}
+			}
+		}
+		data.activity.athlete = {};
+		data.activity.athlete.name = activityLookup[activityId].athleteName;
+		data.activity.start_date_local = activityLookup[activityId].start_date_local.substr(0, 10);
+		globalData = data;
+		setTimeout(activityLoaded, 1);
+	}
+}
+
+var globalData = null;
+var displayLink = false;
+
+function activityReloaded(data) {
+	displayActivity(data, {showNew: false});
+}
+
+function activityLoaded(data) {
+	if (data == null && globalData != null) data = globalData;
+	displayActivity(data);
+	activityCounter++;
+	loadActivity();
+}
+
+var polylines = [];
+var globalBounds = null;
+var debugging = false;var newPolyline = null;
+var quotaExceeded = false;
+function displayActivity(data, opts) {
+	if (opts == null) {
+		opts = {};
+		opts.showNew = true;
+	}
+	if (data != null && data.points != null && data.points.length == 0) {
+		//debugMessage("Zero points for " + data.activity.id + " " + data.activity.name);
+	}
+	if (data == null || data.points == null || data.activity == null || data.points.length == 0) {
+		return;
+	}
+	var points = data.points;
+	var activity = data.activity;
+	if (activity.id == null) {
+		activity.id = data.activityId;
+		activity.name = activityLookup[activity.id].name;
+		activity.start_date_local = activityLookup[activity.id].start_date_local;
+	}
+	var drawingMode = $("#drawingMode").val();
+	if (localStorage && points.length > 0 && !data.fromLocalStorage && drawingMode != "fast") {
+		var s = "";
+		for (var i = 0; i < points.length; ++i) {
+			if (i > 0) s += ";";
+			s += points[i].latitude + "," + points[i].longitude;
+		}
+		try {
+			var comp = LZString.compressToUTF16(s);
+			var localStorageKey = activity.id;
+			if (drawingMode == "high") {
+				localStorageKey = activity.id + "hr";
+			}
+			localStorage.setItem(localStorageKey, comp);
+		} catch (e) {
+			// will throw QuotaExceeded if localStorage full - no problem if this happens, we can just not store anything else in localStorage
+			if (!quotaExceeded) {
+				debugMessage("Exceeded localStorage capacity on activity " + activityCounter);
+			}
+			quotaExceeded = true;
+		}
+	}
+	if ($("#noCommute").val() == "exclude" && activity.commute) {
+		//return;
+	}
+	if ($("#noCommute").val() == "only" && !activity.commute) {
+		//return;
+	}
+	displayedActivities++;
+	var linkClass = "";
+	if (data.edited == "true") {
+		linkClass = "edited"
+	}
+	var statusText = "<a class='" + linkClass + "result' href='http://www.strava.com/activities/" + activity.id + "' target='_blank'>" + displayedActivities + ". " + (type == "ATHLETE" && multipleAthletes == false ? "" : (activityLookup[activity.id].athleteName + " - ")) + activity.name + " (" + activity.start_date_local.substr(0, 10) + ")</a>";
+	status("<span id='result" + (displayedActivities - 1) + "' activityId='" + activity.id + "'>" + statusText + "</span>");
+	var currentDisplayedActivities = displayedActivities;
+	$("#result" + (currentDisplayedActivities - 1)).hover(
+		function() {highlightActivity(currentDisplayedActivities - 1, 10, {scroll: false});}, 
+		function() {resetActivity(currentDisplayedActivities - 1);}
+	);
+	var path = [];
+	for (var i = 0; i < points.length; ++i) {
+		var p = new google.maps.LatLng(points[i].latitude, points[i].longitude);
+		if (points[i].latitude != null && points[i].longitude != null) {
+			path.push(p);
+		}
+	}
+	if (newPolyline != null) {
+		newPolyline.setMap(null);
+	}
+	if (opts.showNew) {
+		newPolyline = new google.maps.Polyline({
+			map: map,
+			strokeColor: "#0000FF",
+			strokeWeight: 5,
+			strokeOpacity: 1,
+			zIndex: 10,
+			path: path
+		});
+	}
+	var polyline = new google.maps.Polyline({
+		path: path
+	});
+	polylines.push(polyline);
+	polyline.color = currentColor();
+	polyline.width = $("#widthSlider").slider("value") + 0;
+	polyline.opacity = $("#opacitySlider").slider("value") / 100;
+	polyline.activityName = activity.name;
+	polyline.id = activity.id;
+
+	drawLines(path);
+
+	var bounds = new google.maps.LatLngBounds();
+	polyline.getPath().forEach(function(point, index){
+		globalBounds.extend(point);
+		bounds.extend(point);
+	});
+	var autoZoom = $("#autoZoom").val();
+	if (autoZoom == "1") {
+		map.fitBounds(bounds);
+	} else if (autoZoom == "2") {
+		map.fitBounds(globalBounds);
+	}
+}
+
+
+function showKmlLink(show) {
+	$("#linkDiv").html("<a id='kmlLink' href='kml.php'>Download KML</a>&nbsp;&nbsp;<img src='http://www.jonathanokeeffe.com/strava/images/new.gif' title='Download KML file to load your activities into other programs, such as Google Earth'/>");
+	if (show) {
+		$("#linkDiv").show();
+	} else {
+		$("#linkDiv").hide();
+	}
+}
+
+function collectActivities() {
+	var s = "";
+	for (var i = 0; i < polylines.length; ++i) {
+		if (i > 0) s += ",";
+		s += polylines[i].id;
+	}
+	return s;
+}
+
+function sendPolylines(data) {
+	for (var prop in activityLookup) {
+		if (activityLookup.hasOwnProperty(prop)) {
+			var act = activityLookup[prop];
+			// If it there was no file on the server initially, and was displayed from localStorage, need to send data back to server
+			if (!act.file && !act.fetchedFromServer) {
+				for (var i = 0; i < polylines.length; ++i) {
+					var polyline = polylines[i];
+					if (polyline.id == prop) {
+						var points = "";
+						polyline.getPath().forEach(function(point, index){
+							points += point.lat() + "," + point.lng() + " ";
+						});
+						points = points.trim();
+						data["line" + prop] = points;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+function showLink(show, noChange) {
+	if (noChange == null) noChange = false;
+	if (!noChange) {
+		displayLink = show;
+	}
+
+	var athlete = $("#athlete").val();
+	var whichAthlete = $("#whichAthlete").val();
+	if (whichAthlete == "other") {
+		athlete = "";
+	}
+	var segment = $("#segment").val();
+	var startDate = $("#startDate").val();
+	var endDate = $("#endDate").val();
+	var opacity = $("#opacitySlider").slider("value");
+	var width = $("#widthSlider").slider("value");
+	var latLng = map.getCenter().toUrlValue().split(",");
+	var lat = latLng[0];
+	var lng = latLng[1];
+	var zoom = map.getZoom();
+	var mapType = map.getMapTypeId();
+	var autoZoom = $("#autoZoom").val();
+
+	var url = "map.php?";
+	url += "whichAthlete=" + whichAthlete + "&";
+	if (athlete != "") url += "athlete=" + athlete + "&";
+	if (segment != "") url += "segment=" + segment + "&";
+	if (startDate != "") url += "startDate=" + startDate + "&";
+	if (endDate != "") url += "endDate=" + endDate + "&";
+	url += "width=" + width + "&";
+	url += "opacity=" + opacity + "&";
+	url += "lat=" + lat + "&";
+	url += "lng=" + lng + "&";
+	url += "zoom=" + zoom + "&";
+	url += "autoZoom=" + autoZoom + "&";
+	url += "mapType=" + mapType + "";
+
+	$("#linkDiv").html("<a href='" + url + "'>Link to this map</a>");
+
+	if (noChange) {
+		// don't change state
+	} else {
+		if (show) {
+			$("#linkDiv").show();
+		} else {
+			$("#linkDiv").hide();
+		}
+	}
+}
+
+function updateLink() {
+	//showLink(displayLink);
+}
+
+function mapChanged() {
+	if (!loading) {
+		updateLink();
+	}
+}
+
+var highlighted = -1;
+var highlightLine = null;
+function highlightActivity(rideIndex, zIndex, opt) {
+	if (highlightLine != null) {
+		highlightLine.setMap(null);
+		highlightLine = null;
+	}
+	if (opt == null) {
+		opt = {};
+		opt.scroll = false;
+		opt.showRemove = false;
+	}
+	if (opt.scroll) {
+		var container = $("#status");
+		var scrollTo = $("#result" + rideIndex);
+		container.scrollTop(
+			scrollTo.offset().top - container.offset().top + container.scrollTop()
+		);
+	}
+
+	$("#result" + rideIndex).css("font-weight", "bold");
+	if (opt.showRemove) {
+		$("#result" + rideIndex).after("<a href='javascript:removeActivity(" + rideIndex + ");' class='extra'> <i>Remove</i></a>");
+	}
+	var line = polylines[rideIndex];
+	highlightLine = new google.maps.Polyline({
+		map: map,
+		strokeColor: "#00FF00",
+		zIndex: zIndex,
+		strokeWeight: 5,
+		strokeOpacity: 1,
+		path: line.getPath()
+	});
+}
+
+function resetActivity(rideIndex, opt) {
+	if (opt == null) {
+		opt = {};
+		opt.clearRemove = false;
+	}
+	$("#result" + rideIndex).css("font-weight", "normal");
+	if (opt.clearRemove) {
+		$(".extra").remove();
+	}
+	if (highlightLine != null) {
+		highlightLine.setMap(null);
+		highlightLine = null;
+	}
+}
+
+function drawLines(path) {
+	var clickHolder = null;
+	if ($("#colorMode").val() == 1) {
+		// heatmap
+		var activities = newActivities.length;
+		if (activities < 20) activities = 20;
+		var hotOpacity = 0.2 * Math.pow(activities, -0.3);
+		var medOpacity = 0.54 * Math.pow(activities, -0.292);
+		var hot = new google.maps.Polyline({
+			clickable: true,
+			map: map,
+			strokeColor: "#FFFF00",
+			strokeWeight: 5,
+			strokeOpacity: hotOpacity,
+			zIndex: 4,
+			path: path
+		});
+		var medium = new google.maps.Polyline({
+			clickable: true,
+			map: map,
+			strokeColor: "#FF0000",
+			strokeWeight: 4,
+			strokeOpacity: medOpacity,
+			zIndex: 3,
+			path: path
+		});
+		var cold = new google.maps.Polyline({
+			clickable: true,
+			map: map,
+			strokeColor: "#0000FF",
+			strokeWeight: 3,
+			strokeOpacity: 0.6,
+			zIndex: 2,
+			path: path
+		});
+		clickHolder = hot;
+		displayedLines.push([hot, medium, cold]);
+	} else {
+		// monochrome
+		var line = new google.maps.Polyline({
+			clickable: true,
+			map: map,
+			strokeColor: currentColor(),
+			strokeWeight: $("#widthSlider").slider("value") + 0,
+			strokeOpacity: $("#opacitySlider").slider("value") / 100,
+			zIndex: 2,
+			path: path
+		});
+		clickHolder = line;
+		displayedLines.push(line);
+	}
+	var currentDisplayedActivities = displayedActivities;
+	google.maps.event.addListener(clickHolder, "click", function() {
+		if (highlighted >= 0) {
+			resetActivity(highlighted, {clearRemove: true});
+		}
+		highlightActivity(currentDisplayedActivities - 1, 10, {scroll: true, showRemove: true});
+		highlighted = currentDisplayedActivities - 1;
+	});
+}
+
+var displayedLines = [];
+
+function removeActivity(rideIndex) {
+	var result = $("#result" + rideIndex);
+	var parent = result.parent();
+	parent.next().remove();
+	parent.remove();
+	$(".extra").remove();
+	removeLine(rideIndex);
+}
+
+function hiresActivity(rideIndex) {
+	var result = $("#result" + rideIndex);
+	var activityId = result.attr('activityId');
+	var parent = result.parent();
+	parent.next().remove();
+	parent.remove();
+	$(".extra").remove();
+	removeLine(rideIndex);
+
+	globalData = null;
+	$.getJSON(
+		'ajaxV3GetRidePoints.php5?activity=' + activityId + '&detailLevel=20&reload=true', 
+		activityReloaded
+	);
+}
+
+function reloadActivity(rideIndex) {
+	var result = $("#result" + rideIndex);
+	var activityId = result.attr('activityId');
+	var parent = result.parent();
+	parent.next().remove();
+	parent.remove();
+	$(".extra").remove();
+	removeLine(rideIndex);
+
+	globalData = null;
+	var data = {};
+	data.activity = activityId;
+	data.reload = "true";
+	var url = "ajaxV3GetRidePoints.php5";
+	$.ajax({
+		type: 'POST',
+		url: url,
+		data: data,
+		success: activityReloaded,
+		dataType: "json"
+	});
+//	$.getJSON(
+//		'ajaxV3GetRidePoints.php5?activity=' + activityId + '&reload=true', 
+//		activityReloaded
+//	);
+}
+
+function cleanActivity(rideIndex) {
+	var result = $("#result" + rideIndex);
+	var activityId = result.attr('activityId');
+	var url = "https://www.strava.com/activities/" + activityId;
+	var win = window.open(url, '_blank');
+	url = "cleanupActivity.php?activityId=" + activityId;
+	win = window.open(url, '_blank');
+}
+
+
+function removeLine(i) {
+	var v = displayedLines[i];
+	if ($.isArray(v)) {
+		for (var j = 0; j < v.length; ++j) {
+			v[j].setMap(null);
+		}
+	} else {
+		v.setMap(null);
+	}
+	if (highlightLine != null) {
+		highlightLine.setMap(null);
+		highlightLine = null;
+	}
+}
+
+var statusSpanCounter = 0;
+function status(s) {
+	//$("#col3").css("width", "345px");
+	$("#status").append("<span id='statusSpanCounter" + statusSpanCounter + "'>" + s + "</span>" + "<br/>");
+	var newSpan = $("#statusSpanCounter" + statusSpanCounter);
+	$("#status").scrollTop($("#status").height() + newSpan.offset().top + (statusSpanCounter * 16));
+	statusSpanCounter++;
+}
+</script>
+</head>
+<body onload="initialize()">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+
+<div id='container'>
+
+<div id='titleDiv' style='font-size:14pt; text-align:left; margin-left: 389px; padding-top: 9px;'>Strava Multiple Ride Mapper</div>
+<div id='donateTextDiv' style='position: absolute; top: 3px; right: 130px;'>Like this site?<br/>The tools here will always be free, but you can help<br/>support the costs of running the site with a donation.  </div>
+
+<div id='donateDiv' style='position: absolute; top: 8px; right: 16px;'>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="UR476W2NM6FSQ">
+<input type="image" style='border:0px;' src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+</div>
+
+<div class="fb-like" style='position: absolute; top: 8px; left: 5px;' data-href="http://www.jonathanokeeffe.com/strava/map.php" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+<div id='gplus' style='position: absolute; top: 8px; left: 105px;'><g:plusone size="medium" href="http://www.jonathanokeeffe.com/strava/map.php"></g:plusone></div>
+<div id='tweetDiv' style='position: absolute; top: 8px; left: 205px;'><a href="https://twitter.com/share" class="twitter-share-button" data-lang="en" data-url="http://www.jonathanokeeffe.com/strava/map.php" data-text="Display all your Strava activities on one map">Tweet</a></div>
+
+<table id='layoutTable'>
+	<col id="col1"/><col id="col2"/><col id="col3"/>
+	<thead>
+	</thead>
+	<tbody>
+	<tr style='height:15px;'></tr>
+	<tr id='mainRow'>
+		<td id='cell1' style='height:400px;'> 
+			<div id="sidebar">
+				<div id="control">
+					<p>Enter parameters below and hit the "Load" button to begin mapping your activities.</p>
+					<form id='controlForm'>
+					<table id='controlTable'>
+					<input type='hidden' id='whichAthlete' value='own'/>
+					<input type='hidden' id='athlete' value=''/>
+					<input type='hidden' id='segment' value=''/>
+					<!--
+					<tr>
+						<td>Activities to Map<img class='tooltip' id='whichAthleteQuestion' src='images/question-mark-icon.png' title="You can choose to map your own activities, or those of other athletes you follow on Strava."/></td>
+						<td>
+							<select id='whichAthlete' style='width:222px;'>
+								<option value='own' selected>Map my own activities</option>
+								<option value='other'>Map activities from another athlete</option>
+							</select>
+						</td>
+					</tr>
+					<tr class='hidden' id='riderIdRow'>
+						<td>Athlete ID<img class='tooltip' id='athleteQuestion' src='images/question-mark-icon.png' title="Numeric athlete ID from the URL of the athlete's Strava profile page<br/>(if your profile page is at http://www.strava.com/athletes/12345, your ID is 12345).  You can enter multiple athlete IDs, separated by commas"/></td>
+						<td><input type='text' id='athlete' size='31' value=""></td>
+					</tr>
+					<tr>
+						<td>Segment ID <img class='tooltip' id='segmentQuestion' src='images/question-mark-icon.png' title="Numeric segment ID from the URL of the Strava segment details page<br/>(if the URL is http://www.strava.com/segments/23456, the segment ID is 23456)<br/>You can enter multiple segment IDs, separated by commas.<br/>Note that this functionality is not supported by Strava's latest APIs, and so is currently disabled."/></td>
+						<td><input type='text' id='segment' size='31' value="" disabled></td>
+					</tr>
+					-->
+					<tr>
+						<td>Date Range<img class='tooltip' id='dateRangeQuestion' src='images/question-mark-icon.png' title="Enter a start date, an end date, or both to restrict the rides that are shown on the map."/></td>
+						<td><input type="text" id="startDate" name="startDate" size="12" value=""/>
+							<input type="text" id="endDate" name="endDate" size="12" value=""/></td>
+					</tr>
+					<tr>
+						<td>Activity Type <img class='tooltip' id='activityTypeQuestion' src='images/question-mark-icon.png' title="Choose the type of activities to display."/></td>
+						<td>
+							<select id='activityType' style='width: 170px;'>
+								<option value='All' selected>All activity types</option>
+								<option value='Ride'>Ride</option>
+								<option value='Run'>Run</option>
+								<option value='AlpineSki'>Alpine Ski</option>
+								<option value='BackcountrySki'>Backcountry Ski</option>
+								<option value='NordicSki'>Nordic Ski</option>
+								<option value='CrossCountrySkiing'>Cross-Country Ski</option>
+								<option value='Canoeing'>Canoeing</option>
+								<option value='Crossfit'>Crossfit</option>
+								<option value='EBikeRide'>E-Bike Ride</option>
+								<option value='Elliptical'>Elliptical</option>
+								<option value='Handcycle'>Handcycle</option>
+								<option value='Hike'>Hike</option>
+								<option value='IceSkate'>Ice Skate</option>
+								<option value='InlineSkate'>Inline Skate</option>
+								<option value='Kayaking'>Kayaking</option>
+								<option value='Kitesurf'>Kitesurf</option>
+								<option value='RockClimbing'>Rock Climbing</option>
+								<option value='RollerSki'>Roller Ski</option>
+								<option value='Rowing'>Rowing</option>
+								<option value='Snowboard'>Snowboard</option>
+								<option value='Snowshoe'>Snowshoe</option>
+								<option value='StairStepper'>Stair Stepper</option>
+								<option value='StandUpPaddling'>Stand-Up Paddling</option>
+								<option value='Surfing'>Surfing</option>
+								<option value='Swim'>Swim</option>
+								<option value='VirtualRide'>Virtual Ride</option>
+								<option value='Walk'>Walk</option>
+								<option value='WaterSport'>Water Sport</option>
+								<option value='WeightTraining'>Weight Training</option>
+								<option value='Wheelchair'>Wheelchair</option>
+								<option value='Windsurf'>Windsurf</option>
+								<option value='WinterSport'>Winter Sport</option>
+								<option value='Workout'>Workout</option>
+								<option value='Yoga'>Yoga</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Keyword <img class='tooltip' id='keywordQuestion' src='images/question-mark-icon.png' title="Keyword search&mdash;enter a keyword to restrict output to only include activities whose names contain that keyword.  Leave blank to display all activities."/></td>
+						<td><input type="text" id="keyword" name="keyword" size="31"></td>
+					</tr>
+					<tr>
+						<td>Detail Level <img class='tooltip' id='drawingModeQuestion' src='images/question-mark-icon.png' title="Controls the level of detail of the paths that are displayed on the map.<br/>For a quick overview, select Low, which will quickly draw all activities on the map, but with less-detailed paths.<br/>The default setting of Normal works well for most road cycling activities<br/>Selecting High will give more-detailed paths, but takes longer to draw, and can be slow to render for large numbers of activities.  The High setting works well for MTB and running activities."/></td>
+						<td>
+							<select id='drawingMode' style='width: 170px;'>
+								<option value='high' selected>High (draws slowly)</option>
+								<option value='slow' selected>Normal</option>
+								<option value='fast'>Low (draws quickly)</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Replace <img class='tooltip' id='replaceQuestion' src='images/question-mark-icon.png' title="Controls what happens when you load additional data after a map has been displayed.<br/>The default value, 'Replace current map', erases the current map and starts a new map.<br/>The other option, 'Add to current map', keeps the current map intact and adds the new activities to the ones already shown on the map."/></td>
+						<td>
+							<select id='replaceMode' style='width: 170px;'>
+								<option value='1' selected>Replace current map</option>
+								<option value='2'>Add to current map</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Commutes <img class='tooltip' id='commuteQuestion' src='images/question-mark-icon.png' title="Controls whether or not rides marked as Commutes are displayed."/></td>
+						<td>
+							<select id='noCommute' style='width: 170px;'>
+								<option value='all' selected>Show all rides</option>
+								<option value='exclude'>Exclude commutes</option>
+								<option value='only'>Only show commutes</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input type='submit' id='loadButton' value='Load' style='margin-bottom: 0px;margin-top: 4px;'></input></td>
+					</tr>
+					</table>
+					</form>
+
+
+					<div><span class='floatLeft'>Transparent</span><span class='floatRight'>Opaque</span></div>
+					<br/>
+					<div id='opacitySlider'></div>
+
+					<div style='margin-top: 10px;'><span class='floatLeft'>1 pixel</span><span class='floatRight'>20 pixels</span></div>
+					<br/>
+					<div id='widthSlider'></div>
+
+					<div id='colorModeDiv' style='margin-top: 10px'>
+					Color display mode <img class='tooltip' id='colorModeQuestion' style='vertical-align:-5px;' src='images/question-mark-icon.png' title="Controls how colors are used on the map.<br/>In Heatmap mode, the lines are the map are colored in proportion to how often they are used&mdash;blue is low frequency, orange is moderate frequency, and yellow is high frequency.</br>In Monochrome mode, a single color is used for all activities (you can select the color)."/>
+						<select id='colorMode'>
+							<option value='1' selected>Heatmap (varying colors)</option>
+							<option value='2'>Monochrome (choose color)</option>
+						</select>
+					</div>
+
+					<div id='colorSelectorHolder'>Color <div id="colorSelector"><div style="background-color: #ff0000"></div></div></div>
+
+					<label  style='width:120px;' for="applyMode">Settings apply to <img class='tooltip' id='applyQuestion' style='vertical-align:-5px;' src='images/question-mark-icon.png' title="Controls whether the Transparency, Width, and Color settings apply to all activities currently on the map, or to new activities only."/></label>
+					<select id='applyMode' style='margin-bottom: 0px;position:relative;left:-2px; margin-top:6px;'>
+						<option value='1' selected>All activities</option>
+						<option value='2'>New activities only</option>
+					</select>
+					<br/><br/>
+
+					<div style='margin-top: 0px;'>
+					Auto-zoom behavior:
+					<select id='autoZoom' style='margin-left:30px;'>
+						<option value='1' >Zoom to each activity as it is displayed</option>
+						<option value='2' selected>Zoom to show all activities</option>
+						<option value='3' >Don't auto-zoom</option>
+					</select>
+					</div>
+
+					<div style='margin-top: 0px;'>
+					Hide map background <input style='position:relative; top:3px;' type='checkbox' id='hideMap'>
+					</div>
+
+					<div id="progressbar"></div>
+					<div id="linkDiv"></div>
+					<div id="status"></div>
+				</div> <!-- control -->
+			</div> <!-- end sidebar -->
+		</td>
+
+		<td id='cell2' style='padding: 0px;'>
+			<div id="map_canvas"></div>
+			<div id='footer' style='margin-top: 14px;height:20px;'>
+			Questions or comments?  Post a note <a href='http://www.jonathanokeeffe.com/wp/multi-ride-mapper/'>here</a>.
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			Other Strava API tools:&nbsp;&nbsp;<a target='_blank' href='http://www.jonathanokeeffe.com/strava/notifier.php'>KOM Notifier</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;<a target='_blank' href='http://www.jonathanokeeffe.com/strava/segmentDetails.php'>Segment Details</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;<a target='_blank' href='http://www.jonathanokeeffe.com/strava/annualSummary.php'>Annual Summary</a>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			Version 3.24
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href='javascript:changeLog();'>Recent Changes</a>
+<a href='javascript:clearCache();'>&nbsp;&nbsp;Clear Cache</a>&nbsp;&nbsp;
+			<img style='height:30px;vertical-align:middle;margin-left:20px;' src='images/pbs.png'/>
+			</div>
+		</td>
+		<td id='cell3'>
+		</td>
+	</tr>
+	</tbody>
+</table>
+
+
+<script type='text/javascript'>
+function clearCache() {
+	if (localStorage) {
+		localStorage.clear();
+	}
+	alert("Cache cleared");
+}
+
+function moveMap(d) {
+	if (d == 1) {
+		map.panBy(0, 1);
+	} else if (d == 2) {
+		map.panBy(0, -1);
+	} else if (d == 3) {
+		map.panBy(-1, 0);
+	} else if (d == 4) {
+		map.panBy(1, 0);
+	}
+}
+function saveLoad(p) {
+	if (p == "save") {
+		var latLng = map.getCenter().toUrlValue().split(",");
+		var lat = latLng[0];
+		var lng = latLng[1];
+		var zoom = map.getZoom();
+		var data = {lat: lat, lng: lng, zoom: zoom, action: "save"};
+		$("#saveS").css("background-color", "red");
+		$.ajax({
+			type: 'GET',
+			url: 'ajaxMapSaveLoad.php',
+			data: data,
+			success: function(){
+				$("#saveS").css("background-color", "transparent");
+			},
+			dataType: "json"
+		});
+	} else {
+		$("#saveL").css("background-color", "red");
+		$.ajax({
+			type: 'GET',
+			url: 'ajaxMapSaveLoad.php',
+			data: {action: "load"},
+			success: function(data){
+				map.setCenter({lat: data.lat - 0, lng: data.lng - 0});
+				map.setZoom(data.zoom - 0);
+				$("#saveL").css("background-color", "transparent");
+			},
+			dataType: "json"
+		});
+	}
+}
+function info() {
+		var latLng = map.getCenter().toUrlValue().split(",");
+		var lat = latLng[0];
+		var lng = latLng[1];
+		var zoom = map.getZoom();
+		$("#info").html(lat + ", " + lng + ", " + zoom);
+}
+
+/*
+//alert($.browser.msie);
+var vpos = -113;
+if ($.browser.msie) {
+	vpos = -12;
+}
+document.write("<p style='position:relative; left:370px; top:" + vpos + "px;' id='footer'>");
+*/
+</script>
+
+</div><!-- end container -->
+
+
+<div id="dialog-confirm" title="Display all activities?">
+	<div id='dialogText' style='font-size: 12px; font-family: sans-serif;'></div>
+</div>
+
+<div id="dialog-changes" title="Change Log">
+<div style='font-family: sans-serif;'>
+<ul>
+<li>May 27, 2012 - Added color selector</li>
+<li>Jun 3, 2012 - Added option for displaying most recent 100 activities, in addition to earliest 100 activities</li>
+<li>Jun 10, 2012 - Link now includes map settings (location, zoom, map type, and auto-zoom)</li>
+<li>Jul 7, 2012 - Added support for multiple athletes (separate athlete IDs by commas)</li>
+<li>Oct 12, 2012 - Added full-screen support</li>
+<li>Oct 14, 2012 - Change colors for all activities or for new activities only</li>
+<li>Nov 16, 2012 - Added keyword filter</li>
+<li>Jul 4, 2013 - 3.00 - Upgraded to use Strava's new V3 API; segment mapping and date range parameters not supported</li>
+<li>Jul 5, 2013 - 3.01 - Added drop-down to choose activity type</li>
+<li>Jul 5, 2013 - 3.02 - Added support for date ranges</li>
+<li>Jul 9, 2013 - 3.03 - Added "Level of Detail" option to choose between faster and slower maps with less and more detail, respectively</li>
+<li>Jul 18, 2013 - 3.04 - Added Heatmap option to display activity with varying colors</li>
+<li>Aug 31, 2013 - 3.10 - Upgraded to use Strava's V3 API authentication system, after Strava cut off access for unauthenticated users</li>
+<li>Jun 11, 2015 - 3.11 - Add option to hide map background</li>
+<li>Dec 7, 2015 - 3.12 - Add option to remove activity from map (click activity on map and click "Remove")</li>
+<li>Apr 29, 2016 - 3.13 - Add option to exclude commutes, or to only show commutes</li>
+<li>May 25, 2016 - 3.14 - Add option for higher-resolution activity display</li>
+<li>Jul 31, 2016 - 3.20 - Use local browser storage to cache maps for much faster display when revisiting site</li>
+<li>Aug 27, 2016 - 3.21 - Add KML download</li>
+<li>Sep 22, 2016 - 3.22 - Add Ctrl-Shift-H hotkey to toggle hiding map tiles</li>
+<li>Sep 29, 2016 - 3.23 - Fix hiding map to work properly when scrolling and zooming</li>
+<li>Sep 25, 2017 - 3.24 - Add new activity types - E-Bike Ride, Handcycle, Virtual Ride, Wheelchair</li>
+</ul>
+</div>
+</div>
+
+<script type='text/javascript'>
+(function() {
+    var
+        fullScreenApi = {
+            supportsFullScreen: false,
+            isFullScreen: function() { return false; },
+            requestFullScreen: function() {},
+            cancelFullScreen: function() {},
+            fullScreenEventName: '',
+            prefix: ''
+        },
+        browserPrefixes = 'webkit moz o ms khtml'.split(' ');
+ 
+    // check for native support
+    if (typeof document.cancelFullScreen != 'undefined') {
+        fullScreenApi.supportsFullScreen = true;
+    } else {
+        // check for fullscreen support by vendor prefix
+        for (var i = 0, il = browserPrefixes.length; i < il; i++ ) {
+            fullScreenApi.prefix = browserPrefixes[i];
+ 
+            if (typeof document[fullScreenApi.prefix + 'CancelFullScreen' ] != 'undefined' ) {
+                fullScreenApi.supportsFullScreen = true;
+ 
+                break;
+            }
+        }
+    }
+ 
+    // update methods to do something useful
+    if (fullScreenApi.supportsFullScreen) {
+        fullScreenApi.fullScreenEventName = fullScreenApi.prefix + 'fullscreenchange';
+ 
+        fullScreenApi.isFullScreen = function() {
+            switch (this.prefix) {
+                case '':
+                    return document.fullScreen;
+                case 'webkit':
+                    return document.webkitIsFullScreen;
+                default:
+                    return document[this.prefix + 'FullScreen'];
+            }
+        }
+        fullScreenApi.requestFullScreen = function(el) {
+            return (this.prefix === '') ? el.requestFullScreen() : el[this.prefix + 'RequestFullScreen']();
+        }
+        fullScreenApi.cancelFullScreen = function(el) {
+            return (this.prefix === '') ? document.cancelFullScreen() : document[this.prefix + 'CancelFullScreen']();
+        }
+    }
+ 
+    // jQuery plugin
+    if (typeof jQuery != 'undefined') {
+        jQuery.fn.requestFullScreen = function() {
+ 
+            return this.each(function() {
+                if (fullScreenApi.supportsFullScreen) {
+                    fullScreenApi.requestFullScreen(this);
+                }
+            });
+        };
+    }
+    if (typeof jQuery != 'undefined') {
+        jQuery.fn.cancelFullScreen = function() {
+ 
+            return this.each(function() {
+                if (fullScreenApi.supportsFullScreen) {
+                    fullScreenApi.cancelFullScreen(this);
+                }
+            });
+        };
+    }
+ 
+    // export api
+    window.fullScreenApi = fullScreenApi;
+})();
+
+function debugMessage(s) {
+	if (debugging) console.log(s);
+}
+
+</script>
+
+</body>
+</html>
