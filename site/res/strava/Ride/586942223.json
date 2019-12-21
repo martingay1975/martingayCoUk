@@ -1,0 +1,20 @@
+{
+  "Latlng": {
+    "original_size": 2,
+    "resolution": "high",
+    "series_type": "distance",
+    "data": [
+      [
+        51.301674,
+        -0.727436
+      ],
+      [
+        51.301674,
+        -0.727436
+      ]
+    ]
+  },
+  "Name": "Evening Ride",
+  "ActivityType": "Ride",
+  "StartDateTime": "2016-05-19T18:32:09Z"
+}

@@ -104,13 +104,18 @@ namespace Strava.NET.Api
 
             // verify the required parameter 'id' is set
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling GetActivityStreams");
-            
+
             // verify the required parameter 'keys' is set
-            if (keys == null) throw new ApiException(400, "Missing required parameter 'keys' when calling GetActivityStreams");
-            
+            if (keys == null)
+            {
+                throw new ApiException(400, "Missing required parameter 'keys' when calling GetActivityStreams");
+            }
+
             // verify the required parameter 'keyByType' is set
-            if (keyByType == null) throw new ApiException(400, "Missing required parameter 'keyByType' when calling GetActivityStreams");
-            
+            if (keyByType == null)
+            {
+                throw new ApiException(400, "Missing required parameter 'keyByType' when calling GetActivityStreams");
+            }
     
             var path = "/activities/{id}/streams";
             path = path.Replace("{format}", "json");
@@ -121,9 +126,16 @@ namespace Strava.NET.Api
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
-    
-             if (keys != null) queryParams.Add("keys", ApiClient.ParameterToString(keys)); // query parameter
- if (keyByType != null) queryParams.Add("key_by_type", ApiClient.ParameterToString(keyByType)); // query parameter
+
+            if (keys != null)
+            {
+                queryParams.Add("keys", ApiClient.ParameterToString(keys)); // query parameter
+            }
+
+            if (keyByType != null)
+            {
+                queryParams.Add("key_by_type", ApiClient.ParameterToString(keyByType)); // query parameter
+            }
                                         
             // authentication setting, if any
             String[] authSettings = new String[] { "strava_oauth" };

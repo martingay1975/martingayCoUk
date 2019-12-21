@@ -7,7 +7,7 @@ namespace HeatMapExe
         static void Main(string[] args)
         {
             var a = new HeatmapData.MartinsRoutes();
-            a.GetRoutes("afe3070b2b9fd65b7a0fa48b1bde5fd1a9b51f82", @"c:\temp\strava");
+            a.GetRoutes("5d9ea0425d96c12495d43d7669cdf5a84dff8c73", @"c:\temp\strava");
         }
     }
 }
