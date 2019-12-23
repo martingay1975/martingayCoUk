@@ -15,30 +15,32 @@ namespace HeatmapData
     {
         public void GetRoutes(string accessToken, string folderPath)
         {
+            Debug.WriteLine($"Access Token: {accessToken}, folderPath: {folderPath}");
+
             Configuration.AccessToken = accessToken;
             var activitiesApi = new ActivitiesApi();
             var streamsApi = new StreamsApi();
-            var gpxFileSystem = new GpxFileSystem();
-
-            var files = Directory.GetFiles(folderPath);
-            var exists = files.Select(Path.GetFileNameWithoutExtension).ToList();
-            
+            var gpxFileSystem = new GpxFileSystem(folderPath);
+           
+            // Get all the activities for the logged in user
             var activities = activitiesApi.GetAllLoggedInAthleteActivities();
+            var polyLineCount = 0;
 
-            var routes = new Dictionary<DateTime?, StreamSet>();
             for (var activityIndex=0; activityIndex < activities.Count; activityIndex ++)
             {
                 var activity = activities[activityIndex];
                 try
                 {
-                    Debug.WriteLine($"       {activity.Id} - {activity.Name}. ({activityIndex + 1} of {activities.Count})");
+                    var fileExists = File.Exists(gpxFileSystem.GetActivityFilePath(activity));
+                    Debug.WriteLine($"       {activity.Id} - {activity.Name}. ({activityIndex + 1} of {activities.Count}) - {(fileExists? "EXISTS" : "FETCH")}");
 
-                    if (exists.Contains(activity.Id.ToString()))
+                    if (fileExists)
                     {
+                        gpxFileSystem.Add(activity.Type, activity.Id.Value);
                         continue;
                     }
 
-                    var latlng = streamsApi.GetActivityStreams(activity.Id, new List<string> { "latlng" }, true);
+                    //var latlng = streamsApi.GetActivityStreams(activity.Id, new List<string> { "latlng" }, true);
 
                     if (!activity.StartDate.HasValue)
                     {
@@ -48,24 +50,33 @@ namespace HeatmapData
                     var heatMapJson = new HeatMapJson()
                     {
                         ActivityType = activity.Type,
-                        Latlng = latlng.Latlng,
+                        Polyline = activity.Map.Polyline ?? activity.Map.SummaryPolyline,
                         Name = activity.Name,
                         StartDateTime = activity.StartDate
                     };
 
-                    var json = JsonConvert.SerializeObject(heatMapJson, Formatting.Indented);
-                    File.WriteAllText(Path.Combine(folderPath, activity.Type.ToString(), $"{activity.Id.Value.ToString()}.json"), json);
+                    if (activity.Map.Polyline != null)
+                    {
+                        polyLineCount++;
+                    }
+
+                    var json = JsonConvert.SerializeObject(heatMapJson);
+                    
+                    var activityJsonPath = gpxFileSystem.GetActivityFilePath(activity);
+                    File.WriteAllText(activityJsonPath, json);
+
                     gpxFileSystem.Add(activity.Type, activity.Id.Value);
-                    routes.Add(activity.StartDate, latlng);
                 }
                 catch (Exception e)
                 {
-                    Debug.Log($"ERROR: {activity.Id} - {activity.Name}. {e}");
+                    Debug.WriteLine($"ERROR: {activity.Id} - {activity.Name}. {e}");
                 }
             }
 
+            Debug.WriteLine("Polyline: " + polyLineCount);
+
             var jsonFS = JsonConvert.SerializeObject(gpxFileSystem.FileSystem, Formatting.Indented);
-            File.WriteAllText(Path.Combine(folderPath, "FileSystem.json"), jsonFS);
+            File.WriteAllText(gpxFileSystem.GetFileSystemPath(), jsonFS);
         }
     }
 }

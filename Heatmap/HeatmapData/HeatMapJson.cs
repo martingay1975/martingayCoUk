@@ -10,7 +10,9 @@ namespace HeatmapData
     public class HeatMapJson
     {
         [DataMember]
-        public LatLngStream Latlng { get; set; }
+        public string Polyline { get; set; }
+
+        //public LatLngStream Latlng { get; set; }
 
         [DataMember]
         public string Name { get; set; }

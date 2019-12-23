@@ -3,6 +3,7 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
 
 	"use strict";
 
+    const GoogleMapsApiKey = "AIzaSyBYemck0mQmHpfMmqrxgERNPaYZ99RbiuQ";
     var StavaActivitiesLoader;
 
     var extendJQuery = function() {
@@ -39,9 +40,19 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
             else {
                 var promise = $.getJSON(jsonPath);
                 promise.done(function(response) {
+                    // find out how much local storage is being used.
+                    var space = escape(encodeURIComponent(JSON.stringify(localStorage))).length;
+
                     // line below Error: DOMException: Failed to execute 'setItem' on 'Storage': Setting the value of '/res/strava/Run/437607297.json' exceeded the quota.
-                    //var stringJson = JSON.stringify(response);
-                    //window.localStorage.setItem(jsonPath, stringJson);
+                    try
+                    {
+                         var stringJson = JSON.stringify(response);
+                         window.localStorage.setItem(jsonPath, stringJson);
+                    }
+                    catch (e) 
+                    {
+                        console.log("Failed. " + e);
+                    }
                     deferred.resolve(response);
                 });
 
@@ -61,9 +72,10 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
             let activityIdListToDraw = [];
             var promise = getFileSystemPromise.then(function(gpxFileSystemDictionary) {
 
+                const isAllActivityTypes = !activityTypeFilter;
                 for (const key in gpxFileSystemDictionary) {
 
-                    if (!key || key === activityTypeFilter)
+                    if (isAllActivityTypes || key === activityTypeFilter)
                     {
                         let activitiesForType = gpxFileSystemDictionary[key];
                         if (activitiesForType) {
@@ -83,21 +95,34 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
             return promise;
         }
 
-        this.getActivitiesAsync = function(drawActivityFn, activityPaths)
+        this.getActivitiesAsync = function(drawActivityFn, activityJsonPaths, filterOptions)
         {
-            const promises = [];
-            for (var index = 0; index < activityPaths.length; index++)
+            const getActivityPromises = [];
+            for (var index = 0; index < activityJsonPaths.length; index++)
             {
                 // gets the activity
-                var promise = getJSONAsync(activityPaths[index]);
-                promises.push(promise);
+                var getActivityPromise = getJSONAsync(activityJsonPaths[index]);
+                getActivityPromises.push(getActivityPromise);
             }
 
-            var overallPromise = $.when.all(promises).then(function(activities) {
+            var overallPromise = $.when.all(getActivityPromises).then(function(activities) {
                 for (var index = 0; index < activities.length; index++)
                 {
-                    var activity = activities[index];
-                    drawActivityFn(activity);
+                    var heatMapJson = activities[index];
+
+                    if (filterOptions)
+                    {
+                        if (filterOptions.year)
+                        {
+                            if (heatMapJson.StartDateTime.slice(0,4) !== filterOptions.year)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+
+                    drawActivityFn(heatMapJson);
+                    //window.setTimeout(function() {drawActivityFn(heatMapJson)}, 300);
                 }
             });
 
@@ -108,27 +133,71 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
     var GoogleMap = function() {
 
         var self = this;
+        var allPolylines = [];
+        this.currentActivityType = "Kayaking";
+        this.filterOptions = {
+            year: null
+        };
 
-        this.createGoogleLatLng = function(stravaLatLng) {
-            var gMapLngLatArray = [];
-            for (var index = 0; index < stravaLatLng.length; index ++)
-            {
-                var latlng = stravaLatLng[index];
-                var lat = latlng[0];
-                var lng = latlng[1];
-                gMapLngLatArray.push(new google.maps.LatLng(lat, lng));
+        this.runClick = function() {
+            self.currentActivityType = "Run";
+            self.runAsync();
+        };
+
+        this.bikeClick = function() {
+            self.currentActivityType = "Ride";
+            self.runAsync();
+        };
+
+        this.walkClick = function() {
+            self.currentActivityType = "Walk";
+            self.runAsync();
+        };
+
+        this.kayakClick = function() {
+            self.currentActivityType = "Kayaking";
+            self.runAsync();
+        };
+
+        this.allActivityClick = function() {
+            self.currentActivityType = null;
+            self.runAsync();
+        };
+
+        this.year2019Click = function() {
+            self.filterOptions = {
+                year: "2019"
             }
+            self.runAsync();
+        }
 
-            return gMapLngLatArray;
+        this.yearAllClick = function() {
+            self.filterOptions = {
+                year: null
+            }
+            self.runAsync();
+        }
+
+        this.drawActivity = function(heatMapJson) {
+            var activityCount = 1600;
+            const encodedPolyline = heatMapJson.Polyline;
+            try
+            {
+                if (encodedPolyline === null)
+                {
+                    return;
+                }
+                
+                var polyline = google.maps.geometry.encoding.decodePath(encodedPolyline);
+                self.drawPolyline(polyline, activityCount);
+            }
+            catch (e)
+            {
+                console.error(e);
+            }
         };
 
-        this.drawRoute = function(stravaActivity) {
-            var googleLatLng = self.createGoogleLatLng(stravaActivity.Latlng.data);
-            var activityCount = 300;
-            self.drawPolyline(googleLatLng, activityCount);
-        };
-
-        this.drawPolyline = function(googleLatLng, activityCount)
+        this.drawPolyline = function(polyline, activityCount)
         {
             var hotOpacity = 0.2 * Math.pow(activityCount, -0.3);
             var hot = new google.maps.Polyline({
@@ -138,8 +207,9 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
                 strokeWeight: 5,
                 strokeOpacity: hotOpacity,
                 zIndex: 4,
-                path: googleLatLng
+                path: polyline
             });
+            allPolylines.push(hot);
 
             var medOpacity = 0.54 * Math.pow(activityCount, -0.292);
             var medium = new google.maps.Polyline({
@@ -149,8 +219,9 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
                 strokeWeight: 4,
                 strokeOpacity: medOpacity,
                 zIndex: 3,
-                path: googleLatLng
+                path: polyline
             });
+            allPolylines.push(medium);
 
             var cold = new google.maps.Polyline({
                 clickable: true,
@@ -159,13 +230,38 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
                 strokeWeight: 3,
                 strokeOpacity: 0.6,
                 zIndex: 2,
-                path: googleLatLng
+                path: polyline
             });
+            allPolylines.push(cold);
+        };
+
+        this.removeAllPolylines = function() {
+            for (var index=0; index < allPolylines.length; index ++) {
+                var polyline = allPolylines[index];
+                polyline.setMap(null);
+            }
+        };
+
+        this.runAsync = function() {
+
+            self.removeAllPolylines();
+
+            const stavaActivitiesLoader = new StavaActivitiesLoader();
+            const fileSystemPromise = stavaActivitiesLoader.getFileSystemAsync(this.currentActivityType);
+            fileSystemPromise.then(function(activityJsonPaths) {
+                return stavaActivitiesLoader.getActivitiesAsync(self.drawActivity, activityJsonPaths, self.filterOptions);
+            });
+
+            return fileSystemPromise;
         };
 
         this.initAsync = function() {
             self.map = null;
-            const promiseMapLoader = gmapLoader({key: "AIzaSyBYemck0mQmHpfMmqrxgERNPaYZ99RbiuQ"})
+            const promiseMapLoader = gmapLoader({
+                key: GoogleMapsApiKey,
+                libraries: ["geometry"]
+            });
+
             promiseMapLoader.then(function(googleMaps) {
                 const mapProp= {
                     // Center the map around Frimley Green
@@ -176,12 +272,7 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
                 const googleMapElement = document.getElementById("googleMap");
                 self.map = new googleMaps.Map(googleMapElement, mapProp);
 
-                const stavaActivitiesLoader = new StavaActivitiesLoader();
-
-                let fileSystemPromise = stavaActivitiesLoader.getFileSystemAsync("Run");
-                fileSystemPromise.then(function(activityPaths) {
-                    return stavaActivitiesLoader.getActivitiesAsync(self.drawRoute, activityPaths);
-                });
+                return self.runAsync();
             });
 
             return promiseMapLoader;

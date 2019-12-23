@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using RestSharp;
 using Strava.NET.Client;
 using Strava.NET.Model;
@@ -359,6 +360,7 @@ if (commute != null) formParams.Add("commute", ApiClient.ParameterToString(commu
             var chunkSize = 200;
             while (true)
             {
+                Debug.WriteLine($"{page} - Getting Activity Summary");
                 var twoHundredActivities = GetLoggedInAthleteActivities(null, null, page, chunkSize);
                 ret.AddRange(twoHundredActivities);
 

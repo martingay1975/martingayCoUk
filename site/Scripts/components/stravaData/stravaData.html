@@ -1,4 +1,17 @@
 
-<div style="width:900px; height:700px" id="googleMap">
+<div class="btn-group" role="group" aria-label="Activity Type">
+    <button type="button" class="btn btn-success" data-bind="click: $component.runClick">Run</button>
+    <button type="button" class="btn btn-success" data-bind="click: $component.bikeClick">Bike</button>
+    <button type="button" class="btn btn-success" data-bind="click: $component.walkClick">Walk</button>
+    <button type="button" class="btn btn-success" data-bind="click: $component.kayakClick">Kayak</button>
+    <button type="button" class="btn btn-success" data-bind="click: $component.allActivityClick">All Activity Types</button>
+</div>
+
+<div class="btn-group" role="group" aria-label="Time Period">
+    <button type="button" class="btn btn-warning" data-bind="click: $component.yearAllClick">All Time</button>
+    <button type="button" class="btn btn-warning" data-bind="click: $component.year2019Click">2019</button>
+</div>
+
+<div style="position: absolute; width:90%; height:90%" id="googleMap">
     <p>Loading Map ....</p>
 </div>
