@@ -1,19 +1,29 @@
 ﻿using Newtonsoft.Json;
+using RestSharp;
 using Strava.NET.Api;
 using Strava.NET.Client;
-using Strava.NET.Model;
+using Strava.NET.main.CsharpDotNet2.Strava.NET.Model;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 
 namespace HeatmapData
 {
-
-    public class MartinsRoutes
+    public static class MartinsRoutes
     {
-        public void GetRoutes(string accessToken, string folderPath)
+        public static void Start(string authorizationCode)
+        {
+            var client = new RestClient($"https://www.strava.com/oauth/token?client_id=9912&client_secret=64dc88eaf43bfa3d3b0f4f624e5b7aeefd1059c6&code={authorizationCode}&grant_type=authorization_code");
+            client.Timeout = -1;
+
+            var request = new RestRequest(Method.POST);
+
+            var response = client.Execute(request);
+            var accessTokenResponse = JsonConvert.DeserializeObject<AccessTokenResponse>(response.Content);
+
+            GetRoutes(accessTokenResponse.AccessToken, @"c:\temp\strava");
+        }
+        private static void GetRoutes(string accessToken, string folderPath)
         {
             Debug.WriteLine($"Access Token: {accessToken}, folderPath: {folderPath}");
 

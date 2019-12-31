@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="/Scripts/ThirdParty/jquery-2.0.3.js"></script>
+    <script type="text/javascript">
+            $(document).ready(function() {
+                var url = location.href;
+                var urlParts = [];
+                document.location.search.substr(1).split('&').forEach(pair => {
+                    [key, value] = pair.split('=');
+                    urlParts[key] = value;
+                });
+            
+                var authorizationCode = urlParts['code'];
+
+                var uri = "api/strava/" + authorizationCode;
+                $.get(uri);
+            });
+        
+    </script>
+</head>
+<body>
+    <p>Hellozz1</p>
+</body>
+</html>

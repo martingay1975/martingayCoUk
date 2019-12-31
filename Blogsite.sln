@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDataEntry.Web", "WebData
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDataEntry.Owin", "WebDataEntry.Owin\WebDataEntry.Owin.csproj", "{FF5A4F13-1BF6-46E4-AEF3-78C3A32BCC6B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strava.NET", "Heatmap\strava-net-master\src\Strava.NET.csproj", "{84AA9A6D-B31A-44EB-A35F-E7E4E99D835B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeatmapData", "Heatmap\HeatmapData\HeatmapData.csproj", "{E1A058A2-5CB6-458F-9DAE-444749B341C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +69,30 @@ Global
 		{FF5A4F13-1BF6-46E4-AEF3-78C3A32BCC6B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{FF5A4F13-1BF6-46E4-AEF3-78C3A32BCC6B}.Release|x86.ActiveCfg = Release|Any CPU
 		{FF5A4F13-1BF6-46E4-AEF3-78C3A32BCC6B}.Release|x86.Build.0 = Release|Any CPU
+		{84AA9A6D-B31A-44EB-A35F-E7E4E99D835B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84AA9A6D-B31A-44EB-A35F-E7E4E99D835B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84AA9A6D-B31A-44EB-A35F-E7E4E99D835B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{84AA9A6D-B31A-44EB-A35F-E7E4E99D835B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{84AA9A6D-B31A-44EB-A35F-E7E4E99D835B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{84AA9A6D-B31A-44EB-A35F-E7E4E99D835B}.Debug|x86.Build.0 = Debug|Any CPU
+		{84AA9A6D-B31A-44EB-A35F-E7E4E99D835B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84AA9A6D-B31A-44EB-A35F-E7E4E99D835B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84AA9A6D-B31A-44EB-A35F-E7E4E99D835B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{84AA9A6D-B31A-44EB-A35F-E7E4E99D835B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{84AA9A6D-B31A-44EB-A35F-E7E4E99D835B}.Release|x86.ActiveCfg = Release|Any CPU
+		{84AA9A6D-B31A-44EB-A35F-E7E4E99D835B}.Release|x86.Build.0 = Release|Any CPU
+		{E1A058A2-5CB6-458F-9DAE-444749B341C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1A058A2-5CB6-458F-9DAE-444749B341C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1A058A2-5CB6-458F-9DAE-444749B341C7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E1A058A2-5CB6-458F-9DAE-444749B341C7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E1A058A2-5CB6-458F-9DAE-444749B341C7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E1A058A2-5CB6-458F-9DAE-444749B341C7}.Debug|x86.Build.0 = Debug|Any CPU
+		{E1A058A2-5CB6-458F-9DAE-444749B341C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1A058A2-5CB6-458F-9DAE-444749B341C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1A058A2-5CB6-458F-9DAE-444749B341C7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E1A058A2-5CB6-458F-9DAE-444749B341C7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E1A058A2-5CB6-458F-9DAE-444749B341C7}.Release|x86.ActiveCfg = Release|Any CPU
+		{E1A058A2-5CB6-458F-9DAE-444749B341C7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

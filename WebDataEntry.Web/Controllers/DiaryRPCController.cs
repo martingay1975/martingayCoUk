@@ -1,10 +1,10 @@
-﻿using System;
+﻿using HeatmapData;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using WebDataEntry.Web.Application;
 using WebDataEntry.Web.Models;
@@ -12,7 +12,19 @@ using WebDataEntry.Web.Models.Data;
 
 namespace WebDataEntry.Web.Controllers
 {
-	[RoutePrefix(@"api/rpc")]
+    [RoutePrefix(@"api/strava")]
+    public class StravaController : ApiController
+    {
+        [Route("{authorizationCode}")]
+        [HttpGet]
+        public void Get([FromUri] string authorizationCode)
+        {
+            MartinsRoutes.Start(authorizationCode);
+        }
+    }
+
+
+    [RoutePrefix(@"api/rpc")]
 	public class DiaryRpcController : ApiController
 	{
 		private readonly IDiaryRepository _diaryRepository;

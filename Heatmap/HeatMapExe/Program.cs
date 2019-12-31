@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
 using System;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace HeatMapExe
@@ -8,32 +9,20 @@ namespace HeatMapExe
     class Program
     {
         // Click Authorize, then from the result, grab the code= part of the array.
-        const string AuthorizationCode = "85afe5302c182180fb3c925a7799552bb4839096";
+        const string AuthorizationCode = "9ed4daef55ce5f4a8c1db502a7ddef653ff76460";
 
         static void Main(string[] args)
         {
             // Run this in the client
-            // http://www.strava.com/oauth/authorize?client_id=9912&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=force&scope=profile:read_all,profile:write,activity:write,activity:read_all
+            // http://www.strava.com/oauth/authorize?client_id=9912&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=auto&scope=profile:read_all,profile:write,activity:write,activity:read_all
 
-            var client = new RestClient($"https://www.strava.com/oauth/token?client_id=9912&client_secret=64dc88eaf43bfa3d3b0f4f624e5b7aeefd1059c6&code={AuthorizationCode}&grant_type=authorization_code");
-            client.Timeout = -1;
+            //var initialRequestUrl = "http://www.strava.com/oauth/authorize?client_id=9912&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=auto&scope=profile:read_all,profile:write,activity:write,activity:read_all";
 
-            var request = new RestRequest(Method.POST);
-
-            var response = client.Execute(request);
-            AccessTokenResponse accessTokenResponse = JsonConvert.DeserializeObject<AccessTokenResponse>(response.Content);
-
-
-            var martinsRoutes = new HeatmapData.MartinsRoutes();
-            martinsRoutes.GetRoutes(accessTokenResponse.AccessToken, @"c:\temp\strava");
-        }
-
-        [DataContract]
-        public class AccessTokenResponse
-        {
-            [DataMember]
-            [JsonProperty(PropertyName = "access_token")]
-            public string AccessToken { get; set; }
+            //var process = new Process();
+            //process.StartInfo.WorkingDirectory = @"C:\Program Files(x86)\Google\Chrome\Application";
+            //process.StartInfo.Arguments = initialRequestUrl;
+            //process.StartInfo.FileName = "chrome.exe";
+            //process.Start();
         }
     }
 }
