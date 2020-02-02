@@ -51,7 +51,7 @@ define(["knockout"], function (ko) {
 
 			hasYouTube: function () {
 				if (this && this.info && this.info.content) {
-					return this.info.content.indexOf("youtube.com ") > -1;
+					return this.info.content.indexOf("www.youtube.com/embed") > -1;
 				}
 
 				return false;

@@ -50,15 +50,6 @@ namespace DiaryDatabase.Helper.DataToJson
 					destination.Images = imagesOccurrences;
 
 				}
-				
-				//if (source.Info.Images != null)
-				//{
-				//	destination.Images = new List<Image>(source.Info.Images.Count);
-				//	foreach (var sourceImage in source.Info.Images)
-				//	{
-				//		destination.Images.Add(ImageAssembler.Copy(sourceImage));
-				//	}
-				//}
 			}
             return destination;
         }

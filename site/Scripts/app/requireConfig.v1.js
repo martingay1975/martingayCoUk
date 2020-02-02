@@ -7,7 +7,8 @@ var require = {
 		crossroads:					"ThirdParty/crossroads/dist/crossroads",
 		hasher:						"ThirdParty/hasher/dist/js/hasher",
 		jquery:						"//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min",
-		knockout:					"//cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min",
+		knockout:					"//cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout",
+		//knockout: 					"ThirdParty/knockout/knockout-3.5.0",	// debug
 		"knockout-projections":		"ThirdParty/knockout-projections/dist/knockout-projections",
 		"knockout-mapping":			"ThirdParty/knockout-mapping/knockout.mapping",
 		signals:					"ThirdParty/js-signals/dist/signals",

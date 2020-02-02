@@ -25,7 +25,6 @@
 					return entryUtil.getId(entry.date);
 				},
 
-
 				getDateValue: ko.pureComputed(function() {
 					return entryUtil.getDateValue(entry.date);
 				}, entry),
@@ -88,7 +87,7 @@
 					this.isContentDisplayed(newIsContentDisplayed);
 				},
 
-				hasYouTubey: entryUtil.hasYouTube.call(entry),
+				hasYouTube: entryUtil.hasYouTube.call(entry),
 				hasImages: entryUtil.hasImages.call(entry)
 			});
 

@@ -42,11 +42,10 @@
 			</div>
 
 			<div class="float-right entry-buttonbar">
+				<span data-bind="visible: $data.hasYouTube" class="fas fa-video"></span>
+				<span data-bind="visible: $data.hasImages" class="fas fa-camera"></span>
 
-				<span data-bind="visible: $data.hasYouTube" class="glyphicon glyphicon-facetime-video"></span>
-				<span data-bind="visible: $data.hasImages" class="glyphicon glyphicon-picture"></span>
-
-				<span class="glyphicon glyphicon-share hover-pointer popover-standard"
+				<span class="fas fa-external-link-alt hover-pointer popover-standard"
 					  data-toggle="popover"
 					  data-placement="bottom"
 					  data-container="body"

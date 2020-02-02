@@ -27,7 +27,8 @@ namespace WebDataEntry.Web.Models
 			this.relativePaths = new List<string> { 
 				"res/xml/diary.xml", 
 				"res/json/whoops.json",
-				"res/json/2019.json",
+                "res/json/2020.json",
+                "res/json/2019.json",
 				"res/json/2018.json",
 				"res/json/2017.json",
 				"res/json/2016.json",
@@ -216,7 +217,7 @@ namespace WebDataEntry.Web.Models
 
 			// create titles
 			var noInfoDiary = this.CreateNoInfo(modelDiary);
-			this.SaveJson(noInfoDiary, "noInfo-all.json", hashes);
+			this.SaveJson(noInfoDiary, "noInfo-all.json", hashes, false);
 
 			// create siteOptions.json
 			this.SaveSiteOptions(hashes);
@@ -224,10 +225,10 @@ namespace WebDataEntry.Web.Models
 			return hashes;
 		}
 
-		private void SaveJson(DiaryDatabase.Model.Data.Xml.Diary diary, string filename, Dictionary<string, int> hashes)
+		private void SaveJson(DiaryDatabase.Model.Data.Xml.Diary diary, string filename, Dictionary<string, int> hashes, bool copyOptions = true)
 		{
 			var outPath = Path.Combine(this.configuration.JsonDirectoryPath, filename);
-			var hash = _diarySerialization.SaveJsonDiary(outPath, diary, true);
+			var hash = _diarySerialization.SaveJsonDiary(outPath, diary, copyOptions);
 			hashes[filename] = hash;
 		}
 
@@ -288,10 +289,10 @@ namespace WebDataEntry.Web.Models
 		private DiaryDatabase.Model.Data.Xml.Diary CreateNoInfo(DiaryDatabase.Model.Data.Xml.Diary modelDiary)
 		{
 			var noInfoDiary = new DiaryDatabase.Model.Data.Xml.Diary(modelDiary);
-			foreach (var entry in noInfoDiary.Entries)
-			{
-				entry.Info = null;
-			}
+			//foreach (var entry in noInfoDiary.Entries)
+			//{
+   //             entry.Info = null;
+   //         }
 
 			return noInfoDiary;
 		}

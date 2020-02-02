@@ -1,5 +1,5 @@
 /*global require*/
-define(['knockout', 'router', 'provider', 'text!./search.html'], function (ko, router, provider, componentTemplate) {
+define(['knockout', 'router', 'provider', 'stringUtil', 'text!./search.html'], function (ko, router, provider, stringUtil, componentTemplate) {
 
 	"use strict";
 
@@ -21,9 +21,34 @@ define(['knockout', 'router', 'provider', 'text!./search.html'], function (ko, r
 
 		var newHash;
 
+		// for the filter this will eventually end up in diaryFilter
+		let filter = "";
+		if (this.searchTerm().length === 4 && !isNaN(this.searchTerm())) {
+
+			// search on the year
+			const filterStartYear = this.searchTerm().substring(0, 4);
+			const filterStartMonth = "01";
+			const filterStartDay = "01";
+
+			const filterEndYear = this.searchTerm().substring(0, 4);
+			const filterEndMonth = "12";
+			const filterEndDay = "31";
+
+			filter = stringUtil.format("startdatev={0}{1}{2}&enddatev={3}{4}{5}",
+				filterStartYear,
+				filterStartMonth,
+				filterStartDay,
+				filterEndYear,
+				filterEndMonth,
+				filterEndDay);
+		} else {
+			// search on the title
+			filter = "title=" + encodeURIComponent(this.searchTerm())
+		}
+
 		newHash = {
 			expanded: false,
-			filter: "title=" + encodeURIComponent(this.searchTerm()),
+			filter: filter,
 			title: this.searchTerm(),
 			componentName: "entries"
 		};

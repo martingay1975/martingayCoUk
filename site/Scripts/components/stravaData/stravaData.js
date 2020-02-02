@@ -98,7 +98,10 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
         this.getActivitiesAsync = function(drawActivityFn, activityJsonPaths, filterOptions)
         {
             const getActivityPromises = [];
-            for (var index = 0; index < activityJsonPaths.length; index++)
+            const numActivities = activityJsonPaths.length;
+
+            console.log(`Getting {numActivities} activities`);
+            for (var index = 0; index < numActivities; index++)
             {
                 // gets the activity
                 var getActivityPromise = getJSONAsync(activityJsonPaths[index]);
@@ -106,6 +109,8 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
             }
 
             var overallPromise = $.when.all(getActivityPromises).then(function(activities) {
+                
+                console.log(`Got {numActivities} activities`);
                 for (var index = 0; index < activities.length; index++)
                 {
                     var heatMapJson = activities[index];
@@ -124,6 +129,7 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
                     drawActivityFn(heatMapJson);
                     //window.setTimeout(function() {drawActivityFn(heatMapJson)}, 300);
                 }
+                console.log("Finished drawing");
             });
 
             return overallPromise;
@@ -134,7 +140,7 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
 
         var self = this;
         var allPolylines = [];
-        this.currentActivityType = "Kayaking";
+        this.currentActivityType = "Run";
         this.filterOptions = {
             year: null
         };
@@ -164,9 +170,9 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
             self.runAsync();
         };
 
-        this.year2019Click = function() {
+        this.year2020Click = function() {
             self.filterOptions = {
-                year: "2019"
+                year: "2020"
             }
             self.runAsync();
         }
@@ -243,7 +249,6 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
         };
 
         this.runAsync = function() {
-
             self.removeAllPolylines();
 
             const stavaActivitiesLoader = new StavaActivitiesLoader();
