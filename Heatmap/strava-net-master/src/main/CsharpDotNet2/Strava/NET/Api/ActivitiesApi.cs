@@ -360,7 +360,7 @@ if (commute != null) formParams.Add("commute", ApiClient.ParameterToString(commu
             var chunkSize = 200;
             while (true)
             {
-                Debug.WriteLine($"{page} - Getting Activity Summary");
+                Debug.WriteLine($"{page * chunkSize} - Getting Activity Summary");
                 var twoHundredActivities = GetLoggedInAthleteActivities(null, null, page, chunkSize);
                 ret.AddRange(twoHundredActivities);
 
@@ -395,9 +395,9 @@ if (commute != null) formParams.Add("commute", ApiClient.ParameterToString(commu
             String postBody = null;
     
              if (before != null) queryParams.Add("before", ApiClient.ParameterToString(before)); // query parameter
- if (after != null) queryParams.Add("after", ApiClient.ParameterToString(after)); // query parameter
- if (page != null) queryParams.Add("page", ApiClient.ParameterToString(page)); // query parameter
- if (perPage != null) queryParams.Add("per_page", ApiClient.ParameterToString(perPage)); // query parameter
+             if (after != null) queryParams.Add("after", ApiClient.ParameterToString(after)); // query parameter
+             if (page != null) queryParams.Add("page", ApiClient.ParameterToString(page)); // query parameter
+             if (perPage != null) queryParams.Add("per_page", ApiClient.ParameterToString(perPage)); // query parameter
                                         
             // authentication setting, if any
             String[] authSettings = new String[] { "strava_oauth" };

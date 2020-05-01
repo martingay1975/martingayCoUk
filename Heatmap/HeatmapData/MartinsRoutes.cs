@@ -42,7 +42,7 @@ namespace HeatmapData
                 try
                 {
                     var fileExists = File.Exists(gpxFileSystem.GetActivityFilePath(activity));
-                    Debug.WriteLine($"       {activity.Id} - {activity.Name}. ({activityIndex + 1} of {activities.Count}) - {(fileExists? "EXISTS" : "FETCH")}");
+                    Debug.WriteLine($"       {activityIndex} {activity.Id} - {activity.Name}. ({activityIndex + 1} of {activities.Count}) - {(fileExists? "EXISTS" : "FETCH")}");
 
                     if (fileExists)
                     {
