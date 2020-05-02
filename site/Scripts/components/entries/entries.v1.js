@@ -16,7 +16,7 @@ define(['knockout', 'provider', 'router', 'text!./entries.html?version=1', 'bind
 			this.buttons = [];
 
 			this.buttonClick = function(button) {
-				router.setUrl("#/whoops/false/" + button.hash);
+				router.setUrl(button.hash);
 			}
 
 			init = function() {
@@ -31,7 +31,7 @@ define(['knockout', 'provider', 'router', 'text!./entries.html?version=1', 'bind
 					params.title = diaryProvider.defaultName;
 				}
 
-				self.buttons = diaryProvider.buttons;
+				self.buttons = diaryProvider.getButtons(params);
 
 				self.title(params.title);
 

@@ -3,7 +3,7 @@ define(['stringUtil', 'entryUtil', 'urlBuilder'], function (stringUtil, entryUti
 
 	"use strict";
 
-	var DiaryFilter, jsDateToDatev, TOKEN, FIELD, EXPRESSIONSPLITTER;
+	var jsDateToDatev, TOKEN, FIELD, EXPRESSIONSPLITTER;
 
 	TOKEN = {
 		top: "$top",
@@ -22,7 +22,7 @@ define(['stringUtil', 'entryUtil', 'urlBuilder'], function (stringUtil, entryUti
 
 	EXPRESSIONSPLITTER = "&";
 
-	DiaryFilter = function () {
+	var DiaryFilter = function () {
 
 		var self = this;
 

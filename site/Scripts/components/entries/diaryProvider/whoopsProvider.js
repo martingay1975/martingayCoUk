@@ -41,10 +41,13 @@ define(['jquery', 'diaryFilter', 'whoopsRepository', 'entryExtension', 'stringUt
 			return stringUtil.format('$orderBy=date desc', new Date().getFullYear() - 1, 11, 1);
 		};
 
-		this.buttons = [
-						{label: "By Rating", hash: this.getDefaultFilter()}, 
-						{label: "By Date", hash: this.orderByDateDescending()}
-					];
+		this.getButtons = function(params) {
+			var buttons = [ {label: "By Rating", hash: "#/whoops/false/" + this.getDefaultFilter()}, 
+							{label: "By Date", hash: "#/whoops/false/" + this.orderByDateDescending()}
+						];
+			
+			return buttons;
+		};
 
 		this.defaultName = "Whoops";
 

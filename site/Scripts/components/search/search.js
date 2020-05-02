@@ -32,7 +32,7 @@ define(['knockout', 'router', 'provider', 'stringUtil', 'text!./search.html'], f
 
 			const filterEndYear = this.searchTerm().substring(0, 4);
 			const filterEndMonth = "12";
-			const filterEndDay = "31";
+			const filterEndDay = "32";
 
 			filter = stringUtil.format("startdatev={0}{1}{2}&enddatev={3}{4}{5}",
 				filterStartYear,

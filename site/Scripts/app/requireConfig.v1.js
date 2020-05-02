@@ -40,6 +40,7 @@ var require = {
 		diaryFilter:				"app/diary/diaryFilter",								// Diary filtering container
 		entryUtil:					"app/diary/entryUtil",									// Diary entry utilities.
 		entryExtension:				"app/diary/entryExtension",								// Diary extended with knockout
+		monthTitle:			        "app/diary/monthTitle",									// Getting info about Month diary titles
 		diaryJsonReader:			"app/diary/diaryJsonReader",
 
 		// polyfill

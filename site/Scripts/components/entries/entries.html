@@ -2,19 +2,18 @@
 
 <titles params="{iconPath: $data.iconPath, title: $data.title}"></titles>
 
+<!-- ko foreach: $component.buttons -->
+	<button class="btn btn-success" style="margin-top: -18px; margin-bottom: 3px" data-bind="text: $data.label, click: $component.buttonClick"></button>
+<!-- /ko -->
+
 <!-- ko if: $data.diaryEntries().length === 0 -->
 <div class="card card-default">
-
 	<div class="card-body">
 		<div class="infocontent">
 			<p>There are no entries which match the search.</p>
 		</div>
 	</div>
 </div>
-<!-- /ko -->
-
-<!-- ko foreach: $component.buttons -->
-	<button class="btn btn-success" data-bind="text: $data.label, click: $component.buttonClick"></button>
 <!-- /ko -->
 
 <!-- ko foreach: $data.diaryEntries -->
