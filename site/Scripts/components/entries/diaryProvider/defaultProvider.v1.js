@@ -105,17 +105,13 @@ define(['jquery', 'moment', 'stringUtil', 'noInfoRepository', 'diaryFilter', 'fu
 					let startYear = parseInt(filter.startDate.substr(0,4));
 					let endYear = parseInt(filter.endDate.substr(0,4));
 					
-					if (startYear < 1970)
-					{
-						return [];
-					}
-	
 					if (isStartOfMonth && isEndOfMonth)
 					{
 						if (startYear == endYear)
 						{
 							// start and end dates are in same month and year
 							const monthTitle = new MonthTitle();
+							const MINYEAR = 1975;
 							
 							if (startMonth == endMonth)
 							{
@@ -123,10 +119,15 @@ define(['jquery', 'moment', 'stringUtil', 'noInfoRepository', 'diaryFilter', 'fu
 								let diaryCurrentYear = monthTitle.getYear(startYear);
 
 								const returnButtons = [];
-								returnButtons.push({label: diaryCurrentYear.title, hash: diaryCurrentYear.hash});
-								returnButtons.push({label: diaryTitlePrev.title, hash: diaryTitlePrev.hash});
 
-								if (!(startYear == today.year() && startMonth == today.month()+1)) {
+								returnButtons.push({label: diaryCurrentYear.title, hash: diaryCurrentYear.hash});
+
+								if (startYear >= MINYEAR)
+								{
+									returnButtons.push({label: diaryTitlePrev.title, hash: diaryTitlePrev.hash});
+								}
+
+								if (!(startYear == today.year() && startMonth == today.month() + 1)) {
 									let diaryTitleNext = monthTitle.getMonth({datev: filter.startDate, monthAdjust: 1});
 									returnButtons.push({label: diaryTitleNext.title, hash: diaryTitleNext.hash});
 								}
@@ -136,8 +137,12 @@ define(['jquery', 'moment', 'stringUtil', 'noInfoRepository', 'diaryFilter', 'fu
 								// start date is start of a month, end date is different month - both same year
 
 								const returnButtons = [];
-								const diaryPrevYear = monthTitle.getYear(startYear - 1);
-								returnButtons.push({label: diaryPrevYear.title, hash: diaryPrevYear.hash});
+
+								if (startYear >= MINYEAR)
+								{
+									const diaryPrevYear = monthTitle.getYear(startYear - 1);
+									returnButtons.push({label: diaryPrevYear.title, hash: diaryPrevYear.hash});
+								}
 
 								if (startYear < today.year())
 								{
