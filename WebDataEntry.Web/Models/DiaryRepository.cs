@@ -100,7 +100,8 @@ namespace WebDataEntry.Web.Models
 
 					this.relativePaths.ForEach(relativePath =>
 					{
-						var hasChanged = context.IsHashChanged(relativePath);
+						//var hasChanged = context.IsHashChanged(relativePath);
+						const bool hasChanged = true;
 
 						// only upload files that have changed.
 						if (hasChanged)
@@ -142,7 +143,9 @@ namespace WebDataEntry.Web.Models
 				Sort();
 				SaveListOfImages(model);
 				this._loadedHashes = SaveFormatsPrivate(new SaveRequest() { AllJson = true, LatestEntriesJson = true, OldEntriesJson = true, WhoopsJson = true });
+				DoHealthCheck();
 			}
+
 
 			return _diary;
 		}
@@ -363,6 +366,49 @@ namespace WebDataEntry.Web.Models
 
 			_diary.Entries.Sort(entryComparer);
 			_diary.Locations = _diary.Locations.OrderBy(location => location.Name).ToList();
+		}
+
+		private void DoHealthCheck()
+		{
+			var duplicates = _diary.Entries
+				.GroupBy(entry => entry.DateEntry)
+				.SelectMany(entry => entry.Skip(1));
+
+			foreach (var diaryEntry in _diary.Entries)
+			{
+				diaryEntry.DateEntry.DayOfWeek = null;
+			}
+			
+			foreach (var diaryEntry in duplicates)
+			{
+				Trace.WriteLine($"Duplicate: {diaryEntry.DateEntry} - {diaryEntry.Title.Value}");
+			}
+
+			var emptiesTitle = _diary.Entries.Where(diaryEntry => string.IsNullOrEmpty(diaryEntry?.Title?.Value));
+			foreach (var diaryEntry in emptiesTitle)
+			{
+				Trace.WriteLine($"Empty Title: {diaryEntry.DateEntry} - {diaryEntry?.Title?.Value}");
+			}
+
+			var emptiesInfo = _diary.Entries.Where(diaryEntry => string.IsNullOrEmpty(diaryEntry?.Info?.Content));
+			foreach (var diaryEntry in emptiesInfo)
+			{
+				if (diaryEntry.Info == null)
+				{
+					diaryEntry.Info = new Info();
+				}
+
+				diaryEntry.Info.Content = $"<p>{diaryEntry.Title.Value}</p>";
+				diaryEntry.Version++;
+				Trace.WriteLine($"Empty Info: {diaryEntry.DateEntry} - {diaryEntry?.Title?.Value}");
+			}
+
+			var noDayEntries = _diary.Entries.Where(diaryEntry => diaryEntry?.DateEntry?.Day == null);
+			foreach (var diaryEntry in noDayEntries)
+			{
+				Trace.WriteLine($"No Day Info: {diaryEntry.DateEntry} - {diaryEntry?.Title?.Value}");
+			}
+
 		}
 
 		public void Update(UpdateEntryRequest updateEntryRequest)

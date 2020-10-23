@@ -42,6 +42,7 @@ namespace Strava.NET.Model {
         VirtualRide,
         Workout,
         Surfing,
-        Snowboard
+        Snowboard,
+        RockClimbing
     }
 }

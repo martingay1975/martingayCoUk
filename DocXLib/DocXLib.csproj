@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3E567B0E-2C1D-4B0D-ADB1-14B4F1BFB05B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DocXLib</RootNamespace>
+    <AssemblyName>DocXLib</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="HtmlAgilityPack, Version=1.11.25.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.25\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Xceed.Document.NET, Version=1.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocX.1.7.1\lib\net40\Xceed.Document.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Words.NET, Version=1.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocX.1.7.1\lib\net40\Xceed.Words.NET.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Load.cs" />
+    <Compile Include="Helper\DataToJson\DateAssembler.cs" />
+    <Compile Include="Helper\DataToJson\DiaryAssembler.cs" />
+    <Compile Include="Helper\DataToJson\EntryAssembler.cs" />
+    <Compile Include="Helper\DataToJson\FirstAssembler.cs" />
+    <Compile Include="Helper\DataToJson\ImageAssembler.cs" />
+    <Compile Include="Helper\DataToJson\InfoAssembler.cs" />
+    <Compile Include="Helper\DataToJson\TitleAssembler.cs" />
+    <Compile Include="Helper\FileEquality.cs" />
+    <Compile Include="Helper\IFileStreamSerialize.cs" />
+    <Compile Include="Helper\JsonFileSerialize.cs" />
+    <Compile Include="Helper\XmlFileStreamSerialize.cs" />
+    <Compile Include="Model\Data\Json\Date.cs" />
+    <Compile Include="Model\Data\Json\Diary.cs" />
+    <Compile Include="Model\Data\Json\Entry.cs" />
+    <Compile Include="Model\Data\Json\First.cs" />
+    <Compile Include="Model\Data\Json\Image.cs" />
+    <Compile Include="Model\Data\Json\Info.cs" />
+    <Compile Include="Model\Data\Json\Title.cs" />
+    <Compile Include="Model\Data\Xml\DateEntry.cs" />
+    <Compile Include="Model\Data\Xml\Diary.cs" />
+    <Compile Include="Model\Data\Xml\DiaryImage.cs" />
+    <Compile Include="Model\Data\Xml\Entry.cs" />
+    <Compile Include="Model\Data\Xml\First.cs" />
+    <Compile Include="Model\Data\Xml\Info\IImageConsumer.cs" />
+    <Compile Include="Model\Data\Xml\Info\IInfoParse.cs" />
+    <Compile Include="Model\Data\Xml\Info\ImageReader.cs" />
+    <Compile Include="Model\Data\Xml\Info\Info.cs" />
+    <Compile Include="Model\Data\Xml\Info\InfoParseAll.cs" />
+    <Compile Include="Model\Data\Xml\Info\InfoParseForDiaryContentAndImages.cs" />
+    <Compile Include="Model\Data\Xml\Info\InfoParseWhoops.cs" />
+    <Compile Include="Model\Data\Xml\Info\Whoop.cs" />
+    <Compile Include="Model\Data\Xml\Location.cs" />
+    <Compile Include="Model\Data\Xml\Person.cs" />
+    <Compile Include="Model\Data\Xml\Title.cs" />
+    <Compile Include="Start.cs" />
+    <Compile Include="DateX.cs" />
+    <Compile Include="ParagraphSample.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WebDataEntry.Web\WebDataEntry.Web.csproj">
+      <Project>{0268EA67-A7AD-4E25-8838-22F725E58BC3}</Project>
+      <Name>WebDataEntry.Web</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

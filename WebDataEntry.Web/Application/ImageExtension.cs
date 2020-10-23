@@ -52,62 +52,59 @@ namespace WebDataEntry.Web.Application
 			}
 		}
 
+		public static Size CalculateNewSize(Size maxSize, Size originalImageSize)
+        {
+			maxSize = GetSizingRight(maxSize, originalImageSize);
+
+			float nPercentW = ((float)maxSize.Width / (float)originalImageSize.Width);
+			float nPercentH = ((float)maxSize.Height / (float)originalImageSize.Height);
+			float nPercent = nPercentH < nPercentW ? nPercentH : nPercentW;
+
+			var destWidth = (int)(originalImageSize.Width * nPercent);
+			var destHeight = (int)(originalImageSize.Height * nPercent);
+
+			return new Size(destWidth, destHeight);
+		}
+
 		public static Image ResizeImage(this Image imgToResize, Size maxSize)
 		{
 			ExifRotate(imgToResize);
+			var newSize = CalculateNewSize(maxSize, imgToResize.Size);
 
-			var sourceWidth = imgToResize.Width;
-			var sourceHeight = imgToResize.Height;
-
-			maxSize = GetSizingRight(maxSize, imgToResize);
-
-			float nPercent = 0;
-			float nPercentW = 0;
-			float nPercentH = 0;
-
-			nPercentW = ((float)maxSize.Width / (float)sourceWidth);
-			nPercentH = ((float)maxSize.Height / (float)sourceHeight);
-
-			nPercent = nPercentH < nPercentW ? nPercentH : nPercentW;
-
-			var destWidth = (int)(sourceWidth * nPercent);
-			var destHeight = (int)(sourceHeight * nPercent);
-
-			var bitmap = new Bitmap(destWidth, destHeight);
+			var bitmap = new Bitmap(newSize.Width, newSize.Height);
 			using (var graphics = Graphics.FromImage(bitmap))
 			{
 				graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-				graphics.DrawImage(imgToResize, 0, 0, destWidth, destHeight);
+				graphics.DrawImage(imgToResize, 0, 0, newSize.Width, newSize.Height);
 			}
 
 			return bitmap;
 		}
 
-		private static Size GetSizingRight(Size size, Image imgToResize)
+		private static Size GetSizingRight(Size maxSize, Size imageSize)
 		{
-			var sourceWidth = imgToResize.Width;
-			var sourceHeight = imgToResize.Height;
+			var originalMaxSize = maxSize;
 
-			var originalSize = size;
-
-			if (sourceWidth > sourceHeight)
+			if (imageSize.Width > imageSize.Height)
 			{
-				if (originalSize.Width < originalSize.Height)
+				// landscape
+				if (originalMaxSize.Width < originalMaxSize.Height)
 				{
-					size.Width = originalSize.Height;
-					size.Height = originalSize.Width;
+					maxSize.Width = originalMaxSize.Height;
+					maxSize.Height = originalMaxSize.Width;
 				}
 			}
 			else
 			{
-				if (originalSize.Width > originalSize.Height)
+				// portrait
+				if (originalMaxSize.Width > originalMaxSize.Height)
 				{
-					size.Width = originalSize.Height;
-					size.Height = originalSize.Width;
+					maxSize.Width = originalMaxSize.Height;
+					maxSize.Height = originalMaxSize.Width;
 				}
 			}
 
-			return size;
+			return maxSize;
 		}
 
 		public static void SaveJPeg(this Image imgToSave, string filePath, int compression)

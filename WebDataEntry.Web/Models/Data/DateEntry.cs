@@ -25,6 +25,11 @@
             return true;
         }
 
+        public override string ToString()
+        {
+            return $"{Year}-{Month}-{Day}";
+        }
+
         public static bool operator == (DateEntry a, DateEntry b)
         {
             // If both are null, or both are same instance, return true.
