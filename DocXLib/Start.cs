@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using DocXLib.Model.Data.Xml;
 using HtmlAgilityPack;
-using WebDataEntry.Web.Application;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 using Font = Xceed.Document.NET.Font;
@@ -19,12 +19,12 @@ namespace DocXLib
         private const string BaseImagePath = @"L:\images";
         private const string DiaryXmlPath = @"C:\Users\Slop\AppData\Roaming\res\xml\diary.xml";
         const int KatiePersonId = 502;
-        private readonly static List<string> BadImages;
+        private readonly static List<BadImageItem> BadImages;
         private readonly static Size MaxSize;
 
         static Start()
         {
-            BadImages = new List<string>();
+            BadImages = new List<BadImageItem>();
             MaxSize = new Size(width: 250, height: 300);
         }
 
@@ -49,6 +49,57 @@ namespace DocXLib
             finally
             {
                 document.Save();
+                ProcessBadImages();
+            }
+        }
+
+        public class BadImageItem
+        {
+            public BadImageItem(string year, string filename)
+            {
+                Year = year;
+                Filename = filename;
+                FoundLocations = null;
+            }
+
+            public string Year;
+            public string Filename;
+            public string[] FoundLocations;
+
+            public void FindFilename()
+            {
+                var yearSearchPath = Path.Combine(BaseImagePath, Year);
+                FoundLocations = Directory.GetFiles(yearSearchPath, Filename, SearchOption.AllDirectories);
+                if (FoundLocations.Length == 0)
+                {
+                    FoundLocations = Directory.GetFiles(BaseImagePath, Filename, SearchOption.AllDirectories);
+                }
+            }
+        }
+
+        private static void ProcessBadImages()
+        {
+            Debug.WriteLine($"There are {BadImages.Count} bad images.");
+            int count = 1;
+            foreach (var badImage in BadImages)
+            {
+                badImage.FindFilename();
+                
+                var value = badImage.FoundLocations == null ? "-" : string.Join(",", badImage.FoundLocations);
+                Debug.WriteLine($"{count} - {badImage.Filename} - {value}");
+
+                if (badImage.FoundLocations != null && badImage.FoundLocations.Length == 1)
+                {
+                    File.Copy(badImage.FoundLocations[0], Path.Combine(BaseImagePath, badImage.Filename));
+                } else
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        var url = $"http://www.martingay.co.uk/images/years/{badImage.Year}/{badImage.Filename}";
+                        client.DownloadFile(new Uri(url), $@"l:\images\{badImage.Filename}");
+                    }
+                }
+                count++;
             }
         }
 
@@ -96,16 +147,17 @@ namespace DocXLib
         {
             // go find the image from the _BestOf directory. Full Res image.
 
-            var streamImage = document.AddImage(new FileStream(GetFullImagePath(imagePath), FileMode.Open, FileAccess.Read));
-            var pictureStream = streamImage.CreatePicture();
+            var sourceImagePath = GetFullImagePath(imagePath);
+            //var streamImage = document.AddImage(new FileStream(sourceImagePath, FileMode.Open, FileAccess.Read));
+            //var pictureStream = streamImage.CreatePicture();
 
-            var newSize = ImageExtension.CalculateNewSize(MaxSize, new Size((int)pictureStream.Width, (int)pictureStream.Height));
+            //var newSize = ImageExtension.CalculateNewSize(MaxSize, new Size((int)pictureStream.Width, (int)pictureStream.Height));
 
-            pictureStream.Width = newSize.Width;
-            pictureStream.Height = newSize.Height;
-            paragraph.AppendPicture(pictureStream);
-            paragraph.InsertCaptionAfterSelf(caption);
-            paragraph.SpacingAfter(20);
+            //pictureStream.Width = newSize.Width;
+            //pictureStream.Height = newSize.Height;
+            //paragraph.AppendPicture(pictureStream);
+            //paragraph.InsertCaptionAfterSelf(caption);
+            //paragraph.SpacingAfter(20);
         }
 
         private static string GetFullImagePath(string imagePath)
@@ -121,7 +173,9 @@ namespace DocXLib
 
             if (!File.Exists(convertedPath))
             {
-                throw new Exception($"Cannot find file '{convertedPath}'. Original '{imagePath}'");
+                BadImages.Add(new BadImageItem(year, filename));
+                Debug.WriteLine($"'{convertedPath, 50}'. Original '{imagePath}'");
+                //throw new Exception($"Cannot find file '{convertedPath}'. Original '{imagePath}'");
             }
 
             return convertedPath;
