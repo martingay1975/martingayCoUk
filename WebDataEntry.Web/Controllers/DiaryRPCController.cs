@@ -103,6 +103,18 @@ namespace WebDataEntry.Web.Controllers
 			return _diaryRepository.GetLocations();
 		}
 
+		[Route("DeleteImage/{year}/{filename}")]
+		[HttpGet]
+		public void DeleteImage(string year, string filename)
+		{
+			var path = $"/martingay/images/years/{year}/{filename}";
+			using (var sftpBatch = new SFtpBatch(_configuration))
+			{
+				sftpBatch.DeleteFile(path);
+			}
+		}
+
+
 		[HttpPost]
 		[Route("UploadImages")]
 		public async Task<List<string>> UploadImages()
@@ -144,5 +156,6 @@ namespace WebDataEntry.Web.Controllers
 				sftpBatch.Upload(relativeSource);
 			}
 		}
+
 	}
 }

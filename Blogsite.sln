@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocXLib", "DocXLib\DocXLib.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocXConsole", "DocXConsole\DocXConsole.csproj", "{EB4537DD-3250-40F0-81FD-D0EF2584F885}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocXWinform", "DocXWinform\DocXWinform.csproj", "{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,18 @@ Global
 		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|x86.ActiveCfg = Release|Any CPU
 		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|x86.Build.0 = Release|Any CPU
+		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Debug|x86.Build.0 = Debug|Any CPU
+		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Release|x86.ActiveCfg = Release|Any CPU
+		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -67,6 +67,11 @@ namespace WebDataEntry.Web.Application
 			return (sourcePath, destinationPath);
 		}
 
+		internal void DeleteFile(string path)
+        {
+			sftp.DeleteFile(path);
+        }
+
 		public void Dispose()
 		{
 			sftp.Disconnect();
