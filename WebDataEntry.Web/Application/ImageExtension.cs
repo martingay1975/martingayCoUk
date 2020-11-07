@@ -51,14 +51,16 @@ namespace WebDataEntry.Web.Application
 					return false;
 			}
 		}
+		
+		public delegate Size GetSizingRightFunc(Size maxSize, Size imageSize);
 
-		public static Size CalculateNewSize(Size maxSize, Size originalImageSize)
+		public static Size CalculateNewSize(in Size maxSize, Size originalImageSize, GetSizingRightFunc getSizingRightFunc)
         {
-			maxSize = GetSizingRight(maxSize, originalImageSize);
+			var newMaxSize = getSizingRightFunc(maxSize, originalImageSize);
 
-			float nPercentW = ((float)maxSize.Width / (float)originalImageSize.Width);
-			float nPercentH = ((float)maxSize.Height / (float)originalImageSize.Height);
-			float nPercent = nPercentH < nPercentW ? nPercentH : nPercentW;
+			float nPercentW = ((float)newMaxSize.Width / (float)originalImageSize.Width);
+			float nPercentH = ((float)newMaxSize.Height / (float)originalImageSize.Height);
+			float nPercent = Math.Min(nPercentH, nPercentW);
 
 			var destWidth = (int)(originalImageSize.Width * nPercent);
 			var destHeight = (int)(originalImageSize.Height * nPercent);
@@ -69,7 +71,7 @@ namespace WebDataEntry.Web.Application
 		public static Image ResizeImage(this Image imgToResize, Size maxSize)
 		{
 			ExifRotate(imgToResize);
-			var newSize = CalculateNewSize(maxSize, imgToResize.Size);
+			var newSize = CalculateNewSize(maxSize, imgToResize.Size, GetSizingRight);
 
 			var bitmap = new Bitmap(newSize.Width, newSize.Height);
 			using (var graphics = Graphics.FromImage(bitmap))

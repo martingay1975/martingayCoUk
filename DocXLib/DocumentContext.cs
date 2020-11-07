@@ -11,6 +11,7 @@ namespace DocXLib
         public Paragraph Paragraph { get; private set; }
         public Entry Entry { get; private set; }
         public List<Picture> Pictures { get; private set; }
+        public Paragraph FirstParagraph { get; private set; }
 
         public DocumentContext(DocX document)
         {
@@ -21,11 +22,17 @@ namespace DocXLib
         {
             this.Entry = entry;
             Pictures = new List<Picture>();
+            FirstParagraph = null;
         }
 
         public Paragraph SetNewParagraph(string value)
         {
             this.Paragraph = this.Document.InsertParagraph(value);
+            if (this.FirstParagraph == null)
+            {
+                this.FirstParagraph = this.Paragraph;
+            }
+
             return this.Paragraph;
         }
     }

@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.IO;
 using Xceed.Document.NET;
-using WebDataEntry.Web.Application;
 using System.Collections.Generic;
 
 namespace DocXLib
@@ -29,12 +28,7 @@ namespace DocXLib
             {
                 var documentImage = documentContext.Document.AddImage(fs);
                 var documentPicture = documentImage.CreatePicture();
-                var newSize = ImageExtension.CalculateNewSize(MaxSize, new Size((int)documentPicture.Width, (int)documentPicture.Height));
-                documentPicture.Width = newSize.Width;
-                documentPicture.Height = newSize.Height;
-
                 documentPicture.Name = caption;
-
                 return documentPicture;
             }
 
