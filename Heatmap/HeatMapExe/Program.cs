@@ -8,7 +8,7 @@ namespace HeatMapExe
         // http://www.strava.com/oauth/authorize?client_id=9912&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=auto&scope=profile:read_all,profile:write,activity:write,activity:read_all
 
         // 2) Click Authorize, then from the result, grab the code= part of the array.
-        const string AuthorizationCode = "56a14413a22e1b655fa2d4dc462a6e33e4f450e9";
+        const string AuthorizationCode = "ff0187bf287816cdb4e71ef62571a0c832839d36";
 
         // 3) Once run, goto C:\temp\strava. Upload the latest file timestamps via FileZilla. Remember to do the FileSystem.json in the root as well.
 

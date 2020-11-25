@@ -15,62 +15,135 @@ namespace DocXLib
 {
     public static class Start
     {
-        public const string OutputDocXDirectory = @"C:\temp\docx\";
-        
-        private const string DiaryXmlPath = @"C:\Users\Slop\AppData\Roaming\res\xml\diary.xml";
-        private const int chunkingLength = 300;
-        private const int KatiePersonId = 502;
+        private const bool UseLicensedVersion = false;
+        private const int STARTATCHUNKIDX = 1;
+        //public readonly static List<int> ChunkStartIdx = new List<int> { 
+        //    /*  0 */ 0, 
+        //    /*  1 */ 800, 
+        //    /*  2 */ 950, 
+        //    /*  3 */ 1200, 
+        //    /*  4 */ 1400, 
+        //    /*  5 */ 1650, 
+        //    /*  6 */ 1800, 
+        //    /*  7 */ 2000, 
+        //    /*  8 */ 2250, 
+        //    /*  9 */ 2600};
 
-        public static void Run()
+        public readonly static List<int> ChunkLength = new List<int>
         {
-            var diary = Load.LoadXml(DiaryXmlPath);
-            var entries = diary.Entries.Where(entry => entry.People.Contains(KatiePersonId));
-            var chunkingStart = 0;
+            /*  0 */ 800,
+            /*  1 */ 150,
+            /*  2 */ 250,
+            /*  3 */ 150,
+            /*  4 */ 250,
+            /*  5 */ 150,
+            /*  6 */ 150,
+            /*  7 */ 100,
+            /*  8 */ 150,
+            /*  9 */ 350
+        };  
 
-            while (true)
+        private static int GetStartIndex(int chunkIdx)
+        {
+            int startIndex = 0;
+            for (var i=0; i<chunkIdx; i++)
             {
-                var chunkedEntries = entries.Skip(chunkingStart).Take(chunkingLength);
-                if (!Create1Document(chunkedEntries))
-                {
-                    return;
-                }
-                chunkingStart += chunkingLength;
-                return;
+                startIndex += ChunkLength[i];
             }
+
+            return startIndex;
         }
 
-        private static bool Create1Document(in IEnumerable<Entry> entries)
+        public const string DocXDirectory = @"C:\temp\docx\";
+        private const string DiaryXmlPath = @"C:\Users\Slop\AppData\Roaming\res\xml\diary.xml";
+        private const int KatiePersonId = 502;
+
+        public static void Run(int? idx = null)
         {
-            var document = CreateDocument(entries.First().DateEntry.GetShortDate());
-            var documentContext = new DocumentContext(document);
+            var diary = Load.LoadXml(DiaryXmlPath);
+
+            var startAtChunkIdx = idx ?? STARTATCHUNKIDX;
+            var startAt = GetStartIndex(startAtChunkIdx);
+            var takeEntries = ChunkLength[startAtChunkIdx];
+            var entries = diary.Entries.Where(entry => entry.People.Contains(KatiePersonId));
+            var chunkedEntries = entries.Skip(startAt).Take(takeEntries);
+            CreateDocument(chunkedEntries, startAtChunkIdx);
+        }
+
+        private static void CreateYearPage(DocX document, int year)
+        {
+            document.InsertSectionPageBreak();
+            var yearParagraph = document.InsertParagraph(year.ToString()).FontSize(50);
+            yearParagraph.Heading(HeadingType.Heading1);
+            document.InsertParagraph("Image to follow");
+            document.InsertSectionPageBreak();
+        }
+
+        private static void CreateDocument(in IEnumerable<Entry> entries, int idx)
+        {
+            var documentFromPostfix = entries.First().DateEntry.GetShortDate().Replace(" ", "-");
+            var documentLastPostfix = entries.Last().DateEntry.GetShortDate().Replace(" ", "-");
+            var filePath = Path.Combine(DocXDirectory, $"diary{idx} {documentFromPostfix} to {documentLastPostfix}.docx");
+            var document = DocX.Create(filePath);
+            var font = new Font("Calibri (Body)");
+            document.SetDefaultFont(font, 11d, Color.Black);
 
             var counter = 0;
             var chunkedEntries = entries.ToList();
             var chunkedEntriesLength = chunkedEntries.Count;
+            var previousYear = 0;
+            var previousMonth = 0;
+
+            // InsertTOC(document);
+
             foreach (var entry in chunkedEntries)
             {
+                var entryContext = new EntryContext(document, entry);
+                
                 counter++;
-                Console.WriteLine($"{counter} / {chunkedEntriesLength}");
+                Console.WriteLine($"{counter} / {chunkedEntriesLength} - {entryContext.Entry.DateEntry.GetShortDate()}");
 
-                documentContext.SetNewEntry(entry);
-                CreateDiaryHeader(documentContext);
-                CreateDiaryContent(documentContext);
+                if (entry.DateEntry.Year != previousYear)
+                {
+                    // Add a blank page introducing the year.
+                    CreateYearPage(document, entry.DateEntry.Year);
+                    previousYear = entry.DateEntry.Year;
+                    previousMonth = 0;
+                }
 
-                AddPictures(documentContext);
-                documentContext.SetNewParagraph("")
-                    .SpacingAfter(40);
+                if (entry.DateEntry.Month != previousMonth)
+                {
+                    var month = document.InsertParagraph(entry.DateEntry.GetLongMonthAndYear());
+                    month.Heading(HeadingType.Heading2);
+                    previousMonth = entry.DateEntry.Month.Value;
+                }
+
+                document.InsertParagraph("").SpacingBefore(10);
+                CreateDiaryHeader(document, entry);
+                CreateDiaryContent(entryContext);
+
+                AddPictures(entryContext);
             }
 
             document.Save();
-            return chunkedEntriesLength == chunkingLength;
+            document.Dispose();
         }
 
-        private static void CreateDiaryHeader(in DocumentContext documentContext)
+        private static void InsertTOC(DocX document)
+        {
+            var switches = new Dictionary<TableOfContentsSwitches, string>() {
+                { TableOfContentsSwitches.O, "1-3" },
+                { TableOfContentsSwitches.U, "" } };
+
+            document.InsertTableOfContents("", switches);
+        }
+
+        private static void CreateDiaryHeader(in DocX document, in Entry entry)
         {
             // Add a table in a document of 1 row and 3 columns.
             var columnWidths = new [] { 480f, 120f };
-            var table = documentContext.Document.InsertTable(1, columnWidths.Length);
-
+            var table = document.InsertTable(1, columnWidths.Length);
+            
             // Set the table's column width and background 
             table.SetWidths(columnWidths);
             table.AutoFit = AutoFit.Contents;
@@ -81,16 +154,19 @@ namespace DocXLib
             // Fill in the columns of the first row in the table.
             // Title
             var titleParagraph = row.Cells[0].Paragraphs.First();
-            titleParagraph.Append(documentContext.Entry.Title.Value)
+
+            titleParagraph.Heading(HeadingType.Heading3);
+
+            titleParagraph.Append(entry.Title.Value)
                 .CapsStyle(CapsStyle.caps)
                 .FontSize(14)
-                .Spacing(4)
+                .Spacing(3)
                 .Bold(true)
                 .Color(Color.DarkBlue);
 
             // Date
             var dateParagraph = row.Cells[1].Paragraphs.First();
-            dateParagraph.Append(documentContext.Entry.DateEntry.GetLongDate())
+            dateParagraph.Append(entry.DateEntry.GetLongDate())
                 .CapsStyle(CapsStyle.caps)
                 .FontSize(9)
                 .Color(Color.DeepPink);
@@ -98,67 +174,109 @@ namespace DocXLib
             dateParagraph.Alignment = Alignment.right;
         }
 
-        private static void CreateDiaryContent(in DocumentContext documentContext)
+        private static void CreateDiaryContent(in EntryContext entryContext)
         {
-            var contentHtml = documentContext.Entry.Info.OriginalContent;
-            
+            // Create a table with 1 row and 1 column - serves as a container
+            entryContext.Container = TableHelper.CreateTable(entryContext, 1, 1);
+
+            var contentHtml = entryContext.Entry.Info.OriginalContent;
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(contentHtml);
-
+            
             var childNodes = htmlDocument.DocumentNode.ChildNodes;
-
             foreach (var childNode in childNodes)
             {
-                NodeHandler(documentContext, childNode);
+                NodeHandler(entryContext, childNode);
             }
+
+            htmlDocument = null;
+            GC.Collect();
         }
 
         private static string GetText(HtmlNode htmlNode)
         {
             // need to unescape html eg. &gt; to >
-            return WebUtility.HtmlDecode(htmlNode.InnerText);
+            var ret = WebUtility.HtmlDecode(htmlNode.InnerText)
+                .Replace('\n', ' ')
+                .Trim();
+
+            while (ret.IndexOf("  ") > -1)
+            {
+                ret = ret.Replace("  ", " ");
+            }
+
+            return ret;
         }
 
-        private static void NodeHandler(in DocumentContext documentContext, HtmlNode htmlNode)
+        private static void NodeHandler(in EntryContext entryContext, HtmlNode htmlNode)
         {
             switch (htmlNode.Name)
             {
-                case "p":
-                {
-                    var text = GetText(htmlNode);
-                        var paragraph = documentContext.SetNewParagraph(text);
-                        paragraph.Alignment = Alignment.left;
-                        paragraph.SpacingBefore(11);
-                        paragraph.KeepLinesTogether();
 
+                case "woops":
+                {
                     foreach (var paragraphChildNode in htmlNode.ChildNodes)
                     {
-                        NodeHandler(documentContext, paragraphChildNode);
+                        NodeHandler(entryContext, paragraphChildNode);
+                    }
+                    break;
+                }
+                case "p":
+                case "first":
+                {
+                    var text = GetText(htmlNode);
+                    entryContext.SetContentParagraph(text);
+                    foreach (var paragraphChildNode in htmlNode.ChildNodes)
+                    {
+                        NodeHandler(entryContext, paragraphChildNode);
                     }
 
                     break;
                 }
                 case "ul":
                 {
-                    var list = documentContext.Document.AddList();
+                    var list = entryContext.Document.AddList();
                     foreach (var listItemNode in htmlNode.ChildNodes)
                     {
-                        documentContext.Document.AddListItem(list, GetText(listItemNode), 0, ListItemType.Numbered);
+                        var text = "\t•  " + GetText(listItemNode);
+                        entryContext.SetContentParagraph(text, true);
                     }
 
-                    documentContext.Document.InsertList(list);
                     break;
                 }
                 case "image":
                 {
-                    var picture = PictureHelper.CreateImage(documentContext, GetChildNodeValue(htmlNode, "src"), GetChildNodeValue(htmlNode, "caption"));
-                    documentContext.Pictures.Add(picture);
+                    var picture = PictureHelper.CreateImage(entryContext, GetChildNodeValue(htmlNode, "src"), GetChildNodeValue(htmlNode, "caption"));
+                    if (picture != null)
+                    {
+                        entryContext.Pictures.Add(picture);
+                    }
                     break;
                 }
                 case "#text":
                 {
                     // do nothing - already handled.
                     break;
+                }
+                case "div" when htmlNode.Attributes.Any(a => a.Value == "youtube"):
+                {
+                    break;
+                    // do nothing for now. Although maybe take a screen grab
+                }
+                case "a":
+                {
+                    //entryContext.Paragraph.Append(GetText(htmlNode));
+                    break;
+                }
+                case "googlelink":
+                {
+                    entryContext.Paragraph.Append(" " + GetText(htmlNode) + " ");
+                    break;
+                }
+                default:
+                {
+                    var msg = $"'{htmlNode.Name}' not processed at '{entryContext.Entry.DateEntry.GetShortDate()}' == '{entryContext.Entry.Title?.Value}'";
+                    throw new Exception(msg);
                 }
             }
         }
@@ -169,27 +287,29 @@ namespace DocXLib
             return childNode.InnerText;
         }
 
-        private static void AddPictures(DocumentContext documentContext)
+        private static void AddPictures(EntryContext entryContext)
         {
-            var picCount = documentContext.Pictures.Count;
+            var picCount = entryContext.Pictures.Count;
             if (picCount == 0)
             {
                 return; // no pictures so need to continue
             }
 
-            if (picCount == 1 && documentContext.FirstParagraph != null)
+            if (picCount == 1 )
             {
-                var picture = documentContext.Pictures[0];
-                picture.WrappingStyle = PictureWrappingStyle.WrapTight;
-                picture.WrapText = PictureWrapText.right;
-                picture.VerticalAlignment = WrappingVerticalAlignment.TopRelativeToLine;
-                picture.DistanceFromTextLeft = 7;
-                picture.DistanceFromTextRight = 7;
-                picture.DistanceFromTextTop = 7;
-                picture.DistanceFromTextBottom = 7;
+                var firstParagraph = entryContext.Paragraph;
+                var picture = entryContext.Pictures[0];
+                
+                // UseLicensedVersion - START
+                //picture.WrappingStyle = PictureWrappingStyle.WrapTight;
+                //picture.WrapText = PictureWrapText.right;
+                //picture.VerticalAlignment = WrappingVerticalAlignment.TopRelativeToLine;
+                //picture.DistanceFromTextLeft = 7;
+                //picture.DistanceFromTextRight = 7;
+                //picture.DistanceFromTextBottom = 7;
+                // UseLicensedVersion - END
                 SizePicture(picture, new Size(225, 300));
 
-                var firstParagraph = documentContext.FirstParagraph;
                 firstParagraph.SpacingBefore(0);
                 firstParagraph.KeepLinesTogether(false);
                 firstParagraph.InsertPicture(picture);
@@ -197,45 +317,33 @@ namespace DocXLib
                 return;
             }
 
-            var isThreeColumn = picCount % 3 == 0 || picCount > 4;
-            var columnWidths = isThreeColumn ? new[] { 150f, 150f, 150f } : new[] { 225f, 225f };
-            var columnCount = columnWidths.Length;
-
+            var columnCount = (picCount % 3 == 0 || picCount > 4) ? 3 : 2;
             var rowCount = Math.Ceiling(picCount / (float)columnCount);
 
-            // small gap before the table
-            var paragraph = documentContext.SetNewParagraph("");
-            paragraph.Spacing(7);
+            var pictureEnumerator = entryContext.Pictures.GetEnumerator();
 
-            var table = documentContext.Document.InsertTable((int)rowCount, columnCount);
-
-            // Set the table's column width and background 
-            table.SetWidths(columnWidths);
-            table.AutoFit = AutoFit.Contents;
-            table.Design = TableDesign.None;
-
-            var pictureEnumerator = documentContext.Pictures.GetEnumerator();
-
-            foreach (var row in table.Rows)
-            {
-                foreach (var cell in row.Cells)
+            TableHelper.CreateTable(entryContext, (int)rowCount, columnCount,
+                (int rowIndex, int columnIndex, float columnWidth, Cell cell) =>
                 {
+                    // visitor for each cell in the table.
+
                     if (!pictureEnumerator.MoveNext())
                     {
                         // no more pictures to display
-                        return;
+                        return false;
                     }
 
                     var picture = pictureEnumerator.Current;
 
-                    var columnMaxSize = new Size((int)columnWidths[0] - 10, (int)(columnWidths[0] * 1.25));
+                    var columnMaxSize = new Size((int)columnWidth - 10, (int)(columnWidth * 1.25));
                     SizePicture(picture, columnMaxSize);
 
                     var cellParagraph = cell.Paragraphs.First();
                     cellParagraph.AppendPicture(picture);
                     cellParagraph.InsertCaptionAfterSelf(picture.Name);
-                }
-            }
+
+                    return true;
+                });
         }
 
         static void SizePicture(Picture picture, Size pictureMaxSize)
@@ -244,15 +352,6 @@ namespace DocXLib
             var newSize = ImageExtension.CalculateNewSize(pictureMaxSize, pictureSize, (maxSize, _) => maxSize);
             picture.Width = newSize.Width;
             picture.Height = newSize.Height;
-        }
-
-        static DocX CreateDocument(string documentPostfix)
-        {
-            var filePath = Path.Combine(OutputDocXDirectory, $"diary{documentPostfix}.docx");
-            var document = DocX.Create(filePath);
-            document.SetDefaultFont(new Font("Calibri (Body)"), 11d, Color.Black);
-
-            return document;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using Xceed.Document.NET;
 using System.Collections.Generic;
@@ -10,32 +9,23 @@ namespace DocXLib
     {
         public readonly static List<BadImageItem> NotInBestOfImages;
         public const string BaseImagePath = @"L:\images";
-
-        private readonly static Size MaxSize;
         
         static PictureHelper()
         {
-            MaxSize = new Size(width: 100, height: 200);
             NotInBestOfImages = new List<BadImageItem>();
         }
 
-        public static Picture CreateImage(in DocumentContext documentContext, string imagePath, string caption)
+        public static Picture CreateImage(in EntryContext entryContext, string imagePath, string caption)
         {
             // go find the image from the _BestOf directory. Full Res image.
             var sourceImagePath = GetFullImagePath(imagePath);
-
             using (var fs = new FileStream(sourceImagePath, FileMode.Open, FileAccess.Read))
             {
-                var documentImage = documentContext.Document.AddImage(fs);
+                var documentImage = entryContext.Document.AddImage(fs);
                 var documentPicture = documentImage.CreatePicture();
                 documentPicture.Name = caption;
                 return documentPicture;
             }
-
-            //documentPicture.WrappingStyle = PictureWrappingStyle.WrapTight;
-            //documentPicture.WrapText = PictureWrapText.right;
-            //documentPicture.HorizontalAlignment = WrappingHorizontalAlignment.LeftRelativeToMargin;
-            //documentPicture.VerticalOffsetAlignmentFrom = WrappingVerticalOffsetAlignmentFrom.Line;
         }
 
         public static (string year, string filename) GetImagePathParts(string imagePath)

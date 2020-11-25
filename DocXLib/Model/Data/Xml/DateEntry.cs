@@ -41,6 +41,12 @@ namespace DocXLib.Model.Data.Xml
         {
             return $"{GetValue(this.Day)} {GetValue(this.Month)} {GetValue(this.Year)}";
         }
+
+        public string GetLongMonthAndYear()
+        {
+            return $"{GetMonthName(this.Month)} {GetValue(this.Year)}";
+        }
+
         public string GetLongDate()
         {
             return $"{GetValue(this.Day)} {GetMonthName(this.Month)} {GetValue(this.Year)}";
