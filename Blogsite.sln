@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocXConsole", "DocXConsole\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocXWinform", "DocXWinform\DocXWinform.csproj", "{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCoreLib", "NetCoreLib\NetCoreLib.csproj", "{A7EE8B84-4D68-4941-AFDF-00D1B9554460}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +137,18 @@ Global
 		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Release|x86.ActiveCfg = Release|Any CPU
 		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Release|x86.Build.0 = Release|Any CPU
+		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Debug|x86.Build.0 = Debug|Any CPU
+		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Release|x86.ActiveCfg = Release|Any CPU
+		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -15,15 +15,21 @@ namespace DocXLib
             NotInBestOfImages = new List<BadImageItem>();
         }
 
-        public static Picture CreateImage(in EntryContext entryContext, string imagePath, string caption)
+        public static Picture CreateEntryPicture(in EntryContext entryContext, string imagePath, string caption)
         {
             // go find the image from the _BestOf directory. Full Res image.
             var sourceImagePath = GetFullImagePath(imagePath);
+            var documentPicture = CreatePicture(entryContext.Document, sourceImagePath);
+            documentPicture.Name = caption;
+            return documentPicture;
+        }
+
+        public static Picture CreatePicture(Document document, string sourceImagePath)
+        {
             using (var fs = new FileStream(sourceImagePath, FileMode.Open, FileAccess.Read))
             {
-                var documentImage = entryContext.Document.AddImage(fs);
+                var documentImage = document.AddImage(fs);
                 var documentPicture = documentImage.CreatePicture();
-                documentPicture.Name = caption;
                 return documentPicture;
             }
         }

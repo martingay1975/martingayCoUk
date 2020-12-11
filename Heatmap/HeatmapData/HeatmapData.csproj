@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="RestSharp.Net2" Version="1.1.11" />
+    <ProjectReference Include="..\..\SFtp\SFtp.csproj" />
     <ProjectReference Include="..\strava-net-master\src\Strava.NET.csproj" />
   </ItemGroup>
 

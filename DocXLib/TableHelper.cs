@@ -10,25 +10,33 @@ namespace DocXLib
         // return false to stop visiting
         public delegate bool VisitCellFunc(int rowIndex, int columnIndex, float columnWidth, Cell cell);
 
+        internal class Options
+        {
+            public VisitCellFunc VisitCellFunc { get; set; }
+            public float[] ColumnWidths { get; set; }
+            public int ColumnCountIfNoWidths { get; set; }
+        }
+
         /// <summary>
         /// Creates/inserts a table with no borders
         /// </summary>
-        public static Table CreateTable(EntryContext entryContext, int rowCount, int columnCount, VisitCellFunc visitCellFunc = null)
+        public static Table CreateTable(Document document, int rowCount, Options options)
         {
-            var columnWidths = Enumerable.Repeat((float)TotalWidth / (float)columnCount, columnCount).ToArray();
+            var columnWidths = options.ColumnWidths 
+                ?? Enumerable.Repeat((float)TotalWidth / (float)options.ColumnCountIfNoWidths, options.ColumnCountIfNoWidths).ToArray();
 
             // small gap before the table
-            var paragraph = entryContext.Document.InsertParagraph("");
+            var paragraph = document.InsertParagraph("");
             paragraph.Spacing(7);
 
-            var table = entryContext.Document.InsertTable(rowCount, columnCount);
+            var table = document.InsertTable(rowCount, columnWidths.Length);
 
             // Set the table's column width and background 
             table.SetWidths(columnWidths);
             table.AutoFit = AutoFit.Contents;
             table.Design = TableDesign.None;
 
-            if (visitCellFunc != null)
+            if (options?.VisitCellFunc != null)
             {
                 for (var rowIndex = 0; rowIndex < table.Rows.Count; rowIndex++)
                 {
@@ -36,7 +44,7 @@ namespace DocXLib
                     for (var columnIndex = 0; columnIndex < row.Cells.Count; columnIndex++)
                     {
                         var cell = row.Cells[columnIndex];
-                        if (!visitCellFunc(rowIndex, columnIndex, columnWidths[columnIndex], cell))
+                        if (!options.VisitCellFunc(rowIndex, columnIndex, columnWidths[columnIndex], cell))
                         {
                             return table;
                         }

@@ -4,13 +4,18 @@ using Strava.NET.Api;
 using Strava.NET.Client;
 using Strava.NET.main.CsharpDotNet2.Strava.NET.Model;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using SFtp;
 
 namespace HeatmapData
 {
     public static class MartinsRoutes
     {
+        public const string BasePath = @"c:\temp\strava";
+
         public static void Start(string authorizationCode)
         {
             var client = new RestClient($"https://www.strava.com/oauth/token?client_id=9912&client_secret=64dc88eaf43bfa3d3b0f4f624e5b7aeefd1059c6&code={authorizationCode}&grant_type=authorization_code");
@@ -21,7 +26,10 @@ namespace HeatmapData
             var response = client.Execute(request);
             var accessTokenResponse = JsonConvert.DeserializeObject<AccessTokenResponse>(response.Content);
 
-            GetRoutes(accessTokenResponse.AccessToken, @"c:\temp\strava");
+            GetRoutes(accessTokenResponse.AccessToken, BasePath);
+            Debug.WriteLine("Uploading");
+            UploadJsonToHost();
+            Debug.WriteLine("Finished");
         }
         private static void GetRoutes(string accessToken, string folderPath)
         {
@@ -87,6 +95,18 @@ namespace HeatmapData
 
             var jsonFS = JsonConvert.SerializeObject(gpxFileSystem.FileSystem, Formatting.Indented);
             File.WriteAllText(gpxFileSystem.GetFileSystemPath(), jsonFS);
+        }
+
+        public static void UploadJsonToHost()
+        {
+            var martinGayCoUkHost = new MartinGayCoUkHost(BasePath, "/martingay/res/strava/");
+            martinGayCoUkHost.Upload("FileSystem.json");
+
+            var rootDirectoryInfo = new DirectoryInfo(BasePath);
+            var jsonFiles = rootDirectoryInfo.GetFiles("*.json", SearchOption.AllDirectories);
+            var jsonFilesList = new List<FileInfo>(jsonFiles);
+            var relativeFilesNames = jsonFilesList.Select(activityFileInfo => martinGayCoUkHost.GetRelativePath(activityFileInfo.FullName));
+            martinGayCoUkHost.UploadBatch(relativeFilesNames);
         }
     }
 }

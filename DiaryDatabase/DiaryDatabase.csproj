@@ -94,6 +94,12 @@
     <None Include="packages.config" />
     <None Include="Scripts\jquery-2.1.0.min.map" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetCoreLib\NetCoreLib.csproj">
+      <Project>{a7ee8b84-4d68-4941-afdf-00d1b9554460}</Project>
+      <Name>NetCoreLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
