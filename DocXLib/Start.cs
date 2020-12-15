@@ -19,6 +19,7 @@ namespace DocXLib
         private const bool UseLicensedVersion = false;
         private const int STARTATCHUNKIDX = 1;
         private const bool IncludePictures = false;
+        private const bool CompareLocalAndHostImages = true;
         private readonly static Color HeadingTitleColor = Color.FromArgb(103, 88, 65);
         private readonly static Color DateColor = Color.FromArgb(173, 165, 107);
         public const string DocXDirectory = @"C:\Users\Slop\Desktop\docx\";
@@ -57,6 +58,8 @@ namespace DocXLib
 
         public static void Run(int? idx = null)
         {
+            ImageSimilarity.Create();
+
             var diary = Load.LoadXml(DiaryXmlPath);
 
             var startAtChunkIdx = idx ?? STARTATCHUNKIDX;
@@ -82,6 +85,74 @@ namespace DocXLib
             }
 
             CreateDocument(chunkedEntries, startAtChunkIdx, previousYear, previousMonth);
+        }
+
+        private static void CreateDocument(in IEnumerable<Entry> entries, int idx, int previousYear, int? previousMonth)
+        {
+            string filePath;
+            if (IncludePictures)
+            {
+                var documentFromPostfix = entries.First().DateEntry.GetShortDate().Replace(" ", "-");
+                var documentLastPostfix = entries.Last().DateEntry.GetShortDate().Replace(" ", "-");
+                filePath = Path.Combine(DocXDirectory, $"diary{idx} {documentFromPostfix} to {documentLastPostfix}.docx");
+            }
+            else
+            {
+                filePath = Path.Combine(DocXDirectory, $"diaryNoPics.docx");
+            }
+
+            var document = DocX.Create(filePath);
+            var font = new Font("Calibri (Body)");
+            document.SetDefaultFont(font, 11d, Color.Black);
+            //document.DifferentOddAndEvenPages = true;
+
+            var counter = 0;
+            var chunkedEntries = entries.ToList();
+            var chunkedEntriesLength = chunkedEntries.Count;
+            var srcs = new List<string>();
+
+            if (chunkedEntries.First().DateEntry.Year <= 2003)
+            {
+                InsertDocumentTOC(document);
+            }
+
+            if (CompareLocalAndHostImages)
+            {
+                CompareImages.Run(chunkedEntries, DocXDirectory, document);
+                return;
+            }
+
+            foreach (var entry in chunkedEntries)
+            {
+                var entryContext = new EntryContext(document, entry);
+
+                counter++;
+                Console.WriteLine($"{counter} / {chunkedEntriesLength} - {entryContext.Entry.DateEntry.GetShortDate()}");
+
+                if (entry.DateEntry.Year != previousYear)
+                {
+                    // Add a blank page introducing the year.
+                    CreateYearPages(document, entry.DateEntry.Year, chunkedEntries.Where(e => e.DateEntry.Year == entry.DateEntry.Year));
+                    previousYear = entry.DateEntry.Year;
+                    previousMonth = 0;
+                }
+
+                if (entry.DateEntry.Month != previousMonth)
+                {
+                    var month = document.InsertParagraph(entry.DateEntry.GetLongMonthAndYear());
+                    month.Heading(HeadingType.Heading2);
+                    previousMonth = entry.DateEntry.Month.Value;
+                }
+
+                document.InsertParagraph("").SpacingBefore(10);
+                CreateDiaryHeader(document, entry);
+                CreateDiaryContent(entryContext);
+
+                AddPictures(entryContext);
+            }
+
+            document.Save();
+            document.Dispose();
         }
 
         private static void CreateYearPages(DocX document, int year, IEnumerable<Entry> yearEntries)
@@ -178,67 +249,6 @@ namespace DocXLib
             TableHelper.CreateTable(document, yearEntries.Count + months.Count(), options);
         }
 
-        private static void CreateDocument(in IEnumerable<Entry> entries, int idx, int previousYear, int? previousMonth)
-        {
-            string filePath;
-            if (IncludePictures)
-            {
-                var documentFromPostfix = entries.First().DateEntry.GetShortDate().Replace(" ", "-");
-                var documentLastPostfix = entries.Last().DateEntry.GetShortDate().Replace(" ", "-");
-                filePath = Path.Combine(DocXDirectory, $"diary{idx} {documentFromPostfix} to {documentLastPostfix}.docx");
-            } else
-            {
-                filePath = Path.Combine(DocXDirectory, $"diaryNoPics.docx");
-            }
-            
-
-            var document = DocX.Create(filePath);
-            var font = new Font("Calibri (Body)");
-            document.SetDefaultFont(font, 11d, Color.Black);
-            //document.DifferentOddAndEvenPages = true;
-
-            var counter = 0;
-            var chunkedEntries = entries.ToList();
-            var chunkedEntriesLength = chunkedEntries.Count;
-
-            if (chunkedEntries.First().DateEntry.Year <= 2003)
-            {
-                InsertDocumentTOC(document);
-            }
-
-            foreach (var entry in chunkedEntries)
-            {
-                var entryContext = new EntryContext(document, entry);
-                
-                counter++;
-                Console.WriteLine($"{counter} / {chunkedEntriesLength} - {entryContext.Entry.DateEntry.GetShortDate()}");
-
-                if (entry.DateEntry.Year != previousYear)
-                {
-                    // Add a blank page introducing the year.
-                    CreateYearPages(document, entry.DateEntry.Year, chunkedEntries.Where(e => e.DateEntry.Year == entry.DateEntry.Year));
-                    previousYear = entry.DateEntry.Year;
-                    previousMonth = 0;
-                }
-
-                if (entry.DateEntry.Month != previousMonth)
-                {
-                    var month = document.InsertParagraph(entry.DateEntry.GetLongMonthAndYear());
-                    month.Heading(HeadingType.Heading2);
-                    previousMonth = entry.DateEntry.Month.Value;
-                }
-
-                document.InsertParagraph("").SpacingBefore(10);
-                CreateDiaryHeader(document, entry);
-                CreateDiaryContent(entryContext);
-
-                AddPictures(entryContext);
-            }
-
-            document.Save();
-            document.Dispose();
-        }
-
         private static void InsertDocumentTOC(DocX document)
         {
             if (AutoTOC)
@@ -332,17 +342,9 @@ namespace DocXLib
         private static void CreateDiaryContent(in EntryContext entryContext)
         {
             // Create a table with 1 row and 1 column - serves as a container
-            entryContext.Container = TableHelper.CreateTable(entryContext.Document, 1, new TableHelper.Options() { ColumnCountIfNoWidths=1 });
+            entryContext.Container = TableHelper.CreateTable(entryContext.Document, 1, new TableHelper.Options() { ColumnCountIfNoWidths = 1 });
 
-            var contentHtml = entryContext.Entry.Info.OriginalContent;
-            var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(contentHtml);
-            
-            var childNodes = htmlDocument.DocumentNode.ChildNodes;
-            foreach (var childNode in childNodes)
-            {
-                NodeHandler(entryContext, childNode);
-            }
+            HtmlDocument htmlDocument = HtmlHelper.ReadOriginalInfoContent(entryContext, NodeHandler);
 
             htmlDocument = null;
             GC.Collect();
@@ -403,7 +405,7 @@ namespace DocXLib
                 {
                     if (IncludePictures)
                     {
-                        var picture = PictureHelper.CreateEntryPicture(entryContext, GetChildNodeValue(htmlNode, "src"), GetChildNodeValue(htmlNode, "caption"));
+                        var picture = PictureHelper.CreateEntryPicture(entryContext, HtmlHelper.GetChildNodeValue(htmlNode, "src"), HtmlHelper.GetChildNodeValue(htmlNode, "caption"));
                         if (picture != null)
                         {
                             entryContext.Pictures.Add(picture);
@@ -437,12 +439,6 @@ namespace DocXLib
                     throw new Exception(msg);
                 }
             }
-        }
-
-        static string GetChildNodeValue(in HtmlNode htmlNode, string nodeName)
-        {
-            var childNode = htmlNode.ChildNodes.First(node => nodeName == node.Name);
-            return childNode.InnerText;
         }
 
         private static void AddPictures(EntryContext entryContext)

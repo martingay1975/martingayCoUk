@@ -27,13 +27,13 @@ namespace HeatmapData
             var accessTokenResponse = JsonConvert.DeserializeObject<AccessTokenResponse>(response.Content);
 
             GetRoutes(accessTokenResponse.AccessToken, BasePath);
-            Debug.WriteLine("Uploading");
+            Console.WriteLine("Uploading");
             UploadJsonToHost();
-            Debug.WriteLine("Finished");
+            Console.WriteLine("Finished");
         }
         private static void GetRoutes(string accessToken, string folderPath)
         {
-            Debug.WriteLine($"Access Token: {accessToken}, folderPath: {folderPath}");
+            Console.WriteLine($"Access Token: {accessToken}, folderPath: {folderPath}");
 
             Configuration.AccessToken = accessToken;
             var activitiesApi = new ActivitiesApi();
@@ -50,7 +50,7 @@ namespace HeatmapData
                 try
                 {
                     var fileExists = File.Exists(gpxFileSystem.GetActivityFilePath(activity));
-                    Debug.WriteLine($"       {activityIndex} {activity.Id} - {activity.Name}. ({activityIndex + 1} of {activities.Count}) - {(fileExists? "EXISTS" : "FETCH")}");
+                    Console.WriteLine($"       {activityIndex} {activity.Id} - {activity.Name}. ({activityIndex + 1} of {activities.Count}) - {(fileExists? "EXISTS" : "FETCH")}");
 
                     if (fileExists)
                     {
@@ -87,7 +87,7 @@ namespace HeatmapData
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine($"ERROR: {activity.Id} - {activity.Name}. {e}");
+                    Console.WriteLine($"ERROR: {activity.Id} - {activity.Name}. {e}");
                 }
             }
 

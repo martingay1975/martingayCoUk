@@ -2,6 +2,8 @@
 using System.IO;
 using Xceed.Document.NET;
 using System.Collections.Generic;
+using System;
+using SFtp;
 
 namespace DocXLib
 {
@@ -57,10 +59,42 @@ namespace DocXLib
             {
                 NotInBestOfImages.Add(new BadImageItem(year, filename, imagePath));
                 Debug.WriteLine($"'{convertedPath,50}'. Original '{imagePath}'");
-                //throw new Exception($"Cannot find file '{convertedPath}'. Original '{imagePath}'");
+                throw new Exception($"Cannot find file '{convertedPath}'. Original '{imagePath}'");
             }
 
             return convertedPath;
+        }
+
+        /// <summary>
+        /// Takes a src as set in the xml
+        /// </summary>
+        public static CompareImagesData CompareWithHostVersion(string src)
+        {
+            var compareImagesData = new CompareImagesData() { Src = src };
+            var hostUrl = $"http://martingay.co.uk/{src.Replace('\\', '/')}";
+            compareImagesData.HostFile = hostUrl;
+
+            try
+            {
+                compareImagesData.LocalFile = GetFullImagePath(src);
+            }
+            catch
+            {
+                compareImagesData.Exists = FileExist.NotOnClient;
+                return compareImagesData;
+            }
+
+            try
+            {
+                compareImagesData.Score = ImageSimilarity.GetSimilarScore(compareImagesData.LocalFile, hostUrl);
+                compareImagesData.Exists = FileExist.OK;
+            }
+            catch (Exception)
+            {
+                compareImagesData.Exists = FileExist.NotOnHost;
+            }
+
+            return compareImagesData;
         }
     }
 }

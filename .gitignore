@@ -3,7 +3,7 @@ node_modules/
 obj/
 bin/
 packages/
-
+**/.local-chromium
 .vscode/
 .vs/
 .idea/

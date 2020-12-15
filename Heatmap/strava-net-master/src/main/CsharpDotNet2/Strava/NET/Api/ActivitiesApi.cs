@@ -360,7 +360,7 @@ if (commute != null) formParams.Add("commute", ApiClient.ParameterToString(commu
             var chunkSize = 200;
             while (true)
             {
-                Debug.WriteLine($"{page * chunkSize} - Getting Activity Summary");
+                Console.WriteLine($"{page * chunkSize} - Getting Activity Summary");
                 var twoHundredActivities = GetLoggedInAthleteActivities(null, null, page, chunkSize);
                 ret.AddRange(twoHundredActivities);
 

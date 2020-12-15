@@ -1,4 +1,6 @@
 ﻿using HeatmapData;
+using System;
+using System.Threading.Tasks;
 
 namespace HeatMapExe
 {
@@ -8,13 +10,27 @@ namespace HeatMapExe
         // http://www.strava.com/oauth/authorize?client_id=9912&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=auto&scope=profile:read_all,profile:write,activity:write,activity:read_all
 
         // 2) Click Authorize, then from the result, grab the code= part of the array.
-        const string AuthorizationCode = "f5c9a58293e1d4db0ef2d8ed81c6cc16642d5b06";
+        //const string AuthorizationCode = "47cc32bb0f41420aad43e96d93ce8cfcf5645ec2";
 
-        // 3) Once run, goto C:\temp\strava. Upload the latest file timestamps via FileZilla. Remember to do the FileSystem.json in the root as well.
-
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            MartinsRoutes.Start(AuthorizationCode);
+            try
+            {
+                var webDriver = new WebDriver();
+                webDriver.AutorizationCodeObtained += WebDriver_AutorizationCodeObtained;
+                await webDriver.StartAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            Console.ReadKey();
+        }
+
+        public static void WebDriver_AutorizationCodeObtained(object sender, AutorizationCodeObtainedEventArgs e)
+        {
+            MartinsRoutes.Start(e.Code);
         }
     }
 }
