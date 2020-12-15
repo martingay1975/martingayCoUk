@@ -1,4 +1,5 @@
 ﻿using DocXLib;
+using DocXLib.Image;
 using System;
 using System.Data;
 using System.Linq;

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using DocXLib;
+using DocXLib.Image;
 
 namespace DocXWinform
 {

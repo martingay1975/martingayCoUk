@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using DocXLib.Image;
 using DocXLib.Model.Data.Xml;
 using HtmlAgilityPack;
 using WebDataEntry.Web.Application;

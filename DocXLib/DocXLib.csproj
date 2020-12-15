@@ -70,10 +70,12 @@
   <ItemGroup>
     <Compile Include="BadImageItem.cs" />
     <Compile Include="BadImageManager.cs" />
-    <Compile Include="CompareImages.cs" />
+    <Compile Include="Image\CompareImages.cs" />
     <Compile Include="EntryContext.cs" />
     <Compile Include="HtmlHelper.cs" />
-    <Compile Include="ImageSimilarity.cs" />
+    <Compile Include="Image\CompareImagesData.cs" />
+    <Compile Include="Image\FileExist.cs" />
+    <Compile Include="Image\ImageSimilarity.cs" />
     <Compile Include="Load.cs" />
     <Compile Include="Helper\DataToJson\DateAssembler.cs" />
     <Compile Include="Helper\DataToJson\DiaryAssembler.cs" />
@@ -109,7 +111,7 @@
     <Compile Include="Model\Data\Xml\Location.cs" />
     <Compile Include="Model\Data\Xml\Person.cs" />
     <Compile Include="Model\Data\Xml\Title.cs" />
-    <Compile Include="PictureHelper.cs" />
+    <Compile Include="Image\PictureHelper.cs" />
     <Compile Include="Start.cs" />
     <Compile Include="ParagraphSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -35,11 +35,6 @@ namespace DocXConsole
                 Console.WriteLine(args[0]);
                 Console.WriteLine(e.Message);
             }
-
-            //ParagraphSample.SimpleFormattedParagraphs();
-            //ParagraphSample.Heading();
-            //ParagraphSample.ForceMultiParagraphsOnSinglePage();
-            //ParagraphSample.ForceParagraphOnSinglePage();
         }
     }
 }

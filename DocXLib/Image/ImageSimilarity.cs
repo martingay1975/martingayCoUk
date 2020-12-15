@@ -3,7 +3,7 @@ using System.IO;
 using DeepAI; // Add this line to the top of your file
 using Newtonsoft.Json;
 
-namespace DocXLib
+namespace DocXLib.Image
 {
     public class ImageSimilarityResponse
     {
@@ -15,7 +15,7 @@ namespace DocXLib
         private static DeepAI_API api;
         public static void Create()
         {
-            
+
         }
 
         public static int GetSimilarScore(string localFile, string hostFileUrl)
@@ -27,11 +27,10 @@ namespace DocXLib
             }
 
             // Ensure your DeepAI.Client NuGet package is up to date: https://www.nuget.org/packages/DeepAI.Client
-            // Example posting a image URL:
             StandardApiResponse resp = api.callStandardApi("image-similarity", new
             {
-                image1 = File.OpenRead(localFile),
-                image2 = hostFileUrl,
+                image1 = File.OpenRead(localFile),  // local file
+                image2 = hostFileUrl,               // host file
             });
 
             var re = JsonConvert.DeserializeObject<ImageSimilarityResponse>(api.objectAsJsonString(resp.output));

@@ -3,15 +3,14 @@ using System.IO;
 using Xceed.Document.NET;
 using System.Collections.Generic;
 using System;
-using SFtp;
 
-namespace DocXLib
+namespace DocXLib.Image
 {
     public static class PictureHelper
     {
         public readonly static List<BadImageItem> NotInBestOfImages;
         public const string BaseImagePath = @"L:\images";
-        
+
         static PictureHelper()
         {
             NotInBestOfImages = new List<BadImageItem>();
