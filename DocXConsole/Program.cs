@@ -35,6 +35,10 @@ namespace DocXConsole
                 Console.WriteLine(args[0]);
                 Console.WriteLine(e.Message);
             }
+            finally
+            {
+                Console.ReadKey();
+            }
         }
     }
 }

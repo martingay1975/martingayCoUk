@@ -19,6 +19,8 @@ namespace DocXLib.Image
             var chunkedEntriesLength = chunkedEntries.ToList().Count;
             int counter = 0;
             var compareImages = new CompareImages();
+            var start = DateTime.UtcNow;
+            Console.WriteLine($"Start: {start}");
             Parallel.ForEach(chunkedEntries, new ParallelOptions { MaxDegreeOfParallelism = 3 }, entry =>
             {
                 var res = Interlocked.Increment(ref counter);
@@ -36,9 +38,11 @@ namespace DocXLib.Image
                 }
             });
 
+            var end = DateTime.UtcNow;
             var badReport = compareImages.Report();
             Console.WriteLine(badReport);
             File.WriteAllText(Path.Combine(docXDirectory, "BadReport.txt"), badReport);
+            Console.WriteLine($"End: {end}. {(end - start).TotalMinutes}mins taken");
         }
 
         private ConcurrentBag<CompareImagesData> CompareImagesDatas { get; }
