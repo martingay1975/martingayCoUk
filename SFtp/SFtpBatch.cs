@@ -20,11 +20,11 @@ namespace SFtp
             sftp.Connect();
         }
 
-        public void Download(string hostRelativePath, string clientPath)
+        public bool Download(string hostPath, string clientPath, bool overwrite)
         {
-            if (string.IsNullOrWhiteSpace(hostRelativePath))
+            if (string.IsNullOrWhiteSpace(hostPath))
             {
-                throw new ArgumentException(nameof(hostRelativePath));
+                throw new ArgumentException(nameof(hostPath));
             }
 
             if (string.IsNullOrWhiteSpace(clientPath))
@@ -32,16 +32,24 @@ namespace SFtp
                 throw new ArgumentException(nameof(clientPath));
             }
 
-            var destinationFileInfo = new FileInfo(clientPath);
-            if (!Directory.Exists(destinationFileInfo.DirectoryName))
+            if (!overwrite && File.Exists(clientPath))
             {
-                Directory.CreateDirectory(destinationFileInfo.DirectoryName);
+                // not allowed to overwrite so silently don't download,
+                return false;
+            }
+
+            var clientPathFileInfo = new FileInfo(clientPath);
+            if (!Directory.Exists(clientPathFileInfo.DirectoryName))
+            {
+                Directory.CreateDirectory(clientPathFileInfo.DirectoryName);
             }
 
             using (var fileStream = new FileStream(clientPath, FileMode.Create))
             {
-                sftp.DownloadFile(hostRelativePath, fileStream);
+                sftp.DownloadFile(hostPath, fileStream);
             }
+
+            return true;
         }
         public void UploadFile(string clientPath, string hostPath)
         {

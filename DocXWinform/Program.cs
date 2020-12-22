@@ -16,7 +16,7 @@ namespace DocXWinform
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ImageOnWebAndDiaryXmlButNotInBestOf());
+            Application.Run(new ContainerOfControls());
         }
     }
 }

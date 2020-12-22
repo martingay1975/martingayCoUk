@@ -1,4 +1,5 @@
 ﻿using HeatmapData;
+using SFtp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -108,7 +109,7 @@ namespace WebDataEntry.Web.Controllers
 		public void DeleteImage(string year, string filename)
 		{
 			var path = $"/martingay/images/years/{year}/{filename}";
-			using (var sftpBatch = new SFtpBatch(_configuration))
+			using (var sftpBatch = new Application.SFtpBatch(_configuration))
 			{
 				sftpBatch.DeleteFile(path);
 			}
@@ -151,11 +152,14 @@ namespace WebDataEntry.Web.Controllers
 
 		private void FtpUploadAsync(string relativeSource)
 		{
-			using (var sftpBatch = new SFtpBatch(_configuration))
-			{
-				sftpBatch.Upload(relativeSource);
-			}
-		}
+			var martinGayCoUkHost = new MartinGayCoUkHost(_configuration.BasePath, "/martingay/");
+			martinGayCoUkHost.Upload(relativeSource);
+
+            //using (var sftpBatch = new SFtpBatch(_configuration))
+            //{
+            //    sftpBatch.Upload(relativeSource);
+            //}
+        }
 
 	}
 }

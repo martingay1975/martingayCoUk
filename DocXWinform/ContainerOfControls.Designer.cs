@@ -1,6 +1,6 @@
 ﻿namespace DocXWinform
 {
-    partial class ImageOnWebAndDiaryXmlButNotInBestOf
+    partial class ContainerOfControls
     {
         /// <summary>
         /// Required designer variable.
@@ -31,6 +31,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.btnNext = new System.Windows.Forms.Button();
+            this.btnDone = new System.Windows.Forms.Button();
+            this.lblIndex = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -42,7 +44,7 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(12, 41);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(886, 638);
+            this.panel1.Size = new System.Drawing.Size(886, 800);
             this.panel1.TabIndex = 1;
             // 
             // label1
@@ -64,14 +66,35 @@
             this.btnNext.UseVisualStyleBackColor = true;
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
-            // ImageOnWebAndDiaryXmlButNotInBestOf
+            // btnDone
+            // 
+            this.btnDone.Location = new System.Drawing.Point(93, 12);
+            this.btnDone.Name = "btnDone";
+            this.btnDone.Size = new System.Drawing.Size(75, 23);
+            this.btnDone.TabIndex = 3;
+            this.btnDone.Text = "Done";
+            this.btnDone.UseVisualStyleBackColor = true;
+            this.btnDone.Click += new System.EventHandler(this.btnDone_Click);
+            // 
+            // lblIndex
+            // 
+            this.lblIndex.AutoSize = true;
+            this.lblIndex.Location = new System.Drawing.Point(174, 12);
+            this.lblIndex.Name = "lblIndex";
+            this.lblIndex.Size = new System.Drawing.Size(45, 13);
+            this.lblIndex.TabIndex = 4;
+            this.lblIndex.Text = "Where?";
+            // 
+            // ContainerOfControls
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(910, 691);
+            this.ClientSize = new System.Drawing.Size(910, 739);
+            this.Controls.Add(this.lblIndex);
+            this.Controls.Add(this.btnDone);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.panel1);
-            this.Name = "ImageOnWebAndDiaryXmlButNotInBestOf";
+            this.Name = "ContainerOfControls";
             this.Text = "ImageOnWebAndDiaryXmlButNotInBestOf";
             this.Load += new System.EventHandler(this.ImageOnWebAndDiaryXmlButNotInBestOf_Load);
             this.panel1.ResumeLayout(false);
@@ -85,5 +108,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.Button btnDone;
+        private System.Windows.Forms.Label lblIndex;
     }
 }

@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Xml;
 using DiaryDatabase.Presenter;
+using SFtp;
 using WebDataEntry.Web.Application;
 using WebDataEntry.Web.Models.Data;
 
@@ -61,7 +62,7 @@ namespace WebDataEntry.Web.Models
 
 		public void DownloadDatabase()
 		{
-			using (var sftpClient = new SFtpBatch(this.configuration))
+			using (var sftpClient = new Application.SFtpBatch(this.configuration))
 			{
 				this.relativePaths.ForEach(path => sftpClient.Download(path, Path.Combine(this.configuration.BasePath, path)));
 			}
@@ -92,24 +93,26 @@ namespace WebDataEntry.Web.Models
 		{
 			try
 			{
-				var devEnvionment = new GoogleDriveDevEnvironment(this.configuration);
+				var martinGayCoUkHost = new MartinGayCoUkHost(this.configuration.BasePath, "/martingay/");
+				martinGayCoUkHost.UploadBatch(this.relativePaths);
 
-				using (var sftpClient = new SFtpBatch(this.configuration))
-				{
-					var context = this;
+				//var devEnvionment = new GoogleDriveDevEnvironment(this.configuration);
+				//using (var sftpClient = new SFtpBatch(this.configuration))
+				//{
+				//	var context = this;
 
-					this.relativePaths.ForEach(relativePath =>
-					{
-						//var hasChanged = context.IsHashChanged(relativePath);
-						const bool hasChanged = true;
+				//	this.relativePaths.ForEach(relativePath =>
+				//	{
+				//		//var hasChanged = context.IsHashChanged(relativePath);
+				//		const bool hasChanged = true;
 
-						// only upload files that have changed.
-						if (hasChanged)
-						{
-							sftpClient.Upload(relativePath);
-						}
-					});
-				}
+				//		// only upload files that have changed.
+				//		if (hasChanged)
+				//		{
+				//			sftpClient.Upload(relativePath);
+				//		}
+				//	});
+				//}
 
 				// update the current saved state.
 				this._loadedHashes = this._savedHashes;

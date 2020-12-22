@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -18,6 +17,17 @@ namespace SFtp
         {
             this.baseClientPath = baseClientPath ?? throw new ArgumentNullException(nameof(baseClientPath));
             this.baseHostPath = baseHostPath ?? throw new ArgumentNullException(nameof(baseHostPath));
+
+            if (!this.baseHostPath.StartsWith("/"))
+            {
+                this.baseHostPath = "/" + this.baseHostPath;
+            }
+
+            if (!this.baseHostPath.EndsWith("/"))
+            {
+                this.baseHostPath = this.baseHostPath + "/";
+            }
+
             this.login = "u54145433";
             this.password = "weston2184";
             this.host = "home292042675.1and1-data.host";
@@ -55,6 +65,14 @@ namespace SFtp
                 var clientPath = GetFullClientPath(relativePath);
                 var hostPath = GetFullHostPath(relativePath);
                 return stfpBatch.Upload(clientPath, hostPath);
+            }
+        }
+
+        public void Download(string hostPath, string clientPath, bool overwrite = true)
+        {
+            using (var stfpBatch = new SFtpBatch(login, password, host))
+            {
+                stfpBatch.Download(hostPath, clientPath, overwrite);
             }
         }
 

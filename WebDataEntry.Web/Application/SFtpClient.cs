@@ -49,15 +49,15 @@ namespace WebDataEntry.Web.Application
 			}
 		}
 
-		internal void Upload(string relativePath)
-		{
-			(var sourcePath, var destinationPath) = GetPaths(this.configuration.BasePath, relativePath);
+		//internal void Upload(string relativePath)
+		//{
+		//	(var sourcePath, var destinationPath) = GetPaths(this.configuration.BasePath, relativePath);
 
-			using (var fileStream = new FileStream(sourcePath, FileMode.Open))
-			{
-				sftp.UploadFile(fileStream, destinationPath, canOverride: true);
-			}
-		}
+		//	using (var fileStream = new FileStream(sourcePath, FileMode.Open))
+		//	{
+		//		sftp.UploadFile(fileStream, destinationPath, canOverride: true);
+		//	}
+		//}
 
 		public static (string sourcePath, string destinationPath) GetPaths(string basePath, string relativePath)
 		{

@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using Xceed.Words.NET;
 using System.Collections.Concurrent;
 using System.Threading;
+using System.Globalization;
+using CsvHelper;
+using System.Configuration;
 
 namespace DocXLib.Image
 {
@@ -41,7 +44,8 @@ namespace DocXLib.Image
             var end = DateTime.UtcNow;
             var badReport = compareImages.Report();
             Console.WriteLine(badReport);
-            File.WriteAllText(Path.Combine(docXDirectory, "BadReport.txt"), badReport);
+            var csvPath = Path.Combine(docXDirectory, "BadReport.csv");
+            File.WriteAllText(csvPath, badReport);
             Console.WriteLine($"End: {end}. {(end - start).TotalMinutes}mins taken");
         }
 
@@ -50,6 +54,18 @@ namespace DocXLib.Image
         public CompareImages()
         {
             CompareImagesDatas = new ConcurrentBag<CompareImagesData>();
+        }
+
+        public IReadOnlyList<CompareImagesData> LoadCompareImagesData(string docXDirectory)
+        {
+            var csvPath = Path.Combine(docXDirectory, "BadReport.csv");
+
+            using (var reader = new StreamReader(csvPath))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                csv.Configuration.HasHeaderRecord = false;
+                return csv.GetRecords<CompareImagesData>().ToList();
+            }
         }
 
         public void NodeHandler(in EntryContext entryContext, HtmlNode htmlNode)

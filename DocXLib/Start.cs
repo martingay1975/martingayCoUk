@@ -16,11 +16,12 @@ namespace DocXLib
 {
     public static class Start
     {
+        private const bool IncludePictures = true;
+        private const bool CompareLocalAndHostImages = false;
+
         private const bool AutoTOC = false;
         private const bool UseLicensedVersion = false;
         private const int STARTATCHUNKIDX = 1;
-        private const bool IncludePictures = false;
-        private const bool CompareLocalAndHostImages = true;
         private readonly static Color HeadingTitleColor = Color.FromArgb(103, 88, 65);
         private readonly static Color DateColor = Color.FromArgb(173, 165, 107);
         public const string DocXDirectory = @"C:\Users\Slop\Desktop\docx\";
