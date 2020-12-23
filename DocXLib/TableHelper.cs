@@ -20,16 +20,12 @@ namespace DocXLib
         /// <summary>
         /// Creates/inserts a table with no borders
         /// </summary>
-        public static Table CreateTable(Document document, int rowCount, Options options)
+        public static Table CreateTable(Paragraph paragraph, int rowCount, Options options)
         {
             var columnWidths = options.ColumnWidths 
                 ?? Enumerable.Repeat((float)TotalWidth / (float)options.ColumnCountIfNoWidths, options.ColumnCountIfNoWidths).ToArray();
 
-            // small gap before the table
-            var paragraph = document.InsertParagraph("");
-            paragraph.Spacing(7);
-
-            var table = document.InsertTable(rowCount, columnWidths.Length);
+            var table = paragraph.InsertTableAfterSelf(rowCount, columnWidths.Length);
 
             // Set the table's column width and background 
             table.SetWidths(columnWidths);

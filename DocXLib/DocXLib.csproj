@@ -125,6 +125,7 @@
     <Compile Include="Model\Data\Xml\Person.cs" />
     <Compile Include="Model\Data\Xml\Title.cs" />
     <Compile Include="Image\PictureHelper.cs" />
+    <Compile Include="SectionSample.cs" />
     <Compile Include="Start.cs" />
     <Compile Include="ParagraphSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
