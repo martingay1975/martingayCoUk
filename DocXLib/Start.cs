@@ -14,9 +14,24 @@ using Font = Xceed.Document.NET.Font;
 
 namespace DocXLib
 {
+
+    public class DocumentSlice
+    {
+        public DocumentSlice(int diaryEntriesCount, int startPageNumber)
+        {
+            DiaryEntriesCount = diaryEntriesCount;
+            StartPageNumber = startPageNumber;
+        }
+
+        public int DiaryEntriesCount { get; }
+
+        public int StartPageNumber { get; }
+    }
+
+
     public static class Start
     {
-        private const bool IncludePictures = true;
+        private const bool IncludePictures = false;
         private const bool CompareLocalAndHostImages = false;
 
         private const bool AutoTOC = false;
@@ -44,18 +59,18 @@ namespace DocXLib
         //    /*  8 */ 2250, 
         //    /*  9 */ 2600};
 
-        public readonly static List<int> ChunkLength = new List<int>
+        public readonly static List<DocumentSlice> ChunkLength = new List<DocumentSlice>
         {
-            /*  0 */ 800,
-            /*  1 */ 150,
-            /*  2 */ 250,
-            /*  3 */ 150,
-            /*  4 */ 250,
-            /*  5 */ 150,
-            /*  6 */ 150,
-            /*  7 */ 100,
-            /*  8 */ 150,
-            /*  9 */ 350
+            /*  0 */ new DocumentSlice(800, 1),
+            /*  1 */ new DocumentSlice(150, 434),
+            /*  2 */ new DocumentSlice(250, 534),
+            /*  3 */ new DocumentSlice(150, 634),
+            /*  4 */ new DocumentSlice(250, 734),
+            /*  5 */ new DocumentSlice(150, 834),
+            /*  6 */ new DocumentSlice(150, 934),
+            /*  7 */ new DocumentSlice(100, 1034),
+            /*  8 */ new DocumentSlice(150, 1134),
+            /*  9 */ new DocumentSlice(350, 1234)
         };  
 
         public static void Run(int? idx = null)
@@ -66,7 +81,7 @@ namespace DocXLib
 
             var startAtChunkIdx = idx ?? STARTATCHUNKIDX;
             var startAt = GetStartIndex(startAtChunkIdx);
-            var takeEntries = ChunkLength[startAtChunkIdx];
+            var takeEntries = ChunkLength[startAtChunkIdx].DiaryEntriesCount;
 
             if (IncludePictures == false)
             {
@@ -109,6 +124,7 @@ namespace DocXLib
             document.SetDefaultFont(font, 11d, Color.Black);
             document.DifferentOddAndEvenPages = true;
             document.DifferentFirstPage = true;
+            
 
             var counter = 0;
             var chunkedEntries = entries.ToList();
@@ -222,7 +238,8 @@ namespace DocXLib
                                 {
                                     cellParagraph.FontSize(18).Bold(true);
                                     cellParagraph.AppendPageNumber(PageNumberFormat.normal).FontSize(25).Bold(true);
-                                    
+                                    var test = int.Parse(cellParagraph.Text) + 500;
+                                    cellParagraph.Append("   " + test.ToString());
                                 }
                                 break;
                             }
@@ -585,7 +602,7 @@ namespace DocXLib
             int startIndex = 0;
             for (var i = 0; i < chunkIdx; i++)
             {
-                startIndex += ChunkLength[i];
+                startIndex += ChunkLength[i].DiaryEntriesCount;
             }
 
             return startIndex;
