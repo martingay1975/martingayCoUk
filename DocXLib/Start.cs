@@ -17,15 +17,12 @@ namespace DocXLib
 
     public class DocumentSlice
     {
-        public DocumentSlice(int diaryEntriesCount, int startPageNumber)
+        public DocumentSlice(int diaryEntriesCount)
         {
             DiaryEntriesCount = diaryEntriesCount;
-            StartPageNumber = startPageNumber;
         }
 
         public int DiaryEntriesCount { get; }
-
-        public int StartPageNumber { get; }
     }
 
 
@@ -34,18 +31,19 @@ namespace DocXLib
         private const bool IncludePictures = false;
         private const bool CompareLocalAndHostImages = false;
 
-        private const bool AutoTOC = false;
         private const bool UseLicensedVersion = false;
         private const int STARTATCHUNKIDX = 1;
         private readonly static Color HeadingTitleColor = Color.FromArgb(103, 88, 65);
         private readonly static Color DateColor = Color.FromArgb(173, 165, 107);
+        private readonly static Color PageNumberColor = Color.FromArgb(237, 125, 49);
+
         public const string DocXDirectory = @"C:\Users\Slop\Desktop\docx\";
         public const string ChapterImageDirectory = DocXDirectory + @"Chapters\";
         private const string DiaryXmlPath = @"C:\Users\Slop\AppData\Roaming\res\xml\diary.xml";
         private const int KatiePersonId = 502;
-        private readonly static float[] HeadingColumnWidths = new[] { 480f, 120f };
-        private readonly static float[] TocColumnWidths = new[] { 540f, 60f };
-        private const float ResizeChapterPics = 0.9f;
+        private readonly static float[] HeadingColumnWidths = new[] { 580f, 120f };
+        private readonly static float[] TocColumnWidths = new[] { 640f, 60f };
+        private const float ResizeChapterPics = 0.82f;
 
         //public readonly static List<int> ChunkStartIdx = new List<int> { 
         //    /*  0 */ 0, 
@@ -61,16 +59,16 @@ namespace DocXLib
 
         public readonly static List<DocumentSlice> ChunkLength = new List<DocumentSlice>
         {
-            /*  0 */ new DocumentSlice(800, 1),
-            /*  1 */ new DocumentSlice(150, 434),
-            /*  2 */ new DocumentSlice(250, 534),
-            /*  3 */ new DocumentSlice(150, 634),
-            /*  4 */ new DocumentSlice(250, 734),
-            /*  5 */ new DocumentSlice(150, 834),
-            /*  6 */ new DocumentSlice(150, 934),
-            /*  7 */ new DocumentSlice(100, 1034),
-            /*  8 */ new DocumentSlice(150, 1134),
-            /*  9 */ new DocumentSlice(350, 1234)
+            /*  0 */ new DocumentSlice(800),
+            /*  1 */ new DocumentSlice(150),
+            /*  2 */ new DocumentSlice(250),
+            /*  3 */ new DocumentSlice(150),
+            /*  4 */ new DocumentSlice(250),
+            /*  5 */ new DocumentSlice(150),
+            /*  6 */ new DocumentSlice(150),
+            /*  7 */ new DocumentSlice(100),
+            /*  8 */ new DocumentSlice(150),
+            /*  9 */ new DocumentSlice(350)
         };  
 
         public static void Run(int? idx = null)
@@ -86,7 +84,7 @@ namespace DocXLib
             if (IncludePictures == false)
             {
                 startAt = 0;
-                takeEntries = 300;
+                takeEntries = 200;
             }
 
             var entries = diary.Entries.Where(entry => entry.People.Contains(KatiePersonId)).ToList();
@@ -106,7 +104,6 @@ namespace DocXLib
 
         private static void CreateDocument(in IEnumerable<Entry> entries, int idx, int previousYear, int? previousMonth)
         {
-            var yearToSectionDictionary = new Dictionary<int, Section>();
             string filePath;
             if (IncludePictures)
             {
@@ -152,16 +149,21 @@ namespace DocXLib
                 if (entry.DateEntry.Year != previousYear)
                 {
                     // Add a blank page introducing the year.
-                    var yearSection = CreateYearPages(document, entry.DateEntry.Year, chunkedEntries.Where(e => e.DateEntry.Year == entry.DateEntry.Year));
-                    yearToSectionDictionary[entry.DateEntry.Year] = yearSection;
+                    CreateYearPages(document, entry.DateEntry.Year, chunkedEntries.Where(e => e.DateEntry.Year == entry.DateEntry.Year));
                     previousYear = entry.DateEntry.Year;
                     previousMonth = 0;
                 }
 
                 if (entry.DateEntry.Month != previousMonth)
                 {
-                    var month = document.InsertParagraph(entry.DateEntry.GetLongMonthAndYear());
-                    month.Heading(HeadingType.Heading2);
+                    // put the month and year as a mini heading
+                    var monthParagraph = document.InsertParagraph(entry.DateEntry.GetLongMonthAndYear());
+                    monthParagraph.Color(PageNumberColor)
+                        .FontSize(16)
+                        .Bold(true)
+                        .CapsStyle(CapsStyle.caps)
+                        .SpacingBefore(16);
+
                     previousMonth = entry.DateEntry.Month.Value;
                 }
 
@@ -176,40 +178,51 @@ namespace DocXLib
             for (var sNo = hasDocumentTOC ? 1 : 0; sNo < document.Sections.Count; sNo++)
             {
                 var section = document.Sections[sNo];
-                AddPageFooters(section, chunkedEntries.First().DateEntry.Year - (hasDocumentTOC ? 1 : 0) + sNo);
+                var year = chunkedEntries.First().DateEntry.Year - (hasDocumentTOC ? 1 : 0) + sNo;
+
+                int? startPageNo = null;
+                if (year == 2005)
+                {
+                    startPageNo = 1300;
+                }
+                AddPageFooters(section, year, startPageNo);
             }
 
             document.Save();
             document.Dispose();
         }
 
-        private static Section CreateYearPages(DocX document, int year, IEnumerable<Entry> yearEntries)
+        private static void ApplyStandardMargins(Section section)
         {
-            var section = document.InsertSectionPageBreak();
-
-            Paragraph yearParagraph;
-            if (AutoTOC)
-            {
-                yearParagraph = section.InsertParagraph(year.ToString()).FontSize(50);
-                yearParagraph.Heading(HeadingType.Heading1);
-                section.InsertParagraph("TODO Following image.... please make Wrap over text to cover up this Heading text");
-            }
-            else
-            {
-                yearParagraph = document.InsertParagraph();
-            }
-
-            InsertChapterImagePage(document, year, yearParagraph);
-            InsertYearTOC(document, yearEntries.ToList());
-            section.InsertParagraph("").InsertPageBreakAfterSelf();
-
-            return section;
+            section.MarginBottom = 30;
+            section.MarginTop = 30;
+            section.MarginLeft = 60;
+            section.MarginRight = 30;
+            section.MirrorMargins = true;
         }
 
-        private static void AddPageFooters(Section section, int year)
+        private static void CreateYearPages(DocX document, int year, IEnumerable<Entry> yearEntries)
+        {
+            var chapterPageSection = document.InsertSectionPageBreak();
+            InsertChapterImagePage(document, chapterPageSection, year);
+            
+            var restOfYearSection = document.InsertSectionPageBreak();
+            ApplyStandardMargins(restOfYearSection);
+
+            InsertYearTOC(document, yearEntries.ToList());
+            restOfYearSection.InsertParagraph("").InsertPageBreakAfterSelf();
+        }
+
+        private static void AddPageFooters(Section section, int year, int? pageStart = null)
         {
             section.AddFooters();
             section.DifferentFirstPage = true;
+
+            if (pageStart.HasValue)
+            {
+                section.PageNumberStart = pageStart.Value;
+            }
+
             var footers = section.Footers;
 
             // Page number to the left for even
@@ -234,12 +247,10 @@ namespace DocXLib
                     {
                         case 0:
                             {
-                                if (!isEven)
+                                if (isEven)
                                 {
-                                    cellParagraph.FontSize(18).Bold(true);
+                                    cellParagraph.FontSize(18).Bold(true).Color(PageNumberColor);
                                     cellParagraph.AppendPageNumber(PageNumberFormat.normal).FontSize(25).Bold(true);
-                                    var test = int.Parse(cellParagraph.Text) + 500;
-                                    cellParagraph.Append("   " + test.ToString());
                                 }
                                 break;
                             }
@@ -252,9 +263,9 @@ namespace DocXLib
                         case 2:
                             {
                                 
-                                if (isEven)
+                                if (!isEven)
                                 {
-                                    cellParagraph.FontSize(18).Bold(true);
+                                    cellParagraph.FontSize(18).Bold(true).Color(PageNumberColor);
                                     cellParagraph.AppendPageNumber(PageNumberFormat.normal);
                                     cellParagraph.Alignment = Alignment.right;
                                 }
@@ -272,13 +283,18 @@ namespace DocXLib
         }
 
 
-        private static void InsertChapterImagePage(Document document, int year, Paragraph yearParagraph)
+        private static void InsertChapterImagePage(Document document, Section section, int year)
         {
+            section.MarginBottom = 1;
+            section.MarginTop = 1;
+            section.MarginLeft = 1;
+            section.MarginRight = 1;
+
+            var yearParagraph = section.InsertParagraph();
             var chapterPicture = PictureHelper.CreatePicture(document, Path.Combine(ChapterImageDirectory, $"{year}.jpg"));
             chapterPicture.Width = chapterPicture.Width * ResizeChapterPics;
             chapterPicture.Height = chapterPicture.Height * ResizeChapterPics;
-            yearParagraph.AppendPicture(chapterPicture).InsertPageBreakAfterSelf();
-            
+            yearParagraph.AppendPicture(chapterPicture);
         }
 
         private static void InsertYearTOC(Document document, List<Entry> yearEntries)
@@ -334,50 +350,38 @@ namespace DocXLib
 
         private static void InsertDocumentTOC(DocX document)
         {
-            if (AutoTOC)
+            // TOC for whole document
+            var options = new TableHelper.Options
             {
-
-                var switches = new Dictionary<TableOfContentsSwitches, string>() {
-                { TableOfContentsSwitches.O, "1-3" },
-                { TableOfContentsSwitches.U, "" } };
-
-                document.InsertTableOfContents("", switches);
-            }
-            else
-            {
-                // TOC for whole document
-                var options = new TableHelper.Options
+                ColumnWidths = TocColumnWidths,
+                VisitCellFunc = (int rowIndex, int columnIndex, float columnWidth, Cell cell) =>
                 {
-                    ColumnWidths = TocColumnWidths,
-                    VisitCellFunc = (int rowIndex, int columnIndex, float columnWidth, Cell cell) =>
+                    var cellParagraph = cell.Paragraphs[0];
+                    switch (columnIndex)
                     {
-                        var cellParagraph = cell.Paragraphs[0];
-                        switch (columnIndex)
-                        {
-                            case 0:
-                                {
-                                    cellParagraph.Append($"{rowIndex + 2003}");
-                                    cellParagraph.ApplyDateFormatting();
-                                    cellParagraph.FontSize(14);
-                                    break;
-                                }
+                        case 0:
+                            {
+                                cellParagraph.Append($"{rowIndex + 2003}");
+                                cellParagraph.ApplyDateFormatting();
+                                cellParagraph.FontSize(14);
+                                break;
+                            }
 
-                            case 1:
-                                {
-                                    cellParagraph.Append("TODO");
-                                    cellParagraph.Alignment = Alignment.right;
-                                    break;
-                                }
-                        }
-                    
-                        cell.VerticalAlignment = VerticalAlignment.Center;
-                        return true;
+                        case 1:
+                            {
+                                cellParagraph.Append("TODO");
+                                cellParagraph.Alignment = Alignment.right;
+                                break;
+                            }
                     }
-                };
+                    
+                    cell.VerticalAlignment = VerticalAlignment.Center;
+                    return true;
+                }
+            };
 
-                var paragraph = document.InsertParagraph("");
-                TableHelper.CreateTable(paragraph, 18, options);
-            }
+            var paragraph = document.InsertParagraph("");
+            TableHelper.CreateTable(paragraph, 18, options);
         }
 
         private static void CreateDiaryHeader(in DocX document, in Entry entry)
