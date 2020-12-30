@@ -13,10 +13,6 @@ namespace DocXLib.Image
     static class ImageSimilarity
     {
         private static DeepAI_API api;
-        public static void Create()
-        {
-
-        }
 
         public static int GetSimilarScore(string localFile, string hostFileUrl)
         {

@@ -5,7 +5,7 @@ namespace DocXLib
 {
     internal static class TableHelper
     {
-        private static int TotalWidth = 700;
+        private static int TotalWidth = 500;
 
         // return false to stop visiting
         public delegate bool VisitCellFunc(int rowIndex, int columnIndex, float columnWidth, Cell cell);

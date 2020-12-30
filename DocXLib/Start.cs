@@ -8,19 +8,20 @@ using DocXLib.Model.Data.Xml;
 using HtmlAgilityPack;
 using WebDataEntry.Web.Application;
 using Xceed.Document.NET;
-//using Xceed.Words.NET;
+using Xceed.Words.NET;
 using Font = Xceed.Document.NET.Font;
 
 namespace DocXLib
 {
-
-
+    // TODO:
+    // The year TOC only includes what is in the document.... Should include whole year
+    // The first page number is missing if document starts half way through the year
     public static class Start
     {
         private const bool IncludePictures = true;
         private const bool CompareLocalAndHostImages = false;
 
-        private const bool UseLicensedVersion = false;
+        private const bool UseLicensedVersion = true;
         private const int STARTATCHUNKIDX = 1;
         private readonly static Color HeadingTitleColor = Color.FromArgb(103, 88, 65);
         private readonly static Color DateColor = Color.FromArgb(173, 165, 107);
@@ -30,16 +31,18 @@ namespace DocXLib
         public const string ChapterImageDirectory = DocXDirectory + @"Chapters\";
         private const string DiaryXmlPath = @"C:\Users\Slop\AppData\Roaming\res\xml\diary.xml";
         private const int KatiePersonId = 502;
-        private readonly static float[] HeadingColumnWidths = new[] { 580f, 120f };
-        private readonly static float[] TocColumnWidths = new[] { 640f, 60f };
-        private const float ResizeChapterPics = 0.82f;
+        private readonly static float[] HeadingColumnWidths = new[] { 420f, 80f };
+        private readonly static float[] TocColumnWidths = new[] { 450f, 50f };
+        private const float ResizeChapterPics = 1f;
+        private const int pageNumberJumpYear = 2011;
+        private const int pageNumberJumpYearPN = 700;
 
         //public readonly static List<int> ChunkStartIdx = new List<int> { 
         //    /*  0 */ 0, 
         //    /*  1 */ 800, 
         //    /*  2 */ 950, 
         //    /*  3 */ 1200, 
-        //    /*  4 */ 1400, 
+        //    /*  4 */ 1410, 
         //    /*  5 */ 1650, 
         //    /*  6 */ 1800, 
         //    /*  7 */ 2000, 
@@ -52,9 +55,9 @@ namespace DocXLib
             /*  1 */ new DocumentSlice(150),
             /*  2 */ new DocumentSlice(250),
             /*  3 */ new DocumentSlice(150),
-            /*  4 */ new DocumentSlice(250),
-            /*  5 */ new DocumentSlice(150),
-            /*  6 */ new DocumentSlice(150),
+            /*  4 */ new DocumentSlice(260),
+            /*  5 */ new DocumentSlice(120),
+            /*  6 */ new DocumentSlice(170),
             /*  7 */ new DocumentSlice(100),
             /*  8 */ new DocumentSlice(150),
             /*  9 */ new DocumentSlice(350)
@@ -62,18 +65,16 @@ namespace DocXLib
 
         public static void Run(int? idx = null)
         {
-            ImageSimilarity.Create();
-
             var diary = Load.LoadXml(DiaryXmlPath);
 
             var startAtChunkIdx = idx ?? STARTATCHUNKIDX;
             var startAt = GetStartIndex(startAtChunkIdx);
             var takeEntries = ChunkLength[startAtChunkIdx].DiaryEntriesCount;
 
-            if (IncludePictures == true)
+            if (IncludePictures == false)
             {
-                startAt = 800;
-                takeEntries = 1;
+                startAt = 0;
+                takeEntries = 3000;
             }
 
             var entries = diary.Entries.Where(entry => entry.People.Contains(KatiePersonId)).ToList();
@@ -105,7 +106,7 @@ namespace DocXLib
                 filePath = Path.Combine(DocXDirectory, $"diaryNoPics.docx");
             }
 
-            var document = Xceed.Words.NET.DocX.Create(filePath);
+            var document = DocX.Create(filePath);
             var font = new Font("Calibri (Body)");
             document.SetDefaultFont(font, 11d, Color.Black);
             document.DifferentOddAndEvenPages = true;
@@ -172,9 +173,9 @@ namespace DocXLib
                 var year = chunkedEntries.First().DateEntry.Year + yearSection;
 
                 int? startPageNo = null;
-                if (year == 2005)
+                if (year == pageNumberJumpYear)
                 {
-                    startPageNo = 1300;
+                    startPageNo = pageNumberJumpYearPN;
                 }
                 AddPageFooters(section, year, startPageNo);
             }
@@ -285,10 +286,10 @@ namespace DocXLib
 
         private static void InsertChapterImagePage(Document document, Section section, int year)
         {
-            section.MarginBottom = 1;
-            section.MarginTop = 1;
-            section.MarginLeft = 1;
-            section.MarginRight = 1;
+            section.MarginBottom = 10;
+            section.MarginTop = 10;
+            section.MarginLeft = 25;
+            section.MarginRight = 25;
 
             var yearParagraph = section.InsertParagraph();
             var chapterPicture = PictureHelper.CreatePicture(document, Path.Combine(ChapterImageDirectory, $"{year}.jpg"));
