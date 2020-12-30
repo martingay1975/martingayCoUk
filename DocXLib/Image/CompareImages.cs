@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xceed.Words.NET;
+using Xceed.Document.NET;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Globalization;
@@ -17,7 +17,7 @@ namespace DocXLib.Image
 {
     public class CompareImages
     {
-        public static void Run(IEnumerable<Entry> chunkedEntries, string docXDirectory, DocX document)
+        public static void Run(IEnumerable<Entry> chunkedEntries, string docXDirectory, Document document)
         {
             var chunkedEntriesLength = chunkedEntries.ToList().Count;
             int counter = 0;

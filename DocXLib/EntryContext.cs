@@ -1,20 +1,20 @@
 ﻿using DocXLib.Model.Data.Xml;
 using System.Collections.Generic;
 using Xceed.Document.NET;
-using Xceed.Words.NET;
+//using Xceed.Words.NET;
 
 namespace DocXLib
 {
     public class EntryContext
     {
-        public DocX Document { get; }
+        public Document Document { get; }
         public Paragraph Paragraph => this.Container.Paragraphs[0];
         public Entry Entry { get; private set; }
         public List<Picture> Pictures { get; private set; }
         public Table Container { get; set; }
         private bool firstContents;
 
-        public EntryContext(DocX document, Entry entry)
+        public EntryContext(Document document, Entry entry)
         {
             Document = document;
             Entry = entry;

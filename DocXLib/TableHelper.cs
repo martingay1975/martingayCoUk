@@ -5,7 +5,7 @@ namespace DocXLib
 {
     internal static class TableHelper
     {
-        private static int TotalWidth = 900;
+        private static int TotalWidth = 700;
 
         // return false to stop visiting
         public delegate bool VisitCellFunc(int rowIndex, int columnIndex, float columnWidth, Cell cell);
@@ -20,15 +20,31 @@ namespace DocXLib
         /// <summary>
         /// Creates/inserts a table with no borders
         /// </summary>
-        public static Table CreateTable(Paragraph paragraph, int rowCount, Options options)
+        public static Table CreateTable(Section section, Paragraph paragraph, int rowCount, Options options)
         {
             var columnWidths = options.ColumnWidths 
                 ?? Enumerable.Repeat((float)TotalWidth / (float)options.ColumnCountIfNoWidths, options.ColumnCountIfNoWidths).ToArray();
 
-            var table = paragraph.InsertTableAfterSelf(rowCount, columnWidths.Length);
+            Table table;
+            if (paragraph != null)
+            {
+                table = paragraph.InsertTableAfterSelf(rowCount, columnWidths.Length);
+            }
+            else {
+                table = section.InsertTable(rowCount, columnWidths.Length);
+            }
 
             // Set the table's column width and background 
-            table.SetWidths(columnWidths);
+
+            if (columnWidths.Length > 1)
+            {
+                table.SetWidths(columnWidths);
+            }
+            else
+            {
+                table.SetWidthsPercentage(new float[] { 100 });
+            }
+
             table.AutoFit = AutoFit.Contents;
             table.Design = TableDesign.None;
 

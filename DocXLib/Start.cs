@@ -3,32 +3,21 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
 using DocXLib.Image;
 using DocXLib.Model.Data.Xml;
 using HtmlAgilityPack;
 using WebDataEntry.Web.Application;
 using Xceed.Document.NET;
-using Xceed.Words.NET;
+//using Xceed.Words.NET;
 using Font = Xceed.Document.NET.Font;
 
 namespace DocXLib
 {
 
-    public class DocumentSlice
-    {
-        public DocumentSlice(int diaryEntriesCount)
-        {
-            DiaryEntriesCount = diaryEntriesCount;
-        }
-
-        public int DiaryEntriesCount { get; }
-    }
-
 
     public static class Start
     {
-        private const bool IncludePictures = false;
+        private const bool IncludePictures = true;
         private const bool CompareLocalAndHostImages = false;
 
         private const bool UseLicensedVersion = false;
@@ -81,10 +70,10 @@ namespace DocXLib
             var startAt = GetStartIndex(startAtChunkIdx);
             var takeEntries = ChunkLength[startAtChunkIdx].DiaryEntriesCount;
 
-            if (IncludePictures == false)
+            if (IncludePictures == true)
             {
-                startAt = 0;
-                takeEntries = 200;
+                startAt = 800;
+                takeEntries = 1;
             }
 
             var entries = diary.Entries.Where(entry => entry.People.Contains(KatiePersonId)).ToList();
@@ -116,12 +105,12 @@ namespace DocXLib
                 filePath = Path.Combine(DocXDirectory, $"diaryNoPics.docx");
             }
 
-            var document = DocX.Create(filePath);
+            var document = Xceed.Words.NET.DocX.Create(filePath);
             var font = new Font("Calibri (Body)");
             document.SetDefaultFont(font, 11d, Color.Black);
             document.DifferentOddAndEvenPages = true;
             document.DifferentFirstPage = true;
-            
+            ApplyStandardMargins(document);
 
             var counter = 0;
             var chunkedEntries = entries.ToList();
@@ -175,10 +164,12 @@ namespace DocXLib
             }
 
             var hasDocumentTOC = chunkedEntries.First().DateEntry.Year == 2003;
-            for (var sNo = hasDocumentTOC ? 1 : 0; sNo < document.Sections.Count; sNo++)
+            var sectionNumberStart = hasDocumentTOC ? 1 : 0;
+            for (var sectionNumber = sectionNumberStart; sectionNumber < document.Sections.Count; sectionNumber = sectionNumber + 2)
             {
-                var section = document.Sections[sNo];
-                var year = chunkedEntries.First().DateEntry.Year - (hasDocumentTOC ? 1 : 0) + sNo;
+                var section = document.Sections[sectionNumber];
+                var yearSection = (sectionNumber - (hasDocumentTOC ? 1 : 0)) / 2;
+                var year = chunkedEntries.First().DateEntry.Year + yearSection;
 
                 int? startPageNo = null;
                 if (year == 2005)
@@ -192,16 +183,25 @@ namespace DocXLib
             document.Dispose();
         }
 
+        private static void ApplyStandardMargins(Document document)
+        {
+            document.MarginBottom = 40;
+            document.MarginTop = 40;
+            document.MarginLeft = 55;
+            document.MarginRight = 55;
+            document.MirrorMargins = true;
+        }
+
         private static void ApplyStandardMargins(Section section)
         {
-            section.MarginBottom = 30;
-            section.MarginTop = 30;
-            section.MarginLeft = 60;
-            section.MarginRight = 30;
+            section.MarginBottom = 40;
+            section.MarginTop = 40;
+            section.MarginLeft = 55;
+            section.MarginRight = 55;
             section.MirrorMargins = true;
         }
 
-        private static void CreateYearPages(DocX document, int year, IEnumerable<Entry> yearEntries)
+        private static void CreateYearPages(Document document, int year, IEnumerable<Entry> yearEntries)
         {
             var chapterPageSection = document.InsertSectionPageBreak();
             InsertChapterImagePage(document, chapterPageSection, year);
@@ -279,7 +279,7 @@ namespace DocXLib
                 }
             };
 
-            TableHelper.CreateTable(paragraph, 1, options);
+            TableHelper.CreateTable(null, paragraph, 1, options);
         }
 
 
@@ -345,10 +345,11 @@ namespace DocXLib
                 }
             };
 
-            TableHelper.CreateTable(paragraph, yearEntries.Count + months.Count(), options);
+            var rowCount = yearEntries.Count + months.Count();
+            TableHelper.CreateTable(null, paragraph, rowCount, options);
         }
 
-        private static void InsertDocumentTOC(DocX document)
+        private static void InsertDocumentTOC(Document document)
         {
             // TOC for whole document
             var options = new TableHelper.Options
@@ -381,10 +382,10 @@ namespace DocXLib
             };
 
             var paragraph = document.InsertParagraph("");
-            TableHelper.CreateTable(paragraph, 18, options);
+            TableHelper.CreateTable(null, paragraph, 18, options);
         }
 
-        private static void CreateDiaryHeader(in DocX document, in Entry entry)
+        private static void CreateDiaryHeader(in Document document, in Entry entry)
         {
             // Add a table in a document of 1 row and 3 columns.
             
@@ -431,25 +432,12 @@ namespace DocXLib
         {
             // Create a table with 1 row and 1 column - serves as a container
             var paragraph = entryContext.Document.InsertParagraph("");
-            entryContext.Container = TableHelper.CreateTable(paragraph, 1, new TableHelper.Options() { ColumnCountIfNoWidths = 1 });
+            var section = entryContext.Document.Sections.Last();
+            entryContext.Container = TableHelper.CreateTable(section, null, 1, new TableHelper.Options() { ColumnCountIfNoWidths = 1 });
             HtmlHelper.ReadOriginalInfoContent(entryContext, NodeHandler);
-            entryContext.Container.Paragraphs.Last().InsertHorizontalLine(HorizontalBorderPosition.bottom, BorderStyle.Tcbs_single, 25);
+            //entryContext.Container.Paragraphs.Last().InsertHorizontalLine(HorizontalBorderPosition.bottom, BorderStyle.Tcbs_single, 25);
         }
 
-        private static string GetText(HtmlNode htmlNode)
-        {
-            // need to unescape html eg. &gt; to >
-            var ret = WebUtility.HtmlDecode(htmlNode.InnerText)
-                .Replace('\n', ' ')
-                .Trim();
-
-            while (ret.IndexOf("  ") > -1)
-            {
-                ret = ret.Replace("  ", " ");
-            }
-
-            return ret;
-        }
 
         private static void NodeHandler(in EntryContext entryContext, HtmlNode htmlNode)
         {
@@ -467,7 +455,7 @@ namespace DocXLib
                 case "p":
                 case "first":
                 {
-                    var text = GetText(htmlNode);
+                    var text = HtmlHelper.GetText(htmlNode);
                     entryContext.SetContentParagraph(text);
                     foreach (var paragraphChildNode in htmlNode.ChildNodes)
                     {
@@ -481,7 +469,7 @@ namespace DocXLib
                     var list = entryContext.Document.AddList();
                     foreach (var listItemNode in htmlNode.ChildNodes)
                     {
-                        var text = "\t•  " + GetText(listItemNode);
+                        var text = "\t•  " + HtmlHelper.GetText(listItemNode);
                         entryContext.SetContentParagraph(text, true);
                     }
 
@@ -516,7 +504,7 @@ namespace DocXLib
                 }
                 case "googlelink":
                 {
-                    entryContext.Paragraph.Append(" " + GetText(htmlNode) + " ");
+                    entryContext.Paragraph.Append(" " + HtmlHelper.GetText(htmlNode) + " ");
                     break;
                 }
                 default:
@@ -537,23 +525,25 @@ namespace DocXLib
 
             if (picCount == 1 )
             {
-                var firstParagraph = entryContext.Paragraph;
+                // insert a picture before any text
+                var firstParagraph = entryContext.Document.Tables.Last().Rows.Last().Cells.Last().Paragraphs.First();
                 var picture = entryContext.Pictures[0];
-
+                var xml = picture.Xml.ToString();
                 // UseLicensedVersion - START
-                //picture.WrappingStyle = PictureWrappingStyle.WrapTight;
-                //picture.WrapText = PictureWrapText.right;
-                //picture.VerticalAlignment = WrappingVerticalAlignment.TopRelativeToLine;
-                //picture.DistanceFromTextLeft = 7;
-                //picture.DistanceFromTextRight = 7;
-                //picture.DistanceFromTextBottom = 7;
+                picture.WrappingStyle = PictureWrappingStyle.WrapTight;
+                picture.WrapText = PictureWrapText.right;
+                picture.VerticalAlignment = WrappingVerticalAlignment.TopRelativeToLine;
+                picture.DistanceFromTextLeft = 7;
+                picture.DistanceFromTextRight = 7;
+                picture.DistanceFromTextBottom = 7;
                 // UseLicensedVersion - END
-                SizePicture(picture, new Size(225, 300));
 
+                SizePicture(picture, new Size(225, 300));
+                
                 firstParagraph.SpacingBefore(0);
                 firstParagraph.KeepLinesTogether(false);
                 firstParagraph.InsertPicture(picture);
-
+                
                 return;
             }
 
@@ -562,7 +552,7 @@ namespace DocXLib
 
             var pictureEnumerator = entryContext.Pictures.GetEnumerator();
 
-            // placing the pictures in a table
+            // placing mulitple pictures in a table
             var options = new TableHelper.Options
             {
                 ColumnCountIfNoWidths = columnCount,
@@ -590,7 +580,7 @@ namespace DocXLib
             };
 
             var paragraph = entryContext.Document.InsertParagraph();
-            TableHelper.CreateTable(paragraph, (int)rowCount, options);
+            TableHelper.CreateTable(null, paragraph, (int)rowCount, options);
         }
 
         private static void SizePicture(Picture picture, Size pictureMaxSize)
@@ -611,6 +601,5 @@ namespace DocXLib
 
             return startIndex;
         }
-
     }
 }

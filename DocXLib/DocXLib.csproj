@@ -73,16 +73,11 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Xceed.Document.NET, Version=1.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocX.1.7.1\lib\net40\Xceed.Document.NET.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Words.NET, Version=1.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocX.1.7.1\lib\net40\Xceed.Words.NET.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BadImageItem.cs" />
     <Compile Include="BadImageManager.cs" />
+    <Compile Include="DocumentSlice.cs" />
     <Compile Include="Image\CompareImages.cs" />
     <Compile Include="EntryContext.cs" />
     <Compile Include="HtmlHelper.cs" />
@@ -143,6 +138,14 @@
     <ProjectReference Include="..\WebDataEntry.Web\WebDataEntry.Web.csproj">
       <Project>{0268EA67-A7AD-4E25-8838-22F725E58BC3}</Project>
       <Name>WebDataEntry.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="Xceed2\Xceed.Document.NETStandard2\Xceed.Document.NETStandard2.csproj">
+      <Project>{f08acfc4-7ab5-47b4-aba1-6f86e4a9ce35}</Project>
+      <Name>Xceed.Document.NETStandard2</Name>
+    </ProjectReference>
+    <ProjectReference Include="Xceed2\Xceed.Words.NETStandard2\Xceed.Words.NETStandard2.csproj">
+      <Project>{e783f852-2d40-4aad-88d3-120de2d26278}</Project>
+      <Name>Xceed.Words.NETStandard2</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

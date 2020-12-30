@@ -4,6 +4,7 @@ obj/
 bin/
 packages/
 **/.local-chromium
+**/Xceed2
 .vscode/
 .vs/
 .idea/

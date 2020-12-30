@@ -37,7 +37,7 @@ namespace DocXConsole
             }
             finally
             {
-                Console.ReadKey();
+                //Console.ReadKey();
             }
         }
     }
