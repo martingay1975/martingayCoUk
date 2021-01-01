@@ -75,7 +75,7 @@ namespace DocXLib
             if (IncludePictures == false)
             {
                 startAtAllKatieEntriesIdx = 0;
-                takeEntries = 100;
+                takeEntries = 3000;
             }
 
             var allKatieEntries = diary.Entries.Where(entry => entry.People.Contains(KatiePersonId)).ToList();
@@ -197,11 +197,15 @@ namespace DocXLib
         {
             var chapterPageAndTOCSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.ChapterImage , Year = year});
             InsertChapterImagePage(document, chapterPageAndTOCSection, year);
-            
-            var restOfYearSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.ChapterEntries, Year = year });
 
-            ApplyStandardMargins(restOfYearSection);
+
+            var yearTocSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.ChapterTOC, Year = year });
+            ApplyStandardMargins(yearTocSection);
             InsertYearTOC(document, yearEntries.ToList());
+
+            document.InsertParagraph("Oi HERE");
+
+            var restOfYearSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.ChapterEntries, Year = year });
             restOfYearSection.InsertParagraph("").InsertPageBreakAfterSelf();
         }
 
@@ -303,8 +307,8 @@ namespace DocXLib
                 }
             };
 
-            var paragraph = document.InsertParagraph("");
-            TableHelper.CreateTable(null, paragraph, 18, options);
+            var documentTocSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.DocumentTOC });
+            TableHelper.CreateTable(documentTocSection, null, 18, options);
         }
 
         private static void CreateDiaryHeader(in Document document, in Entry entry, in int allKatieEntriesIdx)

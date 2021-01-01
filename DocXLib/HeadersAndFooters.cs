@@ -13,39 +13,35 @@ namespace DocXLib
             var hasDocumentTOC = chunkedEntries.First().DateEntry.Year == 2003;
             var sectionNumberStart = hasDocumentTOC ? 1 : 0;
 
-            for (var sectionNumber = sectionNumberStart; sectionNumber < documentSections.Count; sectionNumber = sectionNumber + 1)
+            for (var sectionNumber = sectionNumberStart; sectionNumber < documentSections.Count; sectionNumber ++)
             {
                 if (documentSectionManager.SectionInfos.TryGetValue(sectionNumber, out var sectionInfo))
                 {
                     Console.WriteLine($"Section[{sectionNumber}] = {sectionInfo?.Type.ToString()} - {sectionInfo?.Year.ToString()}");
+                    int? startPageNo = null;
+                    if (sectionInfo.Year == Start.pageNumberJumpYear)
+                    {
+                        startPageNo = Start.pageNumberJumpYearPN;
+                    }
+
+                    switch (sectionInfo.Type)
+                    {
+                        case SectionInfo.SectionInfoType.ChapterEntries:
+                        case SectionInfo.SectionInfoType.ChapterTOC:
+                        {
+                            AddPageFooters(documentSections[sectionNumber], sectionInfo, startPageNo);
+                            break;
+                        }
+                    }
+
+                    
                 }
-                else
-                {
-                    Console.WriteLine($"Section[{sectionNumber}] = nothing");
-                }
-
-            }
-
-
-            for (var sectionNumber = sectionNumberStart; sectionNumber < documentSections.Count; sectionNumber = sectionNumber + 2)
-            {
-                var section = documentSections[sectionNumber];
-
-                var yearSection = (sectionNumber - (hasDocumentTOC ? 1 : 0)) / 2;
-                var year = chunkedEntries.First().DateEntry.Year + yearSection;
-
-                int? startPageNo = null;
-                if (year == Start.pageNumberJumpYear)
-                {
-                    startPageNo = Start.pageNumberJumpYearPN;
-                }
-                AddPageFooters(section, year, startPageNo);
             }
         }
-        private static void AddPageFooters(Section section, int year, int? pageStart = null)
+        private static void AddPageFooters(Section section, SectionInfo sectionInfo, int? pageStart = null)
         {
             section.AddFooters();
-            section.DifferentFirstPage = true;
+            section.DifferentFirstPage = false;
 
             if (pageStart.HasValue)
             {
@@ -53,14 +49,15 @@ namespace DocXLib
             }
 
             var footers = section.Footers;
+            var year = sectionInfo.Year.ToString();
 
             // Page number to the left for even
             var pEven = footers.Even.Paragraphs[0];
-            AddFooterTable(pEven, true, year.ToString());
+            AddFooterTable(pEven, true, year);
 
             // Page number to the right for odd
             var pOdd = footers.Odd.Paragraphs[0];
-            AddFooterTable(pOdd, false, year.ToString());
+            AddFooterTable(pOdd, false, year);
         }
 
         private static void AddFooterTable(Paragraph paragraph, bool isEven, string year)
@@ -98,7 +95,6 @@ namespace DocXLib
                                     cellParagraph.AppendPageNumber(PageNumberFormat.normal);
                                     cellParagraph.Alignment = Alignment.right;
                                 }
-
                                 break;
                             }
                     }
@@ -110,6 +106,5 @@ namespace DocXLib
 
             TableHelper.CreateTable(null, paragraph, 1, options);
         }
-
     }
 }
