@@ -78,6 +78,7 @@
     <Compile Include="BadImageItem.cs" />
     <Compile Include="BadImageManager.cs" />
     <Compile Include="DocumentSlice.cs" />
+    <Compile Include="HeadersAndFooters.cs" />
     <Compile Include="Image\CompareImages.cs" />
     <Compile Include="EntryContext.cs" />
     <Compile Include="HtmlHelper.cs" />

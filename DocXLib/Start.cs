@@ -18,24 +18,25 @@ namespace DocXLib
     // The first page number is missing if document starts half way through the year
     public static class Start
     {
-        private const bool IncludePictures = true;
+        private const bool IncludePictures = false;
         private const bool CompareLocalAndHostImages = false;
 
         private const bool UseLicensedVersion = true;
         private const int STARTATCHUNKIDX = 1;
         private readonly static Color HeadingTitleColor = Color.FromArgb(103, 88, 65);
         private readonly static Color DateColor = Color.FromArgb(173, 165, 107);
-        private readonly static Color PageNumberColor = Color.FromArgb(237, 125, 49);
+        public readonly static Color PageNumberColor = Color.FromArgb(237, 125, 49);
 
         public const string DocXDirectory = @"C:\Users\Slop\Desktop\docx\";
         public const string ChapterImageDirectory = DocXDirectory + @"Chapters\";
         private const string DiaryXmlPath = @"C:\Users\Slop\AppData\Roaming\res\xml\diary.xml";
         private const int KatiePersonId = 502;
-        private readonly static float[] HeadingColumnWidths = new[] { 420f, 80f };
+        private readonly static float[] HeadingColumnWidths = new[] { 400f, 100f };
         private readonly static float[] TocColumnWidths = new[] { 450f, 50f };
+        private static DocumentSectionManager documentSectionManager;
         private const float ResizeChapterPics = 1f;
-        private const int pageNumberJumpYear = 2011;
-        private const int pageNumberJumpYearPN = 700;
+        public const int pageNumberJumpYear = 2011;
+        public const int pageNumberJumpYearPN = 700;
 
         //public readonly static List<int> ChunkStartIdx = new List<int> { 
         //    /*  0 */ 0, 
@@ -68,38 +69,38 @@ namespace DocXLib
             var diary = Load.LoadXml(DiaryXmlPath);
 
             var startAtChunkIdx = idx ?? STARTATCHUNKIDX;
-            var startAt = GetStartIndex(startAtChunkIdx);
+            var startAtAllKatieEntriesIdx = GetStartIndex(startAtChunkIdx);
             var takeEntries = ChunkLength[startAtChunkIdx].DiaryEntriesCount;
 
             if (IncludePictures == false)
             {
-                startAt = 0;
-                takeEntries = 3000;
+                startAtAllKatieEntriesIdx = 0;
+                takeEntries = 100;
             }
 
-            var entries = diary.Entries.Where(entry => entry.People.Contains(KatiePersonId)).ToList();
-            var chunkedEntries = entries.Skip(startAt).Take(takeEntries);
+            var allKatieEntries = diary.Entries.Where(entry => entry.People.Contains(KatiePersonId)).ToList();
+            var documentEntries = allKatieEntries.Skip(startAtAllKatieEntriesIdx).Take(takeEntries);
 
             var previousYear = 0;
             var previousMonth = (int?)0;
-            if (startAt > 0)
+            if (startAtAllKatieEntriesIdx > 0)
             {
-                var previousEntry = entries[startAt - 1];
+                var previousEntry = allKatieEntries[startAtAllKatieEntriesIdx - 1];
                 previousMonth = previousEntry.DateEntry.Month;
                 previousYear = previousEntry.DateEntry.Year;
             }
 
-            CreateDocument(chunkedEntries, startAtChunkIdx, previousYear, previousMonth);
+            CreateDocument(allKatieEntries, documentEntries, startAtChunkIdx, startAtAllKatieEntriesIdx, previousYear, previousMonth);
         }
 
-        private static void CreateDocument(in IEnumerable<Entry> entries, int idx, int previousYear, int? previousMonth)
+        private static void CreateDocument(in IEnumerable<Entry> allKatieEntries, in IEnumerable<Entry> documentEntries, int startAtChunkIdx, int startAtAllKatieEntriesIdx, int previousYear, int? previousMonth)
         {
             string filePath;
             if (IncludePictures)
             {
-                var documentFromPostfix = entries.First().DateEntry.GetShortDate().Replace(" ", "-");
-                var documentLastPostfix = entries.Last().DateEntry.GetShortDate().Replace(" ", "-");
-                filePath = Path.Combine(DocXDirectory, $"diary{idx} {documentFromPostfix} to {documentLastPostfix}.docx");
+                var documentFromPostfix = documentEntries.First().DateEntry.GetShortDate().Replace(" ", "-");
+                var documentLastPostfix = documentEntries.Last().DateEntry.GetShortDate().Replace(" ", "-");
+                filePath = Path.Combine(DocXDirectory, $"diary{startAtChunkIdx} {documentFromPostfix} to {documentLastPostfix}.docx");
             }
             else
             {
@@ -107,6 +108,8 @@ namespace DocXLib
             }
 
             var document = DocX.Create(filePath);
+            documentSectionManager = new DocumentSectionManager(document);
+
             var font = new Font("Calibri (Body)");
             document.SetDefaultFont(font, 11d, Color.Black);
             document.DifferentOddAndEvenPages = true;
@@ -114,7 +117,7 @@ namespace DocXLib
             ApplyStandardMargins(document);
 
             var counter = 0;
-            var chunkedEntries = entries.ToList();
+            var chunkedEntries = documentEntries.ToList();
             var chunkedEntriesLength = chunkedEntries.Count;
             var srcs = new List<string>();
 
@@ -134,12 +137,12 @@ namespace DocXLib
                 var entryContext = new EntryContext(document, entry);
 
                 counter++;
-                Console.WriteLine($"{counter} / {chunkedEntriesLength} - {entryContext.Entry.DateEntry.GetShortDate()}");
+                Console.WriteLine($"{counter} / {chunkedEntriesLength} - {entryContext.Entry.DateEntry.GetShortDate()}  ({startAtAllKatieEntriesIdx + counter})");
 
                 if (entry.DateEntry.Year != previousYear)
                 {
                     // Add a blank page introducing the year.
-                    CreateYearPages(document, entry.DateEntry.Year, chunkedEntries.Where(e => e.DateEntry.Year == entry.DateEntry.Year));
+                    CreateYearPages(document, entry.DateEntry.Year, allKatieEntries.Where(e => e.DateEntry.Year == entry.DateEntry.Year));
                     previousYear = entry.DateEntry.Year;
                     previousMonth = 0;
                 }
@@ -158,31 +161,19 @@ namespace DocXLib
                 }
 
                 document.InsertParagraph("").SpacingBefore(10);
-                CreateDiaryHeader(document, entry);
+                CreateDiaryHeader(document, entry, startAtAllKatieEntriesIdx + counter);
                 CreateDiaryContent(entryContext);
 
                 AddPictures(entryContext);
             }
 
-            var hasDocumentTOC = chunkedEntries.First().DateEntry.Year == 2003;
-            var sectionNumberStart = hasDocumentTOC ? 1 : 0;
-            for (var sectionNumber = sectionNumberStart; sectionNumber < document.Sections.Count; sectionNumber = sectionNumber + 2)
-            {
-                var section = document.Sections[sectionNumber];
-                var yearSection = (sectionNumber - (hasDocumentTOC ? 1 : 0)) / 2;
-                var year = chunkedEntries.First().DateEntry.Year + yearSection;
-
-                int? startPageNo = null;
-                if (year == pageNumberJumpYear)
-                {
-                    startPageNo = pageNumberJumpYearPN;
-                }
-                AddPageFooters(section, year, startPageNo);
-            }
+            HeadersAndFooters.AddSectionBits(document.Sections, documentSectionManager, chunkedEntries);
 
             document.Save();
             document.Dispose();
         }
+
+
 
         private static void ApplyStandardMargins(Document document)
         {
@@ -204,85 +195,15 @@ namespace DocXLib
 
         private static void CreateYearPages(Document document, int year, IEnumerable<Entry> yearEntries)
         {
-            var chapterPageSection = document.InsertSectionPageBreak();
-            InsertChapterImagePage(document, chapterPageSection, year);
+            var chapterPageAndTOCSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.ChapterImage , Year = year});
+            InsertChapterImagePage(document, chapterPageAndTOCSection, year);
             
-            var restOfYearSection = document.InsertSectionPageBreak();
-            ApplyStandardMargins(restOfYearSection);
+            var restOfYearSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.ChapterEntries, Year = year });
 
+            ApplyStandardMargins(restOfYearSection);
             InsertYearTOC(document, yearEntries.ToList());
             restOfYearSection.InsertParagraph("").InsertPageBreakAfterSelf();
         }
-
-        private static void AddPageFooters(Section section, int year, int? pageStart = null)
-        {
-            section.AddFooters();
-            section.DifferentFirstPage = true;
-
-            if (pageStart.HasValue)
-            {
-                section.PageNumberStart = pageStart.Value;
-            }
-
-            var footers = section.Footers;
-
-            // Page number to the left for even
-            var pEven = footers.Even.Paragraphs[0];
-            AddFooterTable(pEven, true, year.ToString());
-
-            // Page number to the right for odd
-            var pOdd = footers.Odd.Paragraphs[0];
-            AddFooterTable(pOdd, false, year.ToString());
-        }
-
-        private static void AddFooterTable(Paragraph paragraph, bool isEven, string year)
-        {
-            var options = new TableHelper.Options
-            {
-                ColumnCountIfNoWidths = 3,
-                VisitCellFunc = (int rowIndex, int columnIndex, float columnWidth, Cell cell) =>
-                {
-                    var cellParagraph = cell.Paragraphs[0];
-
-                    switch (columnIndex)
-                    {
-                        case 0:
-                            {
-                                if (isEven)
-                                {
-                                    cellParagraph.FontSize(18).Bold(true).Color(PageNumberColor);
-                                    cellParagraph.AppendPageNumber(PageNumberFormat.normal).FontSize(25).Bold(true);
-                                }
-                                break;
-                            }
-                        case 1:
-                            {
-                                cellParagraph.InsertText($"Katie Gay - {year}");
-                                cellParagraph.Alignment = Alignment.center;
-                                break;
-                            }
-                        case 2:
-                            {
-                                
-                                if (!isEven)
-                                {
-                                    cellParagraph.FontSize(18).Bold(true).Color(PageNumberColor);
-                                    cellParagraph.AppendPageNumber(PageNumberFormat.normal);
-                                    cellParagraph.Alignment = Alignment.right;
-                                }
-                                
-                                break;
-                            }
-                    }
-
-                    cell.VerticalAlignment = VerticalAlignment.Center;
-                    return true;
-                }
-            };
-
-            TableHelper.CreateTable(null, paragraph, 1, options);
-        }
-
 
         private static void InsertChapterImagePage(Document document, Section section, int year)
         {
@@ -386,7 +307,7 @@ namespace DocXLib
             TableHelper.CreateTable(null, paragraph, 18, options);
         }
 
-        private static void CreateDiaryHeader(in Document document, in Entry entry)
+        private static void CreateDiaryHeader(in Document document, in Entry entry, in int allKatieEntriesIdx)
         {
             // Add a table in a document of 1 row and 3 columns.
             
@@ -419,6 +340,10 @@ namespace DocXLib
                 .ApplyDateFormatting();
 
             dateParagraph.Alignment = Alignment.right;
+
+            // entry number
+            row.Cells[1].InsertParagraph(allKatieEntriesIdx.ToString()).ApplyDateFormatting().FontSize(6).Italic(true).Alignment = Alignment.right;
+
             row.Cells[1].VerticalAlignment = VerticalAlignment.Center;
         }
 
@@ -603,4 +528,26 @@ namespace DocXLib
             return startIndex;
         }
     }
+
+    public class DocumentSectionManager
+    {
+        private readonly Document document;
+
+        public Dictionary<int, SectionInfo> SectionInfos { get; }
+
+        public DocumentSectionManager(Document document)
+        {
+            this.document = document ?? throw new ArgumentNullException(nameof(document));
+            this.SectionInfos = new Dictionary<int, SectionInfo>();
+        }
+
+        public Section AddSection(SectionInfo sectionInfo)
+        {
+            var section = document.InsertSectionPageBreak();
+            var sectionIdx = document.Sections.Count - 1;
+            this.SectionInfos[sectionIdx] = sectionInfo;
+            return section;
+        }
+    }
+
 }

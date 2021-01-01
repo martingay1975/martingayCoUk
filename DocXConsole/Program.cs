@@ -37,6 +37,7 @@ namespace DocXConsole
             }
             finally
             {
+                Console.WriteLine("Finished. Press any key to exit");
                 Console.ReadKey();
             }
         }
