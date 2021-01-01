@@ -8,6 +8,7 @@
 
         public enum SectionInfoType
         {
+            Eof,
             DocumentCover,
             DocumentTOC,
             ChapterImage,

@@ -1,35 +1,25 @@
-﻿using DocXLib.Model.Data.Xml;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Xceed.Document.NET;
 
 namespace DocXLib
 {
     public static class HeadersAndFooters
     {
-        public static void AddSectionBits(IList<Section> documentSections, DocumentSectionManager documentSectionManager, List<Entry> chunkedEntries)
+        public static void AddSectionBits(IList<Section> documentSections, DocumentSectionManager documentSectionManager, int? newDocumentPageStart)
         {
-            var hasDocumentTOC = chunkedEntries.First().DateEntry.Year == 2003;
-            var sectionNumberStart = hasDocumentTOC ? 1 : 0;
-
-            for (var sectionNumber = sectionNumberStart; sectionNumber < documentSections.Count; sectionNumber ++)
+            for (var sectionNumber = 0; sectionNumber < documentSections.Count; sectionNumber ++)
             {
                 if (documentSectionManager.SectionInfos.TryGetValue(sectionNumber, out var sectionInfo))
                 {
                     Console.WriteLine($"Section[{sectionNumber}] = {sectionInfo?.Type.ToString()} - {sectionInfo?.Year.ToString()}");
-                    int? startPageNo = null;
-                    if (sectionInfo.Year == Start.pageNumberJumpYear)
-                    {
-                        startPageNo = Start.pageNumberJumpYearPN;
-                    }
 
                     switch (sectionInfo.Type)
                     {
                         case SectionInfo.SectionInfoType.ChapterEntries:
                         case SectionInfo.SectionInfoType.ChapterTOC:
                         {
-                            AddPageFooters(documentSections[sectionNumber], sectionInfo, startPageNo);
+                            AddPageFooters(documentSections[sectionNumber], sectionInfo, newDocumentPageStart);
                             break;
                         }
                     }
@@ -43,7 +33,7 @@ namespace DocXLib
             section.AddFooters();
             section.DifferentFirstPage = false;
 
-            if (pageStart.HasValue)
+            if (pageStart.HasValue && sectionInfo.Type == SectionInfo.SectionInfoType.ChapterTOC)
             {
                 section.PageNumberStart = pageStart.Value;
             }

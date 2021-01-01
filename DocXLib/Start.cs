@@ -14,11 +14,19 @@ using Font = Xceed.Document.NET.Font;
 namespace DocXLib
 {
     // TODO:
-    // The year TOC only includes what is in the document.... Should include whole year
-    // The first page number is missing if document starts half way through the year
+    //TODO: Need to make a contents page:
+    //    Document 1 = 2003 to 2011
+    //    Document 2 = 2012 to 2020
+    // Page Cover and TOC on document 2
+    // Need to check some of the picture have the wrong rotation
+    // The last section in the document has the wrong footer!
+    // Need to tie the header table with the contents table.
+    // Can we do 700 pages in a book.
+
+
     public static class Start
     {
-        private const bool IncludePictures = false;
+        private const bool IncludePictures = true;
         private const bool CompareLocalAndHostImages = false;
 
         private const bool UseLicensedVersion = true;
@@ -42,7 +50,7 @@ namespace DocXLib
         //    /*  0 */ 0, 
         //    /*  1 */ 800, 
         //    /*  2 */ 950, 
-        //    /*  3 */ 1200, 
+        //    /*  3 */ 1126, 
         //    /*  4 */ 1410, 
         //    /*  5 */ 1650, 
         //    /*  6 */ 1800, 
@@ -54,15 +62,17 @@ namespace DocXLib
         {
             /*  0 */ new DocumentSlice(800),
             /*  1 */ new DocumentSlice(150),
-            /*  2 */ new DocumentSlice(250),
-            /*  3 */ new DocumentSlice(150),
-            /*  4 */ new DocumentSlice(260),
+            /*  2 */ new DocumentSlice(176),
+            /*  3 */ new DocumentSlice(135),
+            // Start of 2012
+            /*  4 */ new DocumentSlice(230),
             /*  5 */ new DocumentSlice(120),
             /*  6 */ new DocumentSlice(170),
-            /*  7 */ new DocumentSlice(100),
-            /*  8 */ new DocumentSlice(150),
-            /*  9 */ new DocumentSlice(350)
-        };  
+            /*  7 */ new DocumentSlice(130),
+            /*  8 */ new DocumentSlice(180),
+            /*  9 */ new DocumentSlice(180),
+            /*  10 */ new DocumentSlice(200)
+        };
 
         public static void Run(int? idx = null)
         {
@@ -112,18 +122,21 @@ namespace DocXLib
 
             var font = new Font("Calibri (Body)");
             document.SetDefaultFont(font, 11d, Color.Black);
-            document.DifferentOddAndEvenPages = true;
-            document.DifferentFirstPage = true;
+            //document.DifferentOddAndEvenPages = true;
+            //document.DifferentFirstPage = true;
             ApplyStandardMargins(document);
 
             var counter = 0;
             var chunkedEntries = documentEntries.ToList();
             var chunkedEntriesLength = chunkedEntries.Count;
             var srcs = new List<string>();
+            var newDocument = false;
 
-            if (chunkedEntries.First().DateEntry.Year <= 2003)
+            if (startAtChunkIdx == 0 || startAtChunkIdx == 6)
             {
-                InsertDocumentTOC(document);
+                InsertDocumentFrontPage(document);
+                InsertDocumentTOC();
+                newDocument = true;
             }
 
             if (CompareLocalAndHostImages)
@@ -142,7 +155,8 @@ namespace DocXLib
                 if (entry.DateEntry.Year != previousYear)
                 {
                     // Add a blank page introducing the year.
-                    CreateYearPages(document, entry.DateEntry.Year, allKatieEntries.Where(e => e.DateEntry.Year == entry.DateEntry.Year));
+                    CreateYearImageAndTocPages(document, entry.DateEntry.Year, allKatieEntries.Where(e => e.DateEntry.Year == entry.DateEntry.Year));
+                    CreateYearEntryPages(entry.DateEntry.Year);
                     previousYear = entry.DateEntry.Year;
                     previousMonth = 0;
                 }
@@ -160,6 +174,12 @@ namespace DocXLib
                     previousMonth = entry.DateEntry.Month.Value;
                 }
 
+                if (!documentSectionManager.HaveAddedSections())
+                {
+                    // if the document starts half way through the entries for the year, need to create the section
+                    CreateYearEntryPages(entry.DateEntry.Year);
+                }
+
                 document.InsertParagraph("").SpacingBefore(10);
                 CreateDiaryHeader(document, entry, startAtAllKatieEntriesIdx + counter);
                 CreateDiaryContent(entryContext);
@@ -167,13 +187,26 @@ namespace DocXLib
                 AddPictures(entryContext);
             }
 
-            HeadersAndFooters.AddSectionBits(document.Sections, documentSectionManager, chunkedEntries);
+            var startPageNum = GetStartPage(startAtChunkIdx);
+
+            HeadersAndFooters.AddSectionBits(document.Sections, documentSectionManager, startPageNum);
 
             document.Save();
             document.Dispose();
         }
 
-
+        private static int? GetStartPage(int startAtChunkIdx)
+        {
+            switch (startAtChunkIdx)
+            {
+                case 4:
+                    return 635;
+                case 7:
+                    return 1400;
+                default:
+                    return default(int?);
+            }
+        }
 
         private static void ApplyStandardMargins(Document document)
         {
@@ -193,20 +226,21 @@ namespace DocXLib
             section.MirrorMargins = true;
         }
 
-        private static void CreateYearPages(Document document, int year, IEnumerable<Entry> yearEntries)
+        private static void CreateYearImageAndTocPages(Document document, int year, IEnumerable<Entry> yearEntries)
         {
             var chapterPageAndTOCSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.ChapterImage , Year = year});
             InsertChapterImagePage(document, chapterPageAndTOCSection, year);
 
-
             var yearTocSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.ChapterTOC, Year = year });
             ApplyStandardMargins(yearTocSection);
             InsertYearTOC(document, yearEntries.ToList());
+        }
 
-            document.InsertParagraph("Oi HERE");
-
+        private static Section CreateYearEntryPages(int year)
+        {
             var restOfYearSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.ChapterEntries, Year = year });
-            restOfYearSection.InsertParagraph("").InsertPageBreakAfterSelf();
+            ApplyStandardMargins(restOfYearSection);
+            return restOfYearSection;
         }
 
         private static void InsertChapterImagePage(Document document, Section section, int year)
@@ -275,7 +309,13 @@ namespace DocXLib
             TableHelper.CreateTable(null, paragraph, rowCount, options);
         }
 
-        private static void InsertDocumentTOC(Document document)
+        private static void InsertDocumentFrontPage(Document document)
+        {
+            var documentCoverSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.DocumentCover });
+            documentCoverSection.InsertParagraph("Front Cover").FontSize(30);
+        }
+
+        private static void InsertDocumentTOC()
         {
             // TOC for whole document
             var options = new TableHelper.Options
@@ -306,7 +346,6 @@ namespace DocXLib
                     return true;
                 }
             };
-
             var documentTocSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.DocumentTOC });
             TableHelper.CreateTable(documentTocSection, null, 18, options);
         }
@@ -530,27 +569,6 @@ namespace DocXLib
             }
 
             return startIndex;
-        }
-    }
-
-    public class DocumentSectionManager
-    {
-        private readonly Document document;
-
-        public Dictionary<int, SectionInfo> SectionInfos { get; }
-
-        public DocumentSectionManager(Document document)
-        {
-            this.document = document ?? throw new ArgumentNullException(nameof(document));
-            this.SectionInfos = new Dictionary<int, SectionInfo>();
-        }
-
-        public Section AddSection(SectionInfo sectionInfo)
-        {
-            var section = document.InsertSectionPageBreak();
-            var sectionIdx = document.Sections.Count - 1;
-            this.SectionInfos[sectionIdx] = sectionInfo;
-            return section;
         }
     }
 
