@@ -13,7 +13,7 @@ namespace DocXConsole
                 {
                     if (args[0] == "runall")
                     {
-                        for (var idx=0; idx < Start.ChunkLength.Count; idx ++)
+                        for (var idx=0; idx < Start.DocumentSlices.Count; idx ++)
                         {
 
                             var process = new System.Diagnostics.Process();

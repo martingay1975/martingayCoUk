@@ -14,14 +14,9 @@ using Font = Xceed.Document.NET.Font;
 namespace DocXLib
 {
     // TODO:
-    //TODO: Need to make a contents page:
-    //    Document 1 = 2003 to 2011
-    //    Document 2 = 2012 to 2020
-    // Page Cover and TOC on document 2
-    // Need to check some of the picture have the wrong rotation
-    // The last section in the document has the wrong footer!
-    // Need to tie the header table with the contents table.
-    // Can we do 700 pages in a book.
+    // Print covers
+    // 2 columns in a page?
+    // £170 for a 1000 page book
 
 
     public static class Start
@@ -58,20 +53,20 @@ namespace DocXLib
         //    /*  8 */ 2250, 
         //    /*  9 */ 2600};
 
-        public readonly static List<DocumentSlice> ChunkLength = new List<DocumentSlice>
+        public readonly static List<DocumentSlice> DocumentSlices = new List<DocumentSlice>
         {
-            /*  0 */ new DocumentSlice(800),
-            /*  1 */ new DocumentSlice(150),
-            /*  2 */ new DocumentSlice(176),
-            /*  3 */ new DocumentSlice(135),
+            /*  0 */ new DocumentSlice(800, false, new DocumentProperties(new Tuple<int, int>(2003, 2011))),
+            /*  1 */ new DocumentSlice(150, false),
+            /*  2 */ new DocumentSlice(176, false),
+            /*  3 */ new DocumentSlice(135, true),
             // Start of 2012
-            /*  4 */ new DocumentSlice(230),
-            /*  5 */ new DocumentSlice(120),
-            /*  6 */ new DocumentSlice(170),
-            /*  7 */ new DocumentSlice(130),
-            /*  8 */ new DocumentSlice(180),
-            /*  9 */ new DocumentSlice(180),
-            /*  10 */ new DocumentSlice(200)
+            /*  4 */ new DocumentSlice(230, false, new DocumentProperties(new Tuple<int, int>(2012, 2021), 635)),
+            /*  5 */ new DocumentSlice(120, false),
+            /*  6 */ new DocumentSlice(170, false),
+            /*  7 */ new DocumentSlice(130, false),
+            /*  8 */ new DocumentSlice(180, false),
+            /*  9 */ new DocumentSlice(180, false),
+            /*  10 */ new DocumentSlice(200, true)
         };
 
         public static void Run(int? idx = null)
@@ -80,7 +75,7 @@ namespace DocXLib
 
             var startAtChunkIdx = idx ?? STARTATCHUNKIDX;
             var startAtAllKatieEntriesIdx = GetStartIndex(startAtChunkIdx);
-            var takeEntries = ChunkLength[startAtChunkIdx].DiaryEntriesCount;
+            var takeEntries = DocumentSlices[startAtChunkIdx].DiaryEntriesCount;
 
             if (IncludePictures == false)
             {
@@ -122,35 +117,33 @@ namespace DocXLib
 
             var font = new Font("Calibri (Body)");
             document.SetDefaultFont(font, 11d, Color.Black);
-            //document.DifferentOddAndEvenPages = true;
-            //document.DifferentFirstPage = true;
             ApplyStandardMargins(document);
 
             var counter = 0;
-            var chunkedEntries = documentEntries.ToList();
-            var chunkedEntriesLength = chunkedEntries.Count;
+            var documentEntriesList = documentEntries.ToList();
+            var documentEntriesListCount = documentEntriesList.Count;
             var srcs = new List<string>();
-            var newDocument = false;
 
-            if (startAtChunkIdx == 0 || startAtChunkIdx == 6)
+            var documentSlice = DocumentSlices[startAtChunkIdx];
+
+            if (documentSlice.FirstInDocument)
             {
                 InsertDocumentFrontPage(document);
-                InsertDocumentTOC();
-                newDocument = true;
+                InsertDocumentTOC(documentSlice.DocumentProperties.YearRange);
             }
 
             if (CompareLocalAndHostImages)
             {
-                CompareImages.Run(chunkedEntries, DocXDirectory, document);
+                CompareImages.Run(documentEntriesList, DocXDirectory, document);
                 return;
             }
 
-            foreach (var entry in chunkedEntries)
+            foreach (var entry in documentEntriesList)
             {
                 var entryContext = new EntryContext(document, entry);
 
                 counter++;
-                Console.WriteLine($"{counter} / {chunkedEntriesLength} - {entryContext.Entry.DateEntry.GetShortDate()}  ({startAtAllKatieEntriesIdx + counter})");
+                Console.WriteLine($"{counter} / {documentEntriesListCount} - {entryContext.Entry.DateEntry.GetShortDate()}  ({startAtAllKatieEntriesIdx + counter})");
 
                 if (entry.DateEntry.Year != previousYear)
                 {
@@ -187,9 +180,17 @@ namespace DocXLib
                 AddPictures(entryContext);
             }
 
-            var startPageNum = GetStartPage(startAtChunkIdx);
+            if (documentSlice.LastInDocument)
+            {
+                documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.Eof });
+            }
 
-            HeadersAndFooters.AddSectionBits(document.Sections, documentSectionManager, startPageNum);
+            HeadersAndFooters.AddSectionBits(document.Sections, documentSectionManager, null);
+
+            if (documentSlice.LastInDocument)
+            {
+                document.Sections.Remove(document.Sections.Last());
+            }
 
             document.Save();
             document.Dispose();
@@ -315,7 +316,7 @@ namespace DocXLib
             documentCoverSection.InsertParagraph("Front Cover").FontSize(30);
         }
 
-        private static void InsertDocumentTOC()
+        private static void InsertDocumentTOC(Tuple<int, int> yearRange)
         {
             // TOC for whole document
             var options = new TableHelper.Options
@@ -328,7 +329,7 @@ namespace DocXLib
                     {
                         case 0:
                             {
-                                cellParagraph.Append($"{rowIndex + 2003}");
+                                cellParagraph.Append($"{rowIndex + yearRange.Item1}");
                                 cellParagraph.ApplyDateFormatting();
                                 cellParagraph.FontSize(14);
                                 break;
@@ -347,7 +348,7 @@ namespace DocXLib
                 }
             };
             var documentTocSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.DocumentTOC });
-            TableHelper.CreateTable(documentTocSection, null, 18, options);
+            TableHelper.CreateTable(documentTocSection, null, 1 + yearRange.Item2 - yearRange.Item1, options);
         }
 
         private static void CreateDiaryHeader(in Document document, in Entry entry, in int allKatieEntriesIdx)
@@ -355,7 +356,7 @@ namespace DocXLib
             // Add a table in a document of 1 row and 3 columns.
             
             var table = document.InsertTable(1, HeadingColumnWidths.Length);
-            
+
             // Set the table's column width and background 
             table.SetWidths(HeadingColumnWidths);
             table.AutoFit = AutoFit.Contents;
@@ -565,7 +566,7 @@ namespace DocXLib
             int startIndex = 0;
             for (var i = 0; i < chunkIdx; i++)
             {
-                startIndex += ChunkLength[i].DiaryEntriesCount;
+                startIndex += DocumentSlices[i].DiaryEntriesCount;
             }
 
             return startIndex;

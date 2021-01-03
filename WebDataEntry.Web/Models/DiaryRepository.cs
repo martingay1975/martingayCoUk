@@ -28,7 +28,8 @@ namespace WebDataEntry.Web.Models
 			this.relativePaths = new List<string> { 
 				"res/xml/diary.xml", 
 				"res/json/whoops.json",
-                "res/json/2020.json",
+				"res/json/2021.json",
+				"res/json/2020.json",
                 "res/json/2019.json",
 				"res/json/2018.json",
 				"res/json/2017.json",
@@ -96,36 +97,10 @@ namespace WebDataEntry.Web.Models
 				var martinGayCoUkHost = new MartinGayCoUkHost(this.configuration.BasePath, "/martingay/");
 				martinGayCoUkHost.UploadBatch(this.relativePaths);
 
-				//var devEnvionment = new GoogleDriveDevEnvironment(this.configuration);
-				//using (var sftpClient = new SFtpBatch(this.configuration))
-				//{
-				//	var context = this;
 
-				//	this.relativePaths.ForEach(relativePath =>
-				//	{
-				//		//var hasChanged = context.IsHashChanged(relativePath);
-				//		const bool hasChanged = true;
-
-				//		// only upload files that have changed.
-				//		if (hasChanged)
-				//		{
-				//			sftpClient.Upload(relativePath);
-				//		}
-				//	});
-				//}
 
 				// update the current saved state.
 				this._loadedHashes = this._savedHashes;
-
-				//// also copy to Google Drive so the dev environment is in-sync.
-    //            try
-    //            {
-    //                this.relativePaths.ForEach(devEnvionment.Copy);
-    //            }
-    //            catch (Exception e)
-    //            {
-    //                Console.WriteLine(e);
-    //            }
 			}
 			catch (Exception e)
 			{
