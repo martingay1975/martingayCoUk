@@ -94,7 +94,7 @@ namespace DocXLib
                 }
             };
 
-            TableHelper.CreateTable(null, paragraph, 1, options);
+            TableHelper.CreateTable(null, paragraph, 1, Start.pageSetup, options);
         }
     }
 }

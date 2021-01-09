@@ -18,7 +18,6 @@ namespace DocXLib
     // 2 columns in a page?
     // £170 for a 1000 page book
 
-
     public static class Start
     {
         private const bool IncludePictures = true;
@@ -34,12 +33,10 @@ namespace DocXLib
         public const string ChapterImageDirectory = DocXDirectory + @"Chapters\";
         private const string DiaryXmlPath = @"C:\Users\Slop\AppData\Roaming\res\xml\diary.xml";
         private const int KatiePersonId = 502;
-        private readonly static float[] HeadingColumnWidths = new[] { 400f, 100f };
-        private readonly static float[] TocColumnWidths = new[] { 450f, 50f };
+
         private static DocumentSectionManager documentSectionManager;
         private const float ResizeChapterPics = 1f;
-        public const int pageNumberJumpYear = 2011;
-        public const int pageNumberJumpYearPN = 700;
+        public static PageSetup pageSetup = new PageSetup(2, false);
 
         //public readonly static List<int> ChunkStartIdx = new List<int> { 
         //    /*  0 */ 0, 
@@ -113,7 +110,8 @@ namespace DocXLib
             }
 
             var document = DocX.Create(filePath);
-            documentSectionManager = new DocumentSectionManager(document);
+            
+            documentSectionManager = new DocumentSectionManager(document, pageSetup);
 
             var font = new Font("Calibri (Body)");
             document.SetDefaultFont(font, 11d, Color.Black);
@@ -269,7 +267,7 @@ namespace DocXLib
 
             var options = new TableHelper.Options
             {
-                ColumnWidths = TocColumnWidths,
+                ColumnWidths = pageSetup.GetTocColumnWidths(),
                 VisitCellFunc = (int rowIndex, int columnIndex, float columnWidth, Cell cell) =>
                 {
                     var cellParagraph = cell.Paragraphs[0];
@@ -307,7 +305,7 @@ namespace DocXLib
             };
 
             var rowCount = yearEntries.Count + months.Count();
-            TableHelper.CreateTable(null, paragraph, rowCount, options);
+            TableHelper.CreateTable(null, paragraph, rowCount, pageSetup, options);
         }
 
         private static void InsertDocumentFrontPage(Document document)
@@ -321,7 +319,7 @@ namespace DocXLib
             // TOC for whole document
             var options = new TableHelper.Options
             {
-                ColumnWidths = TocColumnWidths,
+                ColumnWidths = pageSetup.GetTocColumnWidths(),
                 VisitCellFunc = (int rowIndex, int columnIndex, float columnWidth, Cell cell) =>
                 {
                     var cellParagraph = cell.Paragraphs[0];
@@ -348,17 +346,17 @@ namespace DocXLib
                 }
             };
             var documentTocSection = documentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.DocumentTOC });
-            TableHelper.CreateTable(documentTocSection, null, 1 + yearRange.Item2 - yearRange.Item1, options);
+            TableHelper.CreateTable(documentTocSection, null, 1 + yearRange.Item2 - yearRange.Item1, pageSetup, options);
         }
 
         private static void CreateDiaryHeader(in Document document, in Entry entry, in int allKatieEntriesIdx)
         {
             // Add a table in a document of 1 row and 3 columns.
             
-            var table = document.InsertTable(1, HeadingColumnWidths.Length);
+            var table = document.InsertTable(1, pageSetup.GetEntryHeadingColumnWidths().Length);
 
             // Set the table's column width and background 
-            table.SetWidths(HeadingColumnWidths);
+            table.SetWidths(pageSetup.GetEntryHeadingColumnWidths());
             table.AutoFit = AutoFit.Contents;
             table.Design = TableDesign.None;
 
@@ -403,7 +401,7 @@ namespace DocXLib
             // Create a table with 1 row and 1 column - serves as a container
             var paragraph = entryContext.Document.InsertParagraph("");
             var section = entryContext.Document.Sections.Last();
-            entryContext.Container = TableHelper.CreateTable(section, null, 1, new TableHelper.Options() { ColumnCountIfNoWidths = 1 });
+            entryContext.Container = TableHelper.CreateTable(section, null, 1, pageSetup, new TableHelper.Options() { ColumnCountIfNoWidths = 1 });
             HtmlHelper.ReadOriginalInfoContent(entryContext, NodeHandler);
             //entryContext.Container.Paragraphs.Last().InsertHorizontalLine(HorizontalBorderPosition.bottom, BorderStyle.Tcbs_single, 25);
         }
@@ -517,7 +515,8 @@ namespace DocXLib
                 return;
             }
 
-            var columnCount = (picCount % 3 == 0 || picCount > 4) ? 3 : 2;
+            var columnCount = pageSetup.GetTableColumnCountForPictures(picCount);
+
             var rowCount = Math.Ceiling(picCount / (float)columnCount);
 
             var pictureEnumerator = entryContext.Pictures.GetEnumerator();
@@ -543,14 +542,14 @@ namespace DocXLib
 
                     var cellParagraph = cell.Paragraphs.First();
                     cellParagraph.AppendPicture(picture);
-                    cellParagraph.InsertCaptionAfterSelf(picture.Name);
+                    cellParagraph.InsertParagraphAfterSelf(picture.Name);
 
                     return true;
                 }
             };
 
             var paragraph = entryContext.Document.InsertParagraph();
-            TableHelper.CreateTable(null, paragraph, (int)rowCount, options);
+            TableHelper.CreateTable(null, paragraph, (int)rowCount, pageSetup, options);
         }
 
         private static void SizePicture(Picture picture, Size pictureMaxSize)
