@@ -21,7 +21,6 @@ namespace DocXLib
         private const bool CompareLocalAndHostImages = false;
 
         private const int STARTATCHUNKIDX = 1;
-        private readonly static Color HeadingTitleColor = Color.FromArgb(103, 88, 65);
         public readonly static Color RedColor = Color.FromArgb(238, 48, 48);
         public readonly static Color GreenColor = Color.FromArgb(98, 238, 48);
         public readonly static Color YellowColor = Color.FromArgb(233, 238, 48);
