@@ -8,32 +8,47 @@ namespace DocXLib
     {
         public static void AddSectionBits(IList<Section> documentSections, DocumentSectionManager documentSectionManager, int? newDocumentPageStart)
         {
+            bool setStartPage = newDocumentPageStart.HasValue;
+
             for (var sectionNumber = 0; sectionNumber < documentSections.Count; sectionNumber ++)
             {
                 if (documentSectionManager.SectionInfos.TryGetValue(sectionNumber, out var sectionInfo))
                 {
                     Console.WriteLine($"Section[{sectionNumber}] = {sectionInfo?.Type.ToString()} - {sectionInfo?.Year.ToString()}");
+                    var section = documentSections[sectionNumber];
 
                     switch (sectionInfo.Type)
                     {
+                        case SectionInfo.SectionInfoType.ChapterImage:
+                        case SectionInfo.SectionInfoType.DocumentCover:
+                        {
+                            DocumentSetup.ApplyZeroMargins(section);
+                            break;
+                        }
                         case SectionInfo.SectionInfoType.ChapterEntries:
                         case SectionInfo.SectionInfoType.ChapterTOC:
                         {
-                            AddPageFooters(documentSections[sectionNumber], sectionInfo, newDocumentPageStart);
+                            DocumentSetup.ApplyStandardMargins(section);
+                            AddPageFooters(section, sectionInfo, setStartPage, newDocumentPageStart);
+                            setStartPage = false;
+                            break;
+                        }
+                        case SectionInfo.SectionInfoType.DocumentTOC:
+                        {
+                            DocumentSetup.ApplyStandardMargins(section);
                             break;
                         }
                     }
-
-                    
                 }
             }
         }
-        private static void AddPageFooters(Section section, SectionInfo sectionInfo, int? pageStart = null)
+
+        private static void AddPageFooters(Section section, SectionInfo sectionInfo, bool setStartPage, int? pageStart = null)
         {
             section.AddFooters();
             section.DifferentFirstPage = false;
 
-            if (pageStart.HasValue && sectionInfo.Type == SectionInfo.SectionInfoType.ChapterTOC)
+            if (setStartPage && sectionInfo.Type == SectionInfo.SectionInfoType.ChapterTOC)
             {
                 section.PageNumberStart = pageStart.Value;
             }
@@ -65,23 +80,23 @@ namespace DocXLib
                             {
                                 if (isEven)
                                 {
-                                    cellParagraph.FontSize(18).Bold(true).Color(Start.PageNumberColor);
-                                    cellParagraph.AppendPageNumber(PageNumberFormat.normal).FontSize(25).Bold(true);
+                                    cellParagraph.FontSize(18).Color(Start.PageNumberColor);
+                                    cellParagraph.AppendPageNumber(PageNumberFormat.normal);
                                 }
                                 break;
                             }
                         case 1:
                             {
                                 cellParagraph.InsertText($"Katie Gay - {year}");
+                                cellParagraph.Color(Start.PageNumberColor);
                                 cellParagraph.Alignment = Alignment.center;
                                 break;
                             }
                         case 2:
                             {
-
                                 if (!isEven)
                                 {
-                                    cellParagraph.FontSize(18).Bold(true).Color(Start.PageNumberColor);
+                                    cellParagraph.FontSize(18).Color(Start.PageNumberColor);
                                     cellParagraph.AppendPageNumber(PageNumberFormat.normal);
                                     cellParagraph.Alignment = Alignment.right;
                                 }

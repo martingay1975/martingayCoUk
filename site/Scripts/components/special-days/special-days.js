@@ -28,6 +28,16 @@ define(['router', 'menuOption', 'text!./special-days.html'], function (router, M
 			throw "Must invoke the function SpecialDaysViewModel with the new operator";
 		}
 
+		this.trips2020MenuOptions = [];
+		this.trips2020MenuOptions.push(createSpecialOccassionMenuOption('Barcelona', 'images/tiles/2020_01.jpg', 'startdatev=20200118&enddatev=20200119'));
+		this.trips2020MenuOptions.push(createSpecialOccassionMenuOption('North East Trip', 'images/tiles/2020_02.jpg', 'startdatev=20200215&enddatev=20200217'));
+		this.trips2020MenuOptions.push(createSpecialOccassionMenuOption('Ben Skiing', 'images/tiles/2020_02_BenSki.jpg', 'startdatev=20200219&enddatev=20200219'));
+		this.trips2020MenuOptions.push(createSpecialOccassionMenuOption('Mummy Holland', 'images/tiles/2020_03_LauraInHolland.jpg', 'startdatev=20200301&enddatev=20200301'));
+		this.trips2020MenuOptions.push(createSpecialOccassionMenuOption('Cambridge Weekend', 'images/tiles/2020_07_Cambridge.jpg', 'startdatev=20200726&enddatev=20200710'));
+		this.trips2020MenuOptions.push(createSpecialOccassionMenuOption('Boys Oxford 2 Day Bike Ride', 'images/tiles/2020_07_OxfordBikeRide.jpg', 'startdatev=20200726&enddatev=20200711'));
+		this.trips2020MenuOptions.push(createSpecialOccassionMenuOption('Croatia', 'images/tiles/2020_08.jpg', 'startdatev=20200815&enddatev=20200822'));
+		this.trips2020MenuOptions.push(createSpecialOccassionMenuOption('Peak District', 'images/tiles/2020_10_PeakDistrict.jpg', 'startdatev=20201025&enddatev=20201028'));
+
 		this.trips2019MenuOptions = [];
 		this.trips2019MenuOptions.push(createSpecialOccassionMenuOption('Eastbourne Weekender', 'images/tiles/2019_01.jpg', 'startdatev=20190119&enddatev=20190120'));
 		this.trips2019MenuOptions.push(createSpecialOccassionMenuOption('Liverpool', 'images/tiles/2019_02-Liverpool', 'startdatev=20190219&enddatev=20190221'));

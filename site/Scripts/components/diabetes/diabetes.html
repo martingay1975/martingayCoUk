@@ -1,0 +1,197 @@
+﻿<!-- $data is a ComponentViewModel -->
+
+<titles params="{iconPath: '/Scripts/components/lm2016/images/marathon2016.png', title: 'Diabetes and Home Automation'}"></titles>
+
+<div class="card card-default">
+	<div class="card-heading">
+		Introduction
+	</div>
+    <div class="card card-body">
+        <p>Wow, so you've got a lighbulb to flash. It didn't really impress the family to be honest. But only if they knew the effort and tech stack that went into this..... well they'll probably say 10 hours would have been better spent elsewhere!</p>
+        <div class="container-sm">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/g8vTl7zycig" frameborder="0" allowfullscreen="true"></iframe>
+        </div>
+        <p>I have type I diabetes. If I had a school report on my blood glucose management it would say 'Could do better'. For me there is a constant battle of checking if I need to take a correction insulin dosage, or am I flirting with feeling a hypo and the dizzying, sweating force that it can provide. So any help is much appreciated.</p>
+        <p>Technology can be used to constantly monitor my blood glucose levels, this information can be made available to the internet and there is some neat home automation that can help alert me to take the appropriate action. All I need to do is connect the two up.</p>
+        <p>Everything I use is free to use. I've not had to pay for any of the software. What I have had to pay for is the Raspberry Pi and the light bulb. My glucose monitor comes fully funded now via NHS funding which I am very grateful for. All the software is the latest versions as of 25 January 2021. I wouldn't pretend everything was easy and worked first time. Patience and perseverance is a pre-requisite.</p>
+        <p>I am going to try and explain the setup I have and the guides I have followed and fill in any holes. The following diagram is the overall setup.</p>
+        <div class="container-sm">
+            <img src="/Scripts/components/diabetes/images/main.jpg" />
+        </div>
+    </div>
+	<div class="card-heading">
+		Dexcom
+	</div>
+	<div class="card card-body">
+        <div class="container-med">
+            <img src="/Scripts/components/diabetes/images/dexcom.jpg" />
+        </div>
+        <p>So Dexcom is a company that provides a CGM (Continuous Glucose Monitor) called the <a target="_blank" href="https://www.dexcom.com/en-GB/uk-dexcom-g6-cgm-system">G6</a>. It is one of the more accurate, but expensive offerings (£2,236 a year). I think a more popular choice in the UK is the Libre. Basically any CGM will do, as long as it integrates with XDrip. In terms of dataflow, the G6 that is currently stuck to my abdomen communicates via Bluetooth to my Android phone and sends my current blood glucose reading every few minutes.</p>
+    </div>
+	<div class="card-heading">
+		XDrip+
+	</div>
+    <div class="card card-body">
+        <p>The blood glucose value is sent from the CGM every few minutes to my phone where the XDrip + application essentially draws a pretty graph. In fact, it vibrates, plays loud noises and does it's best to prod me to take corrective action when it falls out of the acceptable range. Generally this does prod me into action. XDrip has been at my side for 3 years.</p>
+        <p>XDrip is open source. It is not available in the Google Play Store. Instead you have to go to:</p>
+        <ul>
+            <li>Goto the <a target="_blank" href="https://jamorham.github.io/#xdrip-plus">jamorham site</a> to obtain the latest release. Download the apk file.</li>
+            <li>Copy the apk file onto your phone and install/run it.</li>
+            <li>A certain amount of configuration is required to get XDrip working with your CGM/Dexcom. In the early days I found this a little tricky and frustrating. However, support has improved, less bugs, more docs. There is a comprehensive guide <a target="_blank" href="https://androidaps.readthedocs.io/en/latest/EN/Configuration/xdrip.html#xdrip-dexcom-g6">here</a> - Following this, you should get the pretty graph and vibrating phone.</li>
+            <li>There is an option to Upload the data collected by XDrip up to Nighscout. However, it is best to get Nightscout setup and configured first. We can come back to XDrip and hook up to Nightscout later.</li>
+        </ul>
+    </div>
+    <div class="card-heading">
+        Nightscout
+    </div>
+    <div class="card card-body">
+        <div class="container-med">
+            <img src="/Scripts/components/diabetes/images/nightscout.jpg" />
+        </div>
+        <p>Nightscout and XDrip+ are very much linked applications. Nightscout is essentially a website which you create to get a web page version of the pretty graph and sounds an alarm again when your BG are out of bounds. Be warn the graph is on the internet and is open to anyone looking at it (don't think you can set up authorization). That is not a problem for me. The more people who know how bad I am at managing my blood glucose levels, the more I'll feel ashamed and do something about it! It's data accessibility is one of it's strengths. It means other applications (such as Home Assistant) can also obtain my blood glucose values.</p>
+        <p>'Nightscout is essentially a website which you create' - This might scare a few away... and sure there is a fair bit of setup to do here. It does not mean you need to write html or web code. That's all done for you. Essentially there are a number of components:</p>
+        <ul>
+            <li>Heroku - This is what hosts your website. It'll give you a URL. It's free for the most basic setup. We only need a basic setup.</li>
+            <li>MongoDb Atlas - This is a database which is going to store your blood glucose readings. The graph reads data from here to draw a pretty graph. The data here is also used later on and is given to Home Assistant. Again this is free to use.</li>
+            <li>Nightscout - This is again open source code. It's the actual website code/setup and is installed into Heroku and configured to read data from the MongoDb Atlas database.</li>
+        </ul>
+        <p>A good guide that I followed is <a target="_blank" href="https://aviau.github.io/loopdocs/nightscout/new_user/#step-1-mongodb-atlas-account">here</a>.</p>
+        <p>The final step is now to go back to XDrip and connect XDrip and NightScout together. Follow this <a target="_blank" href="https://androidaps.readthedocs.io/en/latest/EN/Configuration/xdrip.html#xdrip-dexcom-g6">guide</a>.</p>
+        <p>What you should get is something similar to <a target="_blank" href="https://mgns.herokuapp.com">my Nightscout</a> site.</p>
+    </div>
+
+    <div class="card-heading">
+        Smart Lightbulb
+    </div>
+    <div class="card card-body">
+        <div class="container-med">
+            <img src="/Scripts/components/diabetes/images/lightbulb.jpg" />
+        </div>
+        <p>Before going into the integration, let's talk about the end device which is going to make me aware that my BG are out of bounds. I've chosen something simple as a starter. A smart lightbulb. In theory it could be any smart device.</p>
+        <p>I went on to Amazon and just selected almost a random <a target="_blank" href="https://www.amazon.co.uk/gp/product/B08C2F7MP5/.">WiFi Lightbulb</a> that was Smart Life or Tuya compatible. £14.</p>
+        <p>I downloaded the Tuya app onto my phone and set up the lightbulb. Again, getting the light bulb to be recognized by the app took some perseverance. Through the Tuya app I can change the colour and brightness. Perfect.... </p>
+        <p>Now I have the data in the cloud in my NightScout setup and a lightbulb in my kitchen - I just need something that can read the Nightscout BG values and control the lightbulb by making it flash. Enter Home Assistant.</p>
+    </div>
+
+    <div class="card-heading">
+        Home Assistant
+    </div>
+    <div class="card card-body">
+        <div class="container-med">
+            <img src="/Scripts/components/diabetes/images/homeassistant.jpg" />
+        </div>
+        <p>Out of all the tech I have listed, this is relatively new to me. Before a week ago I'd never heard of it. So what is Home Assistant? For me it is an Application / Operating System that runs on a Raspberry Pi and allows you to connect various services and devices together. I can write some code/logic which makes my smart light flash blue and red, if my BG is out of bounds. Brilliant. There are plenty of articles and youtube clips explaining it's endless possibilities. In my mind, I've started relatively basic to prove it can be done. Further down the line who knows. Alexa or Google Nest could blurt out that my BG are out of bounds.... or it could switch the TV off, effectively sending me to the naughty step.</p>
+        <p>So first off Home Assistant needs to run on a Raspberry Pi and be connected to the internet and home network. Mine is the original v3. So anything more up to date than that will be good. Shopping List:</p>
+        <ul>
+            <li><a target="_blank" href="https://shop.pimoroni.com/products/raspberry-pi-4?variant=29157087412307">Raspberry Pi 4 2GB (£33.90)</a></li>
+            <li><a target="_blank" href="https://shop.pimoroni.com/products/raspberry-pi-official-usb-c-power-supply?variant=29157000085587">USB3 3A Power supply (£7.50)</a></li>
+            <li><a target="_blank" href="https://shop.pimoroni.com/products/aluminium-heatsink-case-for-raspberry-pi-4?variant=29430673178707">Case for Pi (£12)</a> (NOT NOT GET OFFICAL CASE - COOKS PI's)</li>
+            <li><a target="_blank" href="https://amzn.to/2VBgW2S">Good quality SD Card (£11.99 32GB)</a></li>
+        </ul>
+        <p>Total: £65.39 assuming you needed it all</p>
+        <p>Next need to install / configure Home Assistant. I've used an ethernet cable and connected. I couldn't get the WiFi working for some reason.</p>
+        <ul>
+            <li>Download the <a target="_blank" href="https://www.home-assistant.io/hassio/installation">Hassio 32bit image</a> (not 64bit).</li>
+            <li>You won't actually need to connect up a screen, keyboard and mouse if we get it working. Configuration to Home Assistant is all done via the browser on your standard computer.</li>
+            <li>Copy the downloaded Home Assistant and flash to the SD card (using <a target="_blank" href="https://www.balena.io/etcher/">Balena Etcher</a> or similar).</li>
+            <li>Place the SD Card in the Raspberry Pi and spark her up. It can take up to 20 minutes to boot initially. It should add itself to the network and create a DNS entry allowing you to access via a local browser at: http://homeassistant.local:8123/</li>
+            <li>Congratualtions... you now have home assistant running. The world is your oyster..... or at least your smart home is.</li>
+            <li>Well not quite. There is a little bit of setup first: A guide is <a target="_blank" href="https://www.home-assistant.io/getting-started/onboarding/">here</a>.</li>
+            <li>After a while you'll get notifications to integrate to various devices you have setup at home. For the purposes of my setup I am interested in adding two integrations: 1) Tuya, for my lightbulb. 2) Nightscout, for my BG values.</li>
+            <li>Go to Configure - Integrations and add both Tuya and Nightscout. You'll need to add some credentials to be able to communicate with them. e.g. For Tuya, the account username and password, Nightscout you'll need the URI of your website.</li>
+            <li>Once these have been added, you should see some new devices and entities appear. These have entityIds which you can refer to when coding. <var>e.g. light.colorbulb1</var></li>
+            <li>Onto the coding. Again fiddly. Home Assistant uses YAML to configure the behaviours you want. A lot of the docs and UI try to lead you down specifying everything via the UI. However, in my short experience this is limited and sometimes does not produce what you want. I've lost trust in it. I've started editing the YAML raw via the text editor. To do this I had to go to Supervisor - Add-on Store - File Editor.</li>
+            <li>In the File Editor you can edit a file called config/scripts.yaml -&gt; This is where I add my functions (flash_light_loop1, flash_light_loop2, flash_light_on, flash_light_off). <code>flash_light_on</code> is a function to turn on the light bulb flashing and <code>flash_light_off</code> another to turn off the light bulb flashing. I have not annotated the code at all - you do need to play around yourself. All I would say is that YAML is very picky on case and spacing (no tabs). I lost time because I did not appreciate you had to reload/restart the scripts for the latest version to be run.</li>
+
+            <pre><code>
+                flash_light_loop1:
+                alias: Flash Light Loop 1
+                sequence:
+                - service: light.turn_off
+                    data:
+                    entity_id: light.colorbulb1
+                - delay: 1
+                - service: light.turn_on
+                    data:
+                    entity_id: light.colorbulb1
+                    rgb_color: [255, 0, 0]
+                - delay: 1
+                - service: script.turn_on
+                    entity_id: script.flash_light_loop2
+
+                flash_light_loop2:
+                alias: Flash Light Loop 2
+                sequence:
+                - service: light.turn_off
+                    data:
+                    entity_id: light.colorbulb1
+                - delay: 1
+                - service: light.turn_on
+                    data:
+                    entity_id: light.colorbulb1
+                    rgb_color: [0, 0, 255]
+                - delay: 1
+                - service: script.turn_on
+                    entity_id: script.flash_light_loop1
+
+                flash_light_on:
+                alias: Flash Light Turn On
+                sequence:
+                - service: script.turn_on
+                    entity_id: script.flash_light_loop1
+
+                flash_light_off:
+                alias: Flash Light Turn Off
+                sequence:
+                - service: script.turn_off
+                    entity_id: script.flash_light_loop1
+                - service: script.turn_off
+                    entity_id: script.flash_light_loop2
+                - service: light.turn_on
+                    data:
+                    entity_id: light.colorbulb1
+                    color_temp: 320
+            </code></pre>
+
+            <li>In the File Editor open a file called config/integrations.yaml -&gt; This is where I add my trigger to detect when my nightscout blood sugar values go out of bounds. When they do call the flashing function.</li>
+            <pre><code>
+                - id: '1611526310626'
+                  alias: Blood Sugar Monitoring Hyper or Hypo
+                  description: ''
+                  trigger:
+                  - platform: numeric_state
+                      entity_id: sensor.blood_sugar
+                      for: 0:03:00
+                      below: 72
+                  - platform: numeric_state
+                      entity_id: sensor.blood_sugar
+                      for: 0:03:00
+                      above: 126
+                  action:
+                  - service: script.turn_on
+                      entity_id: script.flash_light_on
+                  mode: single
+                  - id: '1611607165047'
+                  alias: Blood Sugar Monitoring Normal
+                  description: ''
+                  trigger:
+                  - platform: numeric_state
+                      entity_id: sensor.blood_sugar
+                      below: 127
+                      above: 71
+                  condition: []
+                  action:
+                  - service: script.flash_light_off
+                      data: {}
+                  mode: single
+              </code></pre>
+  
+        </ul>
+    </div>
+    <div class="card-heading">
+        Finally...
+    </div>
+    <div class="card card-body">
+        <p>A lot of credit goes to Martin Rowan and Andy Brown who have helped me immensely setting this all up.  I couldn't have done it without them.</p>
+    </div>
+</div>

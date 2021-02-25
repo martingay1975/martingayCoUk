@@ -5,7 +5,9 @@ namespace DocXLib
 {
     internal static class TableHelper
     {
-        private static int TotalWidth = 500;
+        public readonly static float[] TocColumnWidths = new[] { 490f, 70f };
+
+        private static int TotalWidth = DocumentSetup.GetLivePageWidthPoints();
 
         // return false to stop visiting
         public delegate bool VisitCellFunc(int rowIndex, int columnIndex, float columnWidth, Cell cell);
@@ -63,7 +65,6 @@ namespace DocXLib
                     }
                 }
             }
-
             return table;
         }
     }

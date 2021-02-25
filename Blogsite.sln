@@ -21,8 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocXConsole", "DocXConsole\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocXWinform", "DocXWinform\DocXWinform.csproj", "{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreLib", "NetCoreLib\NetCoreLib.csproj", "{A7EE8B84-4D68-4941-AFDF-00D1B9554460}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFtp", "SFtp\SFtp.csproj", "{38F763A2-C61F-4B6E-9531-F128FCE2EEF7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xceed.Document.NETStandard2", "DocXLib\Xceed2\Xceed.Document.NETStandard2\Xceed.Document.NETStandard2.csproj", "{F08ACFC4-7AB5-47B4-ABA1-6F86E4A9CE35}"
@@ -143,18 +141,6 @@ Global
 		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Release|x86.ActiveCfg = Release|Any CPU
 		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Release|x86.Build.0 = Release|Any CPU
-		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Debug|x86.Build.0 = Debug|Any CPU
-		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Release|x86.ActiveCfg = Release|Any CPU
-		{A7EE8B84-4D68-4941-AFDF-00D1B9554460}.Release|x86.Build.0 = Release|Any CPU
 		{38F763A2-C61F-4B6E-9531-F128FCE2EEF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{38F763A2-C61F-4B6E-9531-F128FCE2EEF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38F763A2-C61F-4B6E-9531-F128FCE2EEF7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

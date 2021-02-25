@@ -25,6 +25,7 @@ define(['knockout', 'siteViewModel'], function (ko, siteViewModel) {
 	ko.components.register('strava', { require: 'components/strava/strava' });
 	ko.components.register('spotify', { require: 'components/spotify/spotify' });
 	ko.components.register('lm2016', { require: 'components/lm2016/lm2016' });
+	ko.components.register('diabetes', { require: 'components/diabetes/diabetes' });
 	ko.components.register('stravaData', { require: 'components/stravaData/stravaData' });
 
 	// ==========================

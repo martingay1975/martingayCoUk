@@ -135,12 +135,12 @@ define(function() {
 				}
 			}
 
-			// london marathon 2016
+			// diabetes
 			, {
-				id: "lm2016",
-				url: "/lm2016",
+				id: "diabetes",
+				url: "/diabetes",
 				params: {
-					componentName: "lm2016"
+					componentName: "diabetes"
 				}
 			}
 
@@ -152,8 +152,6 @@ define(function() {
 					componentName: "stravaData"
 				}
 			}
-
-
 		]
 	};
 
