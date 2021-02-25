@@ -6,7 +6,6 @@ namespace DocXLib
     internal static class TableHelper
     {
         public readonly static float[] TocColumnWidths = new[] { 490f, 70f };
-
         private static int TotalWidth = DocumentSetup.GetLivePageWidthPoints();
 
         // return false to stop visiting
@@ -25,7 +24,7 @@ namespace DocXLib
         public static Table CreateTable(Section section, Paragraph paragraph, int rowCount, Options options)
         {
             var columnWidths = options.ColumnWidths 
-                ?? Enumerable.Repeat((float)TotalWidth / (float)options.ColumnCountIfNoWidths, options.ColumnCountIfNoWidths).ToArray();
+                ?? Enumerable.Repeat(TotalWidth / (float)options.ColumnCountIfNoWidths, options.ColumnCountIfNoWidths).ToArray();
 
             Table table;
             if (paragraph != null)
@@ -38,14 +37,7 @@ namespace DocXLib
 
             // Set the table's column width and background 
 
-            if (columnWidths.Length > 1)
-            {
-                table.SetWidths(columnWidths);
-            }
-            else
-            {
-                table.SetWidthsPercentage(new float[] { 100 });
-            }
+            table.SetWidths(columnWidths);
 
             table.AutoFit = AutoFit.Contents;
             table.Design = TableDesign.None;

@@ -8,6 +8,7 @@ namespace DocXLib
     public class DocumentSectionManager
     {
         private readonly Document document;
+        //private readonly PageSetup pageSetup;
 
         public Dictionary<int, SectionInfo> SectionInfos { get; }
 
@@ -30,6 +31,7 @@ namespace DocXLib
             }
 
             var section = document.Sections.Last();
+            section.PageLayout.Orientation = Orientation.Portrait;
             var sectionIdx = document.Sections.Count - 1;
             this.SectionInfos[sectionIdx] = sectionInfo;
             return section;

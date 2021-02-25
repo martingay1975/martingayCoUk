@@ -96,7 +96,6 @@ namespace WebDataEntry.Web.Models
 			{
 				var martinGayCoUkHost = new MartinGayCoUkHost(this.configuration.BasePath, "/martingay/");
 				martinGayCoUkHost.UploadBatch(this.relativePaths);
-
 				this._loadedHashes = this._savedHashes;
 			}
 			catch (Exception e)

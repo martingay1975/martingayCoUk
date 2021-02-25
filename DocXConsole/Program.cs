@@ -13,9 +13,8 @@ namespace DocXConsole
                 {
                     if (args[0] == "runall")
                     {
-                        for (var idx=0; idx < 6; idx ++)
+                        for (var idx=0; idx < DocumentSlices.DocumentList.Count; idx ++)
                         {
-
                             var process = new System.Diagnostics.Process();
                             process.StartInfo = new System.Diagnostics.ProcessStartInfo(@"C:\git\martingayCoUk\DocXConsole\bin\Debug\DocXConsole.exe", idx.ToString());
                             process.Start();

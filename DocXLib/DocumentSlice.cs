@@ -1,6 +1,4 @@
-﻿//using Xceed.Words.NET;
-
-namespace DocXLib
+﻿namespace DocXLib
 {
     public class DocumentSlice
     {
@@ -14,5 +12,6 @@ namespace DocXLib
         public int DiaryEntriesCount { get; }
         public int? BookNumber { get; }
         public int? StartPageNumber { get; }
+        public bool LastInDocument { get; }
     }
 }

@@ -77,6 +77,7 @@
   <ItemGroup>
     <Compile Include="BadImageItem.cs" />
     <Compile Include="BadImageManager.cs" />
+    <Compile Include="DocumentProperties.cs" />
     <Compile Include="DocumentSectionManager.cs" />
     <Compile Include="DocumentSetup.cs" />
     <Compile Include="DocumentSlice.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Model\Data\Xml\Person.cs" />
     <Compile Include="Model\Data\Xml\Title.cs" />
     <Compile Include="Image\PictureHelper.cs" />
+    <Compile Include="PageSetup.cs" />
     <Compile Include="SectionInfo.cs" />
     <Compile Include="SectionSample.cs" />
     <Compile Include="Start.cs" />
