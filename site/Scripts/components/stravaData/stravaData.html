@@ -9,7 +9,7 @@
 
 <div class="btn-group" role="group" aria-label="Time Period">
     <button type="button" class="btn btn-warning" data-bind="click: $component.yearAllClick">All Time</button>
-    <button type="button" class="btn btn-warning" data-bind="click: $component.year2020Click">2020</button>
+    <button type="button" class="btn btn-warning" data-bind="click: $component.yearCurrentClick, text: $component.yearCurrentValue"></button>
 </div>
 
 <div style="position: absolute; width:90%; height:90%" id="googleMap">

@@ -3,9 +3,8 @@ define(function() {
 
 	"use strict";
 
-	var setDiaryParams, setCalendarParams, routerConfig, addSeparator;
+	var setDiaryParams, setCalendarParams, setSpotifyParams, routerConfig, addSeparator;
 
-	
 	setDiaryParams = function (request, vals) {
 		return {
 			filter: vals.filter,
@@ -18,6 +17,12 @@ define(function() {
 		return {
 			year: vals.year,
 			month: vals.month
+		};
+	};
+
+	setSpotifyParams = function(request, vals) {
+		return {
+			clearcache: vals.clearCache
 		};
 	};
 
@@ -129,9 +134,12 @@ define(function() {
 			// spotify
 			,{
 				id: "spotify",
-				url: "/spotify",
+				url: "/spotify/:clearcache:",
 				params: {
 					componentName: "spotify"
+				},
+				rules: {
+					normalize_ : setSpotifyParams
 				}
 			}
 

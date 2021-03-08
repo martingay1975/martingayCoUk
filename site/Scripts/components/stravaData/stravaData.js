@@ -1,5 +1,5 @@
 /*global define*/
-define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoader, componentTemplate) {
+define(["knockout", "jquery", "gmapLoader", "text!./stravaData.html"], function (ko, $, gmapLoader, componentTemplate) {
 
 	"use strict";
 
@@ -26,6 +26,8 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
         
         extendJQuery();
         var self = this;
+        var now = new Date();
+        self.yearCurrentValue = now.getFullYear().toString();
 
         // Helper to lazily get JSON entries,
         var getJSONAsync = function(jsonPath) {
@@ -140,9 +142,12 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
 
         var self = this;
         var allPolylines = [];
-        this.currentActivityType = "Run";
+        this.currentActivityType = "Ride";
+        var now = new Date();
+        this.yearCurrentValue = now.getFullYear().toString();
+
         this.filterOptions = {
-            year: null
+            year: this.yearCurrentValue
         };
 
         this.runClick = function() {
@@ -170,9 +175,9 @@ define(["jquery", "gmapLoader", "text!./stravaData.html"], function ($, gmapLoad
             self.runAsync();
         };
 
-        this.year2020Click = function() {
+        this.yearCurrentClick = function() {
             self.filterOptions = {
-                year: "2020"
+                year: self.yearCurrentValue
             }
             self.runAsync();
         }

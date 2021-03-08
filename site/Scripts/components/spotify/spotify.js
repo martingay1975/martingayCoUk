@@ -10,6 +10,11 @@ define(['text!./spotify.html'], function (componentTemplate) {
 		if (!(this instanceof ComponentViewModel)) {
 			throw "Must invoke the function ComponentViewModel with the new operator";
 		}
+
+		// backdoor to clearing the local cache.
+		if (params.clearcache) {
+			window.localStorage.clear();
+		}
 	};
 
 	ComponentViewModel.prototype = {
