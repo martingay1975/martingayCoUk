@@ -4,7 +4,7 @@ namespace DocXLib
 {
     public static class DocumentSlices
     {
-        public readonly static List<DocumentSlice> DocumentList = new List<DocumentSlice>
+        public static readonly List<DocumentSlice> DocumentList = new List<DocumentSlice>
         {
             // Start of 2003 - Book 1 (569 page no - Reports 654 pages - 173,652 words)
             /*  0 */ new DocumentSlice(700, 1, 1),

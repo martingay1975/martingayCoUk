@@ -5,7 +5,7 @@ namespace DocXLib
 {
     internal static class TableHelper
     {
-        public readonly static float[] TocColumnWidths = new[] { 490f, 70f };
+        public static readonly float[] TocColumnWidths = new[] { 490f, 70f };
         private static int TotalWidth = DocumentSetup.GetLivePageWidthPoints();
 
         // return false to stop visiting

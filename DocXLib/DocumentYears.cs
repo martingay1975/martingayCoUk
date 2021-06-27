@@ -15,7 +15,7 @@ namespace DocXLib
 
     public static class DocumentYears
     {
-        public readonly static float[] DocumentTocColumnWidths = new[] { 300f, 90f, 70f };
+        public static readonly float[] DocumentTocColumnWidths = new[] { 300f, 90f, 70f };
 
         public static List<Years> YearsToPages { get; private set; }
 

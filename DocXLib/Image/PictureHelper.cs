@@ -9,7 +9,7 @@ namespace DocXLib.Image
 {
     public static class PictureHelper
     {
-        public readonly static List<BadImageItem> NotInBestOfImages;
+        public static readonly List<BadImageItem> NotInBestOfImages;
         public const string BaseImagePath = @"L:\images";
 
         static PictureHelper()

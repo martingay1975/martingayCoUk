@@ -21,23 +21,24 @@ namespace DocXLib
         private const bool CompareLocalAndHostImages = false;
 
         private const int STARTATCHUNKIDX = 1;
-        public readonly static Color RedColor = Color.FromArgb(238, 48, 48);
-        public readonly static Color GreenColor = Color.FromArgb(98, 238, 48);
-        public readonly static Color YellowColor = Color.FromArgb(233, 238, 48);
-        public readonly static Color OrangeColor = Color.FromArgb(237, 125, 49);
+        public static readonly Color RedColor = Color.FromArgb(238, 48, 48);
+        public static readonly Color GreenColor = Color.FromArgb(98, 238, 48);
+        public static readonly Color YellowColor = Color.FromArgb(233, 238, 48);
+        public static readonly Color OrangeColor = Color.FromArgb(237, 125, 49);
 
-        public readonly static Color PinkColor = Color.FromArgb(229, 129, 196);
-        public readonly static Color PurpleColor = Color.FromArgb(160, 83, 203);
+        public static readonly Color PinkColor = Color.FromArgb(229, 129, 196);
+        public static readonly Color PurpleColor = Color.FromArgb(160, 83, 203);
 
-        public readonly static Color PageNumberColor = PinkColor;
+        public static readonly Color PageNumberColor = PinkColor;
 
         public const string DocXDirectory = @"C:\Users\Slop\Desktop\docx\";
         public const string ChapterImageDirectory = DocXDirectory + @"Chapters\";
-        private const string DiaryXmlPath = @"C:\Users\Slop\AppData\Roaming\res\xml\diary.xml";
+        private static string DiaryXmlPath => $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\res\\xml\\diary.xml";
+        
 
         private const int WesawFilterPersonId = 502;
         private const bool HasWesawFilter = true;
-        private readonly static float[] HeadingColumnWidths = new[] { 400f, 100f };
+        private static readonly float[] HeadingColumnWidths = new[] { 400f, 100f };
         public const float ResizeChapterPics = 1.03f;
 
         public const string ResourcesDirectory = DocXDirectory + @"Resources\";
