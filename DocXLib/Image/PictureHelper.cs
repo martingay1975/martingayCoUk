@@ -3,6 +3,7 @@ using System.IO;
 using Xceed.Document.NET;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace DocXLib.Image
 {
@@ -35,14 +36,49 @@ namespace DocXLib.Image
             }
         }
 
+        private static List<string> GetPathParts(string path)
+        {
+            return path.Split(new char[] { '\\', '/' }).ToList();
+        }
+
         public static (string year, string filename) GetImagePathParts(string imagePath)
         {
-            var pathParts = imagePath.Split(new char[] { '\\', '/' });
-
-            var year = pathParts[pathParts.Length - 2];
-            var filename = pathParts[pathParts.Length - 1];
-
+            var pathParts = GetPathParts(imagePath);
+            var year = pathParts[pathParts.Count - 2];
+            var filename = pathParts.Last();
             return (year, filename);
+        }
+
+        public static List<string> ReadBestOfs()
+        {
+            var ret = new List<string>();
+            var allImageDirectories = Directory.EnumerateDirectories(BaseImagePath);
+            foreach (var directory in allImageDirectories)
+            {
+
+                var yearSubDir = GetPathParts(directory).Last();
+                if (!Int32.TryParse(yearSubDir, out var year) || year < 2003)
+                {
+                    continue;
+                }
+
+                var yearBestOf = Path.Combine(directory, "_BestOf");
+                var yearsBestOfFiles = Directory.EnumerateFiles(yearBestOf)
+                    .Select(file => file.ToLower())
+                    .Where(file =>
+                           file.EndsWith(".jpg") ||
+                           file.EndsWith(".jpeg") ||
+                           file.EndsWith(".png"))
+                    .Select(file =>
+                    {
+                        var (_, filename) = GetImagePathParts(file);
+                        return $"images\\years\\{year}\\{filename}";
+                    });
+
+                ret.AddRange(yearsBestOfFiles);
+            }
+
+            return ret;
         }
 
         private static string GetFullImagePath(string imagePath)

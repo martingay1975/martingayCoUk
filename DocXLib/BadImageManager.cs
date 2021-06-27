@@ -3,10 +3,52 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 
 namespace DocXLib
 {
+    public class FoundInBestOfPathNotInDiary
+    {
+        //private static readonly string FoundInBestOfPathNotInDiary = Path.Combine(PictureHelper.BaseImagePath, "_FoundInBestOfPathNotInDiary");
+
+        public void Process(List<string> allImageSrcs)
+        {
+            var bestOfs = PictureHelper.ReadBestOfs();
+
+            // compare the two lists
+            var results = bestOfs.Except(allImageSrcs).OrderBy(v => v);
+            foreach (var result in results)
+            {
+                Console.WriteLine(result);
+            }
+
+            //foreach (var bestOf in bestOfs)
+            //{
+            //    var a = allImageSrcs.FirstOrDefault(t => t == bestOf);
+            //    if (string.IsNullOrWhiteSpace(a))
+            //    {
+            //        Console.WriteLine(bestOf);
+
+            //        var filename = bestOf.Split('\\').ToList().Last();
+            //        var b = allImageSrcs.FirstOrDefault(t => t.Contains(filename));
+            //        if (string.IsNullOrWhiteSpace(b))
+            //        {
+            //            Console.WriteLine($"Really cannot find filename: {filename}");
+            //        }
+            //        else
+            //        {
+            //            Console.WriteLine($"Did find filename in : {b}");
+            //        }
+
+            //    }
+            //}
+            Console.ReadKey();
+        }
+    }
+
+    
+
     public static class BadImageManager
     {
         private static readonly string FoundOnHDNotInBestOfPath = Path.Combine(PictureHelper.BaseImagePath, "_FoundOnHDNotInBestOf");

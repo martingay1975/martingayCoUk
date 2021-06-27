@@ -13,7 +13,8 @@
             DocumentTOC,
             ChapterImage,
             ChapterTOC,
-            ChapterEntries
+            ChapterEntries,
+            FamilyTree
         }
     }
 

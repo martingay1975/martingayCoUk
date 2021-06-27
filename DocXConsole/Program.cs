@@ -13,19 +13,46 @@ namespace DocXConsole
                 {
                     if (args[0] == "runall")
                     {
-                        for (var idx=0; idx < DocumentSlices.DocumentList.Count; idx ++)
+                        for (var idx = 0; idx < 6; idx++)
                         {
                             var process = new System.Diagnostics.Process();
                             process.StartInfo = new System.Diagnostics.ProcessStartInfo(@"C:\git\martingayCoUk\DocXConsole\bin\Debug\DocXConsole.exe", idx.ToString());
                             process.Start();
                         }
 
-                        Console.WriteLine("Waiting 1 minute...");
-                        System.Threading.Thread.Sleep((int)TimeSpan.FromMinutes(2).TotalMilliseconds);
+                        Console.WriteLine("Waiting 2.5 minutes...");
+                        System.Threading.Thread.Sleep((int)TimeSpan.FromSeconds(150).TotalMilliseconds);
 
                         for (var idx = 6; idx < DocumentSlices.DocumentList.Count; idx++)
                         {
 
+                            var process = new System.Diagnostics.Process();
+                            process.StartInfo = new System.Diagnostics.ProcessStartInfo(@"C:\git\martingayCoUk\DocXConsole\bin\Debug\DocXConsole.exe", idx.ToString());
+                            process.Start();
+                        }
+                    }
+                    else if (args[0] == "book1")
+                    {
+                        for (var idx = 0; idx < 3; idx++)
+                        {
+                            var process = new System.Diagnostics.Process();
+                            process.StartInfo = new System.Diagnostics.ProcessStartInfo(@"C:\git\martingayCoUk\DocXConsole\bin\Debug\DocXConsole.exe", idx.ToString());
+                            process.Start();
+                        }
+                    }
+                    else if (args[0] == "book2")
+                    {
+                        for (var idx = 3; idx < 8; idx++)
+                        {
+                            var process = new System.Diagnostics.Process();
+                            process.StartInfo = new System.Diagnostics.ProcessStartInfo(@"C:\git\martingayCoUk\DocXConsole\bin\Debug\DocXConsole.exe", idx.ToString());
+                            process.Start();
+                        }
+                    }
+                    else if (args[0] == "book3")
+                    {
+                        for (var idx = 8; idx < 13; idx++)
+                        {
                             var process = new System.Diagnostics.Process();
                             process.StartInfo = new System.Diagnostics.ProcessStartInfo(@"C:\git\martingayCoUk\DocXConsole\bin\Debug\DocXConsole.exe", idx.ToString());
                             process.Start();
@@ -43,13 +70,13 @@ namespace DocXConsole
             }
             catch (Exception e)
             {
-                Console.WriteLine(args[0]);
+                Console.WriteLine($"Ran with: '{args[0]}'");
                 Console.WriteLine(e.Message);
                 Console.ReadKey();
             }
             finally
             {
-                Console.WriteLine("Finished. Press any key to exit");
+                Console.WriteLine($"Finished '{args[0]}'. Press any key to exit");
                 //Console.ReadKey();
             }
         }

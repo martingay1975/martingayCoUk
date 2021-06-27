@@ -34,7 +34,9 @@ namespace DocXLib
         public const string DocXDirectory = @"C:\Users\Slop\Desktop\docx\";
         public const string ChapterImageDirectory = DocXDirectory + @"Chapters\";
         private const string DiaryXmlPath = @"C:\Users\Slop\AppData\Roaming\res\xml\diary.xml";
-        private const int KatiePersonId = 502;
+
+        private const int WesawFilterPersonId = 502;
+        private const bool HasWesawFilter = true;
         private readonly static float[] HeadingColumnWidths = new[] { 400f, 100f };
         public const float ResizeChapterPics = 1.03f;
 
@@ -43,7 +45,7 @@ namespace DocXLib
         public const string BoyIcon = ResourcesDirectory + @"blueBottle.png";
         public const string GirlIcon = ResourcesDirectory + @"pinkBottle.png";
         public const string XmasIcon = ResourcesDirectory + @"xmasTree.png";
-
+        public static List<string> AllImageSrcs = new List<string>();
         public static void Run(int? idx = null)
         {
             var diary = Load.LoadXml(DiaryXmlPath);
@@ -58,7 +60,16 @@ namespace DocXLib
                 takeEntries = 3000;
             }
 
-            var allKatieEntries = diary.Entries.Where(entry => entry.People.Contains(KatiePersonId)).ToList();
+            List<Entry> allKatieEntries;
+            if (HasWesawFilter)
+            {
+                allKatieEntries = diary.Entries.Where(entry => entry.People.Contains(WesawFilterPersonId)).ToList();
+            }
+            else
+            {
+                allKatieEntries = diary.Entries.Where(entry => entry.DateEntry.Year > 2003 || entry.DateEntry.Year == 2003 && entry.DateEntry.Month > 6).ToList();
+            }
+            
             var documentEntries = allKatieEntries.Skip(startAtAllKatieEntriesIdx).Take(takeEntries);
 
             var previousYear = 0;
@@ -73,13 +84,18 @@ namespace DocXLib
             CreateDocument(allKatieEntries, documentEntries, startAtChunkIdx, startAtAllKatieEntriesIdx, previousYear, previousMonth);
         }
 
+        private static void ProcessAllImageSrcs()
+        {
+            var foundInBestOfPathNotInDiary = new FoundInBestOfPathNotInDiary();
+            foundInBestOfPathNotInDiary.Process(AllImageSrcs);
+        }
+
         private static void CreateDocument(in IEnumerable<Entry> allKatieEntries, in IEnumerable<Entry> documentEntries, int startAtChunkIdx, int startAtAllKatieEntriesIdx, int previousYear, int? previousMonth)
         {
             DocX document = DocumentSetup.CreateAndSetupDocument(documentEntries, startAtChunkIdx, IncludePictures, DocXDirectory);
 
             var chunkedEntries = documentEntries.ToList();
             var chunkedEntriesLength = chunkedEntries.Count;
-            var srcs = new List<string>();
             
             if (DocumentSlices.TryGetStartOfDocumentSlice(startAtChunkIdx, out var documentSlice))
             {
@@ -89,6 +105,12 @@ namespace DocXLib
                 }
 
                 DocumentYears.InsertDocumentTOC(DocumentSetup.DocumentSectionManager);
+
+                // Insert blank page so we can insert the family tree in book 1
+                if (startAtChunkIdx == 0)
+                {
+                    DocumentSetup.DocumentSectionManager.AddSection(new SectionInfo() { Type = SectionInfo.SectionInfoType.DocumentTOC });
+                }
             }
 
             if (CompareLocalAndHostImages)
@@ -204,6 +226,7 @@ namespace DocXLib
             var entryCounter = 0;
             var previousMonth = 0;
             var paragraph = document.InsertParagraph(yearEntries.First().DateEntry.Year.ToString())
+                .Heading(HeadingType.Heading1)
                 .FontSize(14)
                 .Bold(true);
 
@@ -342,7 +365,7 @@ namespace DocXLib
         private static void NodeHandler(in EntryContext entryContext, HtmlNode htmlNode)
         {
             var wesawAttributeValue = htmlNode.GetAttributeValue("wesaw", "");
-            if (wesawAttributeValue.Length > 0 && wesawAttributeValue.IndexOf(KatiePersonId.ToString()) == -1)
+            if (HasWesawFilter && wesawAttributeValue.Length > 0 && wesawAttributeValue.IndexOf(WesawFilterPersonId.ToString()) == -1)
             {
                 // there are "wesaw" values, but did not include the target person
                 return;
@@ -350,7 +373,6 @@ namespace DocXLib
 
             switch (htmlNode.Name)
             {
-
                 case "woops":
                 {
                     foreach (var paragraphChildNode in htmlNode.ChildNodes)
@@ -384,9 +406,12 @@ namespace DocXLib
                 }
                 case "image":
                 {
+                    var src = HtmlHelper.GetChildNodeValue(htmlNode, "src").ToLower().Replace("//", "\\").Replace("/", "\\");
+                    AllImageSrcs.Add(src);
                     if (IncludePictures)
                     {
-                        var picture = PictureHelper.CreateEntryPicture(entryContext, HtmlHelper.GetChildNodeValue(htmlNode, "src"), HtmlHelper.GetChildNodeValue(htmlNode, "caption"));
+                        
+                        var picture = PictureHelper.CreateEntryPicture(entryContext, src, HtmlHelper.GetChildNodeValue(htmlNode, "caption"));
                         if (picture != null)
                         {
                             entryContext.Pictures.Add(picture);
@@ -412,6 +437,10 @@ namespace DocXLib
                 case "googlelink":
                 {
                     entryContext.Paragraph.Append(" " + HtmlHelper.GetText(htmlNode) + " ");
+                    break;
+                }
+                case "table":
+                {
                     break;
                 }
                 default:
@@ -445,12 +474,13 @@ namespace DocXLib
                 picture.DistanceFromTextBottom = 7;
                 // UseLicensedVersion - END
 
-                SizePicture(picture, new Size(225, 300));
+                SizePicture(picture, new Size(260, 320));
                 
                 firstParagraph.SpacingBefore(0);
                 firstParagraph.KeepLinesTogether(false);
                 firstParagraph.InsertPicture(picture);
-                
+                //firstParagraph.Append(picture.Name);
+
                 return;
             }
 
@@ -480,7 +510,7 @@ namespace DocXLib
 
                     var cellParagraph = cell.Paragraphs.First();
                     cellParagraph.AppendPicture(picture);
-                    cellParagraph.InsertCaptionAfterSelf(picture.Name);
+                    //cellParagraph.Append(picture.Name);
 
                     return true;
                 }

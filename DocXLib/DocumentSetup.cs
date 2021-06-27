@@ -12,7 +12,7 @@ namespace DocXLib
     class DocumentSetup
     {
         private const string FontName = "Adobe Fangsong Std R";
-        public const bool IncludeBleeding = false;
+        public const bool IncludeBleeding = true;
 
         public const double marginInches = 0.5;     // minimum margin where text should not appear. Minimum 0.5"
         public const double bleedInches = 0.25;     // increase the size of the page and margin. Minimum 0.25"
@@ -74,7 +74,7 @@ namespace DocXLib
             section.MarginLeft = InchesToPoints(marginInches + gutterSpineMarginInches) + GetBleedingPoints();
             section.MarginRight = InchesToPoints(marginInches) + GetBleedingPoints();
 
-            section.MirrorMargins = true;
+            section.MirrorMargins = false;
         }
 
         private static int GetBleedingPoints()

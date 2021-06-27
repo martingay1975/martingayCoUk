@@ -24,20 +24,20 @@ namespace DocXLib
             YearsToPages = new List<Years>
             {
                 new Years { Year = 2003, Book = 1, Page = 1, EntryNo = 1},
-                new Years { Year = 2004, Book = 1, Page = 36, EntryNo = 86},
-                new Years { Year = 2005, Book = 1, Page = 121, EntryNo = 247},
-                new Years { Year = 2006, Book = 1, Page = 207, EntryNo = 400},
-                new Years { Year = 2007, Book = 1, Page = 309, EntryNo = 566},
-                new Years { Year = 2008, Book = 1, Page = 405, EntryNo = 728},
-                new Years { Year = 2009, Book = 1, Page = 486, EntryNo = 851},
-                new Years { Year = 2010, Book = 1, Page = 572, EntryNo = 992},
-                new Years { Year = 2011, Book = 2, Page = 663, EntryNo = 1126},
-                new Years { Year = 2012, Book = 2, Page = 766, EntryNo = 1261 },
-                new Years { Year = 2013, Book = 2, Page = 849, EntryNo = 1368},
-                new Years { Year = 2014, Book = 2, Page = 913, EntryNo = 1461},
-                new Years { Year = 2015, Book = 2, Page = 1001, EntryNo = 1593},
-                new Years { Year = 2016, Book = 3, Page = 1106, EntryNo = 1718},
-                new Years { Year = 2017, Book = 3, Page = 1216, EntryNo = 1858},
+                new Years { Year = 2004, Book = 1, Page = 37, EntryNo = 86},
+                new Years { Year = 2005, Book = 1, Page = 122, EntryNo = 247},
+                new Years { Year = 2006, Book = 1, Page = 204, EntryNo = 401},
+                new Years { Year = 2007, Book = 1, Page = 311, EntryNo = 569},
+                new Years { Year = 2008, Book = 1, Page = 409, EntryNo = 731},
+                new Years { Year = 2009, Book = 1, Page = 491, EntryNo = 855},
+                new Years { Year = 2010, Book = 2, Page = 569, EntryNo = 1000},
+                new Years { Year = 2011, Book = 2, Page = 663, EntryNo = 1135},
+                new Years { Year = 2012, Book = 2, Page = 758, EntryNo = 1261 },
+                new Years { Year = 2013, Book = 2, Page = 833, EntryNo = 1383},
+                new Years { Year = 2014, Book = 2, Page = 879, EntryNo = 1461},
+                new Years { Year = 2015, Book = 2, Page = 962, EntryNo = 1617},
+                new Years { Year = 2016, Book = 3, Page = 1037, EntryNo = 1718},
+                new Years { Year = 2017, Book = 3, Page = 1206, EntryNo = 1858},
                 new Years { Year = 2018, Book = 3, Page = 1327, EntryNo = 1987},
                 new Years { Year = 2019, Book = 3, Page = 1434, EntryNo = 2116},
                 new Years { Year = 2020, Book = 3, Page = 1569, EntryNo = 2285},
@@ -54,7 +54,9 @@ namespace DocXLib
                 VisitCellFunc = (int rowIndex, int columnIndex, float columnWidth, Cell cell) =>
                 {
                     var cellParagraph = cell.Paragraphs[0];
-                    if (rowIndex == YearsToPages.Count)
+
+                    // if we are the last year in the contents - then add an extra bit for the family tree
+                    if (rowIndex == 0)
                     {
                         switch (columnIndex)
                         {
@@ -72,7 +74,7 @@ namespace DocXLib
                                 }
                             case 2:
                                 {
-                                    cellParagraph.Append("1681").Color(Start.PurpleColor);
+                                    cellParagraph.Append("1").Color(Start.PurpleColor);
                                     cellParagraph.Alignment = Alignment.right;
                                     break;
                                 }
@@ -80,7 +82,7 @@ namespace DocXLib
                         return true;
                     }
 
-                    var years = YearsToPages[rowIndex];
+                    var years = YearsToPages[rowIndex - 1];
                     FormatCell(years.Book, cell, cellParagraph);
                     
                     switch (columnIndex)
