@@ -5,7 +5,6 @@ using Microsoft.Owin.Extensions;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Owin;
-using WebDataEntry.Web;
 
 [assembly: OwinStartup("Production", typeof(WebDataEntry.Owin.StartUp.MartinGayCoUkStartUp))]
 namespace WebDataEntry.Owin.StartUp

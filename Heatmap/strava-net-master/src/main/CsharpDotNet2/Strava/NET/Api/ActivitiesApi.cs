@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using RestSharp;
 using Strava.NET.Client;
 using Strava.NET.Model;

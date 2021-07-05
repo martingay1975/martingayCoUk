@@ -24,11 +24,7 @@ namespace DocXLib
         public static Table CreateTable(Section section, Paragraph paragraph, int rowCount, Options options)
         {
             var columnWidths = options.ColumnWidths 
-<<<<<<< HEAD
-                ?? Enumerable.Repeat((TotalWidth - 30) / (float)options.ColumnCountIfNoWidths, options.ColumnCountIfNoWidths).ToArray();
-=======
-                ?? Enumerable.Repeat((500) / (float)options.ColumnCountIfNoWidths, options.ColumnCountIfNoWidths).ToArray();
->>>>>>> edf3b9a0a1c7057950c8114c196e86c81e8b8f77
+                ?? Enumerable.Repeat((TotalWidth - 90) / (float)options.ColumnCountIfNoWidths, options.ColumnCountIfNoWidths).ToArray();
 
             Table table;
             if (paragraph != null)

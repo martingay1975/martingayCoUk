@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using DiaryDatabase.Model.Data.Json;
 using Entry = DiaryDatabase.Model.Data.Xml.Entry;
 
 namespace DiaryDatabase.Helper.DataToJson

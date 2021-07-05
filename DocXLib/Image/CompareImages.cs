@@ -11,7 +11,6 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Globalization;
 using CsvHelper;
-using System.Configuration;
 
 namespace DocXLib.Image
 {

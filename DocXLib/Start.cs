@@ -314,17 +314,10 @@ namespace DocXLib
         {
             // Add a table in a document of 1 row and 3 columns.
             
-<<<<<<< HEAD
             var table = document.InsertTable(1, DiaryHeaderColumnWidths.Length);
             
             // Set the table's column width and background 
             table.SetWidths(DiaryHeaderColumnWidths);
-=======
-            var table = document.InsertTable(1, DiaryEntryHeaderColumnWidths.Length);
-            
-            // Set the table's column width and background 
-            table.SetWidths(DiaryEntryHeaderColumnWidths);
->>>>>>> edf3b9a0a1c7057950c8114c196e86c81e8b8f77
             table.AutoFit = AutoFit.Fixed;
             table.Design = TableDesign.None;
 

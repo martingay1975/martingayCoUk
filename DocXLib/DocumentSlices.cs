@@ -14,7 +14,7 @@ namespace DocXLib
             /*  4 */ new DocumentSlice(138),
             /*  5 */ new DocumentSlice(108),
             // Start of 2013 - Book 2
-            /*  6 */ new DocumentSlice(186, 2, 659),
+            /*  6 */ new DocumentSlice(186, 2, 662),
             /*  7 */ new DocumentSlice(145),
             /*  8 */ new DocumentSlice(131),
             /*  9 */ new DocumentSlice(140),
@@ -39,6 +39,13 @@ namespace DocXLib
         public static bool IsLastSliceInBook(int documentSliceIndex)
         {
             return documentSliceIndex + 1 == DocumentList.Count || TryGetStartOfDocumentSlice(documentSliceIndex + 1, out _);
+        }
+
+
+        public static int GetStartIndex(DocumentSlice documentSlice)
+        {
+            var index = DocumentList.IndexOf(documentSlice);
+            return GetStartIndex(index);
         }
 
         public static int GetStartIndex(int documentSliceIndex)

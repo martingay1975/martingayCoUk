@@ -1,6 +1,4 @@
 ﻿
-using System.Web;
-
 namespace WebDataEntry.Web.Models
 {
     public class Info 

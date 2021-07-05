@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeatmapData", "Heatmap\Heat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocXLib", "DocXLib\DocXLib.csproj", "{3E567B0E-2C1D-4B0D-ADB1-14B4F1BFB05B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocXConsole", "DocXConsole\DocXConsole.csproj", "{EB4537DD-3250-40F0-81FD-D0EF2584F885}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocXWinform", "DocXWinform\DocXWinform.csproj", "{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFtp", "SFtp\SFtp.csproj", "{38F763A2-C61F-4B6E-9531-F128FCE2EEF7}"
@@ -26,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xceed.Document.NETStandard2", "DocXLib\Xceed2\Xceed.Document.NETStandard2\Xceed.Document.NETStandard2.csproj", "{F08ACFC4-7AB5-47B4-ABA1-6F86E4A9CE35}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xceed.Words.NETStandard2", "DocXLib\Xceed2\Xceed.Words.NETStandard2\Xceed.Words.NETStandard2.csproj", "{E783F852-2D40-4AAD-88D3-120DE2D26278}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocXConsole", "DocXConsole\DocXConsole.csproj", "{EB4537DD-3250-40F0-81FD-D0EF2584F885}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,18 +117,6 @@ Global
 		{3E567B0E-2C1D-4B0D-ADB1-14B4F1BFB05B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3E567B0E-2C1D-4B0D-ADB1-14B4F1BFB05B}.Release|x86.ActiveCfg = Release|Any CPU
 		{3E567B0E-2C1D-4B0D-ADB1-14B4F1BFB05B}.Release|x86.Build.0 = Release|Any CPU
-		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Debug|x86.Build.0 = Debug|Any CPU
-		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|x86.ActiveCfg = Release|Any CPU
-		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|x86.Build.0 = Release|Any CPU
 		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1C7EFD7-DEC4-4864-85F1-CD6953A8964C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -177,6 +165,18 @@ Global
 		{E783F852-2D40-4AAD-88D3-120DE2D26278}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E783F852-2D40-4AAD-88D3-120DE2D26278}.Release|x86.ActiveCfg = Release|Any CPU
 		{E783F852-2D40-4AAD-88D3-120DE2D26278}.Release|x86.Build.0 = Release|Any CPU
+		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Debug|x86.Build.0 = Debug|Any CPU
+		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|x86.ActiveCfg = Release|Any CPU
+		{EB4537DD-3250-40F0-81FD-D0EF2584F885}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
