@@ -37,7 +37,7 @@ namespace DocXLib
 
         private const int WesawFilterPersonId = 502;
         private const bool HasWesawFilter = true;
-        private readonly static float[] HeadingColumnWidths = new[] { 400f, 100f };
+        private readonly static float[] DiaryEntryHeaderColumnWidths = new[] { 400f, 100f };
         public const float ResizeChapterPics = 1.03f;
 
         public const string ResourcesDirectory = DocXDirectory + @"Resources\";
@@ -54,6 +54,7 @@ namespace DocXLib
             var startAtAllKatieEntriesIdx = DocumentSlices.GetStartIndex(startAtChunkIdx);
             var takeEntries = DocumentSlices.DocumentList[startAtChunkIdx].DiaryEntriesCount;
 
+            //takeEntries = 1;
             if (IncludePictures == false)
             {
                 startAtAllKatieEntriesIdx = 0;
@@ -310,11 +311,11 @@ namespace DocXLib
         {
             // Add a table in a document of 1 row and 3 columns.
             
-            var table = document.InsertTable(1, HeadingColumnWidths.Length);
+            var table = document.InsertTable(1, DiaryEntryHeaderColumnWidths.Length);
             
             // Set the table's column width and background 
-            table.SetWidths(HeadingColumnWidths);
-            table.AutoFit = AutoFit.Contents;
+            table.SetWidths(DiaryEntryHeaderColumnWidths);
+            table.AutoFit = AutoFit.Fixed;
             table.Design = TableDesign.None;
 
             var row = table.Rows.First();
@@ -474,7 +475,7 @@ namespace DocXLib
                 picture.DistanceFromTextBottom = 7;
                 // UseLicensedVersion - END
 
-                SizePicture(picture, new Size(260, 320));
+                SizePicture(picture, new Size(290, 350));
                 
                 firstParagraph.SpacingBefore(0);
                 firstParagraph.KeepLinesTogether(false);
@@ -505,7 +506,7 @@ namespace DocXLib
 
                     var picture = pictureEnumerator.Current;
 
-                    var columnMaxSize = new Size((int)columnWidth - 10, (int)(columnWidth * 1.25));
+                    var columnMaxSize = new Size((int)columnWidth, (int)(columnWidth * 1.25));
                     SizePicture(picture, columnMaxSize);
 
                     var cellParagraph = cell.Paragraphs.First();

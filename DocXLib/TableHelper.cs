@@ -5,7 +5,7 @@ namespace DocXLib
 {
     internal static class TableHelper
     {
-        public readonly static float[] TocColumnWidths = new[] { 490f, 70f };
+        public readonly static float[] TocColumnWidths = new[] { 400f, 70f };
         private static int TotalWidth = DocumentSetup.GetLivePageWidthPoints();
 
         // return false to stop visiting
@@ -24,7 +24,7 @@ namespace DocXLib
         public static Table CreateTable(Section section, Paragraph paragraph, int rowCount, Options options)
         {
             var columnWidths = options.ColumnWidths 
-                ?? Enumerable.Repeat((TotalWidth - 50) / (float)options.ColumnCountIfNoWidths, options.ColumnCountIfNoWidths).ToArray();
+                ?? Enumerable.Repeat((500) / (float)options.ColumnCountIfNoWidths, options.ColumnCountIfNoWidths).ToArray();
 
             Table table;
             if (paragraph != null)
@@ -39,7 +39,7 @@ namespace DocXLib
 
             table.SetWidths(columnWidths);
 
-            table.AutoFit = AutoFit.Contents;
+            table.AutoFit = AutoFit.Fixed;
             table.Design = TableDesign.None;
 
             if (options?.VisitCellFunc != null)
