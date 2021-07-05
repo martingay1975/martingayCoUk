@@ -2,6 +2,8 @@
 using Xceed.Document.NET;
 using System;
 using System.Drawing;
+using System.Linq;
+using System.Net.Sockets;
 
 namespace DocXLib
 {
@@ -15,7 +17,7 @@ namespace DocXLib
 
     public static class DocumentYears
     {
-        public static readonly float[] DocumentTocColumnWidths = new[] { 300f, 90f, 70f };
+        public static readonly float[] DocumentTocColumnWidths = new[] { 120f, 90f, 70f };
 
         public static List<Years> YearsToPages { get; private set; }
 
@@ -56,59 +58,47 @@ namespace DocXLib
                     var cellParagraph = cell.Paragraphs[0];
 
                     // if we are the last year in the contents - then add an extra bit for the family tree
-                    if (rowIndex == 0)
-                    {
-                        switch (columnIndex)
-                        {
-                            case 0:
-                                {
-                                    cellParagraph.Append("Family Tree");
-                                    cellParagraph.FontSize(14);
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    cellParagraph.Append($"Book 3").Color(Start.PurpleColor);
-                                    cellParagraph.Alignment = Alignment.right;
-                                    break;
-                                }
-                            case 2:
-                                {
-                                    cellParagraph.Append("1").Color(Start.PurpleColor);
-                                    cellParagraph.Alignment = Alignment.right;
-                                    break;
-                                }
-                        }
-                        return true;
-                    }
 
-                    var years = YearsToPages[rowIndex - 1];
-                    FormatCell(years.Book, cell, cellParagraph);
+                    var documentSlice = DocumentSlices.DocumentList.First(docSlice => docSlice.BookNumber == rowIndex + 1);
                     
                     switch (columnIndex)
                     {
                         case 0:
                             {
-                                cellParagraph.Append(years.Year.ToString());
+                                cellParagraph.Append($"Book {documentSlice.BookNumber}");
                                 cellParagraph.FontSize(14);
                                 break;
                             }
 
                         case 1:
-                            {
-                                cellParagraph.Append($"Book {years.Book}");
+                        {
+                            var yearRange = "";
+                                switch (documentSlice.BookNumber)
+                                {
+                                    case 1:
+                                        yearRange = "2003 - 2012";
+                                        break;
+                                    case 2:
+                                        yearRange = "2013 - 2021";
+                                        break;
+                                    default:
+                                        throw new IndexOutOfRangeException(documentSlice.BookNumber?.ToString());
+                                }
+
+                                cellParagraph.Append(yearRange);
                                 cellParagraph.Alignment = Alignment.right;
                                 break;
                             }
                         case 2:
                             {
-                                cellParagraph.Append(years.Page.ToString());
+                                cellParagraph.Append(documentSlice.StartPageNumber.ToString());
                                 cellParagraph.Alignment = Alignment.right;
                                 break;
                             }
                     }
 
                     cell.VerticalAlignment = VerticalAlignment.Center;
+                    cellParagraph.Color(Start.PurpleColor);
                     return true;
                 }
             };
@@ -117,38 +107,19 @@ namespace DocXLib
             var paragraph1 = documentTocSection.InsertParagraph();
             paragraph1.AppendLine("Hello... ")
                 .FontSize(14)
+                .Color(Start.PinkColor)
                 .Bold(true);
 
             var paragraph2 = documentTocSection.InsertParagraph();
-            documentTocSection.InsertParagraph("The childhood story of the beautiful Katie Gay is so large, it had to be spread over three books. It is a copy of the blogsite - martingay.co.uk - in all its glory.");
+            documentTocSection.InsertParagraph("This series of two books plots the childhood story of the beautiful Katie Clara Uhrskov Gay. The text and pictures are all on the blogsite - martingay.co.uk. There was an attempt to filter out bits that were not related to Katie. ");
+            documentTocSection.InsertParagraph("");
+            documentTocSection.InsertParagraph("Katie is a very much loved person, treasured by her family. You will not find a more giving, kind and generous person. Hopefully Katie will dip into the book now and again and look back at her upbringing.");
             documentTocSection.InsertParagraph("");
 
             //documentTocSection.InsertParagraph("The childhood life of 'Katie Clara Uhrskov Gay'. The most beautiful person inside and out you will ever meet.");
             //documentTocSection.InsertParagraph("The book contains the mundane and exciting activities that the family have been involved in whilst Katie has been growing up. There are three books covering her life from 0 to 18 years. Have fun looking back.");
 
-            TableHelper.CreateTable(documentTocSection, null, YearsToPages.Count + 1, options);
+            TableHelper.CreateTable(documentTocSection, null, 2, options);
         }
-
-        private static void FormatCell(int bookNumber, Cell cell, Paragraph paragraph)
-        {
-            switch (bookNumber)
-            {
-                case 1:
-                    cell.FillColor = Start.RedColor;
-                    paragraph.Color(Color.White);
-                    break;
-                case 2:
-                    cell.FillColor = Start.YellowColor;
-                    paragraph.Color(Color.Black);
-                    break;
-                case 3:
-                    cell.FillColor = Start.GreenColor;
-                    paragraph.Color(Color.Black);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
     }
 }

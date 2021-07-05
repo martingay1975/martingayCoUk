@@ -23,7 +23,7 @@ namespace Xceed.Words.NET.Examples
     {
         #region Private Members
 
-        private const string SectionSampleOutputDirectory = Start.DocXDirectory + @"Section\Output\";
+        private static readonly string SectionSampleOutputDirectory = Start.DocXDirectory + @"Section\Output\";
 
         #endregion
 

@@ -46,6 +46,9 @@ namespace DocXLib
             document.DifferentOddAndEvenPages = true;
             document.PageHeight = InchesToPoints(A4PageHeightInches) + (GetBleedingPoints() * 2);
             document.PageWidth = InchesToPoints(A4PageWidthInches) + (GetBleedingPoints() * 2);
+            
+            document.MarginLeft = InchesToPoints(marginInches);
+            document.MarginRight = InchesToPoints(marginInches);
 
             return document;
         }
@@ -74,7 +77,7 @@ namespace DocXLib
             section.MarginLeft = InchesToPoints(marginInches + gutterSpineMarginInches) + GetBleedingPoints();
             section.MarginRight = InchesToPoints(marginInches) + GetBleedingPoints();
 
-            section.MirrorMargins = false;
+            section.MirrorMargins = true;
         }
 
         private static int GetBleedingPoints()

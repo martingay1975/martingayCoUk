@@ -5,8 +5,8 @@ namespace DocXLib
 {
     internal static class TableHelper
     {
-        public static readonly float[] TocColumnWidths = new[] { 490f, 70f };
-        private static int TotalWidth = DocumentSetup.GetLivePageWidthPoints();
+        public static readonly float[] TocColumnWidths = new[] { 490f, 60f };
+        private static readonly int TotalWidth = DocumentSetup.GetLivePageWidthPoints();
 
         // return false to stop visiting
         public delegate bool VisitCellFunc(int rowIndex, int columnIndex, float columnWidth, Cell cell);
@@ -24,7 +24,7 @@ namespace DocXLib
         public static Table CreateTable(Section section, Paragraph paragraph, int rowCount, Options options)
         {
             var columnWidths = options.ColumnWidths 
-                ?? Enumerable.Repeat((TotalWidth - 50) / (float)options.ColumnCountIfNoWidths, options.ColumnCountIfNoWidths).ToArray();
+                ?? Enumerable.Repeat((TotalWidth - 30) / (float)options.ColumnCountIfNoWidths, options.ColumnCountIfNoWidths).ToArray();
 
             Table table;
             if (paragraph != null)
@@ -36,10 +36,9 @@ namespace DocXLib
             }
 
             // Set the table's column width and background 
-
             table.SetWidths(columnWidths);
 
-            table.AutoFit = AutoFit.Contents;
+            table.AutoFit = AutoFit.Fixed;
             table.Design = TableDesign.None;
 
             if (options?.VisitCellFunc != null)

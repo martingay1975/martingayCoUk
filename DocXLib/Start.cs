@@ -31,21 +31,22 @@ namespace DocXLib
 
         public static readonly Color PageNumberColor = PinkColor;
 
-        public const string DocXDirectory = @"C:\Users\Slop\Desktop\docx\";
-        public const string ChapterImageDirectory = DocXDirectory + @"Chapters\";
+        //public const string DocXDirectory = @"C:\Users\Slop\Desktop\docx\";
+        public static string DocXDirectory => $"{Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)}\\docx\\";
+        public static string ChapterImageDirectory = DocXDirectory + @"Chapters\";
         private static string DiaryXmlPath => $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\res\\xml\\diary.xml";
         
 
         private const int WesawFilterPersonId = 502;
         private const bool HasWesawFilter = true;
-        private static readonly float[] HeadingColumnWidths = new[] { 400f, 100f };
+        private static readonly float[] DiaryHeaderColumnWidths = new[] { 400f, 90f };
         public const float ResizeChapterPics = 1.03f;
 
-        public const string ResourcesDirectory = DocXDirectory + @"Resources\";
-        public const string BirthdayIcon = ResourcesDirectory + @"birthdayCake.png";
-        public const string BoyIcon = ResourcesDirectory + @"blueBottle.png";
-        public const string GirlIcon = ResourcesDirectory + @"pinkBottle.png";
-        public const string XmasIcon = ResourcesDirectory + @"xmasTree.png";
+        public static readonly string ResourcesDirectory = DocXDirectory + @"Resources\";
+        public static readonly string BirthdayIcon = ResourcesDirectory + @"birthdayCake.png";
+        public static readonly string BoyIcon = ResourcesDirectory + @"blueBottle.png";
+        public static readonly string GirlIcon = ResourcesDirectory + @"pinkBottle.png";
+        public static readonly string XmasIcon = ResourcesDirectory + @"xmasTree.png";
         public static List<string> AllImageSrcs = new List<string>();
         public static void Run(int? idx = null)
         {
@@ -311,11 +312,11 @@ namespace DocXLib
         {
             // Add a table in a document of 1 row and 3 columns.
             
-            var table = document.InsertTable(1, HeadingColumnWidths.Length);
+            var table = document.InsertTable(1, DiaryHeaderColumnWidths.Length);
             
             // Set the table's column width and background 
-            table.SetWidths(HeadingColumnWidths);
-            table.AutoFit = AutoFit.Contents;
+            table.SetWidths(DiaryHeaderColumnWidths);
+            table.AutoFit = AutoFit.Fixed;
             table.Design = TableDesign.None;
 
             var row = table.Rows.First();
@@ -343,7 +344,11 @@ namespace DocXLib
             dateParagraph.Alignment = Alignment.right;
 
             // entry number
-            row.Cells[1].InsertParagraph(allKatieEntriesIdx.ToString()).ApplyDateFormatting().FontSize(6).Italic(true).Alignment = Alignment.right;
+            row.Cells[1].InsertParagraph((allKatieEntriesIdx + 1).ToString())
+                .ApplyDateFormatting()
+                .FontSize(6)
+                .Italic(true)
+                .Alignment = Alignment.right;
             row.Cells[1].VerticalAlignment = VerticalAlignment.Center;
         }
 
@@ -475,7 +480,7 @@ namespace DocXLib
                 picture.DistanceFromTextBottom = 7;
                 // UseLicensedVersion - END
 
-                SizePicture(picture, new Size(260, 320));
+                SizePicture(picture, new Size(290, 350));
                 
                 firstParagraph.SpacingBefore(0);
                 firstParagraph.KeepLinesTogether(false);

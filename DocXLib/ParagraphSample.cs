@@ -30,8 +30,8 @@ namespace DocXLib
         { "COST", "$13.95" },
     };
 
-        private const string ParagraphSampleResourcesDirectory = DocXLib.Start.DocXDirectory + @"Paragraph\Resources\";
-        private const string ParagraphSampleOutputDirectory = DocXLib.Start.DocXDirectory + @"Paragraph\Output\";
+        private static readonly string ParagraphSampleResourcesDirectory = DocXLib.Start.DocXDirectory + @"Paragraph\Resources\";
+        private static readonly string ParagraphSampleOutputDirectory = DocXLib.Start.DocXDirectory + @"Paragraph\Output\";
 
         #endregion
 
