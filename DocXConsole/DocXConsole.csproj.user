@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+<<<<<<< HEAD
     <StartArguments>book2</StartArguments>
+=======
+    <StartArguments>runall</StartArguments>
+>>>>>>> edf3b9a0a1c7057950c8114c196e86c81e8b8f77
   </PropertyGroup>
 </Project>

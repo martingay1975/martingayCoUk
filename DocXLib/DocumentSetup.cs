@@ -46,9 +46,9 @@ namespace DocXLib
             document.DifferentOddAndEvenPages = true;
             document.PageHeight = InchesToPoints(A4PageHeightInches) + (GetBleedingPoints() * 2);
             document.PageWidth = InchesToPoints(A4PageWidthInches) + (GetBleedingPoints() * 2);
-            
             document.MarginLeft = InchesToPoints(marginInches);
             document.MarginRight = InchesToPoints(marginInches);
+
 
             return document;
         }
@@ -90,7 +90,7 @@ namespace DocXLib
         /// </summary>
         public static int GetLivePageWidthPoints()
         {
-            return InchesToPoints(A4PageWidthInches - (2 * marginInches));
+            return InchesToPoints(A4PageWidthInches);
         }
 
         private static int InchesToPoints(double inches)

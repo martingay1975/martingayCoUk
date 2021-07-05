@@ -21,15 +21,15 @@ namespace DocXLib
         private const bool CompareLocalAndHostImages = false;
 
         private const int STARTATCHUNKIDX = 1;
-        public static readonly Color RedColor = Color.FromArgb(238, 48, 48);
-        public static readonly Color GreenColor = Color.FromArgb(98, 238, 48);
-        public static readonly Color YellowColor = Color.FromArgb(233, 238, 48);
-        public static readonly Color OrangeColor = Color.FromArgb(237, 125, 49);
+        public readonly static Color RedColor = Color.FromArgb(238, 48, 48);
+        public readonly static Color GreenColor = Color.FromArgb(98, 238, 48);
+        public readonly static Color YellowColor = Color.FromArgb(233, 238, 48);
+        public readonly static Color OrangeColor = Color.FromArgb(237, 125, 49);
 
-        public static readonly Color PinkColor = Color.FromArgb(229, 129, 196);
-        public static readonly Color PurpleColor = Color.FromArgb(160, 83, 203);
+        public readonly static Color PinkColor = Color.FromArgb(229, 129, 196);
+        public readonly static Color PurpleColor = Color.FromArgb(160, 83, 203);
 
-        public static readonly Color PageNumberColor = PinkColor;
+        public readonly static Color PageNumberColor = PinkColor;
 
         //public const string DocXDirectory = @"C:\Users\Slop\Desktop\docx\";
         public static string DocXDirectory => $"{Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)}\\docx\\";
@@ -40,6 +40,7 @@ namespace DocXLib
         private const int WesawFilterPersonId = 502;
         private const bool HasWesawFilter = true;
         private static readonly float[] DiaryHeaderColumnWidths = new[] { 400f, 90f };
+
         public const float ResizeChapterPics = 1.03f;
 
         public static readonly string ResourcesDirectory = DocXDirectory + @"Resources\";
@@ -56,6 +57,7 @@ namespace DocXLib
             var startAtAllKatieEntriesIdx = DocumentSlices.GetStartIndex(startAtChunkIdx);
             var takeEntries = DocumentSlices.DocumentList[startAtChunkIdx].DiaryEntriesCount;
 
+            //takeEntries = 1;
             if (IncludePictures == false)
             {
                 startAtAllKatieEntriesIdx = 0;
@@ -312,10 +314,17 @@ namespace DocXLib
         {
             // Add a table in a document of 1 row and 3 columns.
             
+<<<<<<< HEAD
             var table = document.InsertTable(1, DiaryHeaderColumnWidths.Length);
             
             // Set the table's column width and background 
             table.SetWidths(DiaryHeaderColumnWidths);
+=======
+            var table = document.InsertTable(1, DiaryEntryHeaderColumnWidths.Length);
+            
+            // Set the table's column width and background 
+            table.SetWidths(DiaryEntryHeaderColumnWidths);
+>>>>>>> edf3b9a0a1c7057950c8114c196e86c81e8b8f77
             table.AutoFit = AutoFit.Fixed;
             table.Design = TableDesign.None;
 
@@ -511,7 +520,7 @@ namespace DocXLib
 
                     var picture = pictureEnumerator.Current;
 
-                    var columnMaxSize = new Size((int)columnWidth - 10, (int)(columnWidth * 1.25));
+                    var columnMaxSize = new Size((int)columnWidth, (int)(columnWidth * 1.25));
                     SizePicture(picture, columnMaxSize);
 
                     var cellParagraph = cell.Paragraphs.First();
