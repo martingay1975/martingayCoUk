@@ -36,7 +36,7 @@ namespace DocXLib
         //    };
         //}
 
-        public static void InsertDocumentTOC(DocumentSectionManager documentSectionManager)
+        public static void InsertDocumentTOC(DocumentSectionManager documentSectionManager, int totalEntryCount)
         {
             // TOC for whole document
             var options = new TableHelper.Options
@@ -49,7 +49,21 @@ namespace DocXLib
                     // if we are the last year in the contents - then add an extra bit for the family tree
 
                     var documentSlice = DocumentSlices.DocumentList.First(docSlice => docSlice.BookNumber == rowIndex + 1);
-                    
+                    var startEntryIndex = DocumentSlices.GetStartIndex(documentSlice) + 1;
+                    var endEntryIndex = -1;
+
+                    var nextSlice = DocumentSlices.DocumentList.FirstOrDefault(docSlice => docSlice.BookNumber == rowIndex + 2);
+                    if (nextSlice == null)
+                    {
+                        // we're on book 2
+                        endEntryIndex = totalEntryCount;
+                    } 
+                    else
+                    {
+                        endEntryIndex = DocumentSlices.GetStartIndex(nextSlice) + 1;
+                    }
+                    var bookEntryCount = endEntryIndex - startEntryIndex;
+
                     switch (columnIndex)
                     {
                         case 0:
@@ -80,17 +94,16 @@ namespace DocXLib
                             }
                         case 2:
                             {
-                                cellParagraph.Append($"Page: {documentSlice.StartPageNumber.ToString()}");
+                                cellParagraph.Append($"Page: {documentSlice.StartPageNumber}");
                                 cellParagraph.Alignment = Alignment.left;
                                 break;
                             }
                         case 3:
                         {
-                            cellParagraph.Append($"Entry: {DocumentSlices.GetStartIndex(documentSlice) + 1}");
+                            cellParagraph.Append($"Entries: {bookEntryCount}");
                             cellParagraph.Alignment = Alignment.left;
                             break;
                         }
-
                     }
 
                     cell.VerticalAlignment = VerticalAlignment.Center;

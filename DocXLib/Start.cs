@@ -108,7 +108,7 @@ namespace DocXLib
                     DocumentSetup.InsertDocumentFrontPage(document, documentSlice.BookNumber.Value);
                 }
 
-                DocumentYears.InsertDocumentTOC(DocumentSetup.DocumentSectionManager);
+                DocumentYears.InsertDocumentTOC(DocumentSetup.DocumentSectionManager, allKatieEntries.Count());
 
                 // Insert blank page so we can insert the family tree in book 1
                 if (startAtChunkIdx == 0)
