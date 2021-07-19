@@ -15,11 +15,11 @@ namespace DocXLib
         public const bool IncludeBleeding = true;
 
         public const double marginInches = 0.5;     // minimum margin where text should not appear. Minimum 0.5"
-        public const double bleedInches = 0.25;     // increase the size of the page and magit pushrgin. Minimum 0.25"
+        public const double bleedInches = 0;     // increase the size of the page and margin. Minimum 0.25"
         public const double gutterSpineMarginInches = 0.2;  // allow for extra margin where the spine is. Minimum 0.2"
 
-        public const double A4PageHeightInches = 11.7d;
-        public const double A4PageWidthInches = 8.3d;
+        public const double A4PageHeightInches = 11.69d;
+        public const double A4PageWidthInches = 8.27d;
 
         public static DocumentSectionManager DocumentSectionManager;
 

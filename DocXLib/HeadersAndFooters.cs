@@ -58,11 +58,11 @@ namespace DocXLib
 
             // Page number to the left for even
             var pEven = footers.Even.Paragraphs[0];
-            AddFooterTable(pEven, true, year);
+            AddFooterTable(pEven, false, year);
 
             // Page number to the right for odd
             var pOdd = footers.Odd.Paragraphs[0];
-            AddFooterTable(pOdd, false, year);
+            AddFooterTable(pOdd, true, year);
         }
 
         private static void AddFooterTable(Paragraph paragraph, bool isEven, string year)
@@ -87,7 +87,7 @@ namespace DocXLib
                             }
                         case 1:
                             {
-                                cellParagraph.InsertText($"Katie Gay - {year}");
+                                cellParagraph.InsertText($"{Start.PersonName} - {year}");
                                 cellParagraph.Color(Start.PageNumberColor);
                                 cellParagraph.Alignment = Alignment.center;
                                 break;

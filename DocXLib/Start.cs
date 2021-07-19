@@ -30,6 +30,7 @@ namespace DocXLib
         public readonly static Color PurpleColor = Color.FromArgb(160, 83, 203);
 
         public readonly static Color PageNumberColor = PinkColor;
+        public const string PersonName = "Katie Gay";
 
         //public const string DocXDirectory = @"C:\Users\Slop\Desktop\docx\";
         public static string DocXDirectory => $"{Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)}\\docx\\";
